@@ -1,0 +1,20 @@
+CREATE TABLE "car_details" (
+    "uuid" VARCHAR(36) PRIMARY KEY DEFAULT gen_random_uuid()::varchar(36),
+    "car_uuid" VARCHAR(36) UNIQUE NOT NULL,
+    "name" TEXT NOT NULL,
+    "model" TEXT NOT NULL,
+    "date_of_first_use" DATE NOT NULL,
+    "energy_type" TEXT CHECK ("energy_type" IN ('petrol', 'diesel', 'electric', 'hybrid')),
+    "transmission_type" TEXT CHECK ("transmission_type" IN ('manual', 'automatic')),
+    "brand" TEXT NOT NULL,
+    "no_seats" INT NOT NULL,
+    "color" TEXT NOT NULL,
+    "chassis_no" TEXT NOT NULL,
+    "vin" TEXT NOT NULL,
+    "price_per_day" NUMERIC NOT NULL,
+    "cat_doc" TEXT NOT NULL,
+    "visite_tech_doc" TEXT NOT NULL,
+    "insurance_doc" TEXT NOT NULL,
+    "date_added" TIMESTAMP DEFAULT now(),
+    FOREIGN KEY ("car_uuid") REFERENCES "car"("uuid") ON DELETE CASCADE
+);
