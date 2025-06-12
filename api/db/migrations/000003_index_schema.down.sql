@@ -1,0 +1,1 @@
+DROP INDEX idx_users_email,idx_users_role,idx_cars_owner_uuid,idx_reservations_customer_uuid;
