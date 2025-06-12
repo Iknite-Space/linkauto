@@ -11,17 +11,19 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
-      parser, 
+      parser,
       parserOptions: {
         requireConfigFile: false,
         babelOptions: {
           presets: ["@babel/preset-react"],
         },
       },
-      globals: {
-        ...globals.browser,
-        ...globals.jest,
-      },
+      globals: Object.fromEntries(
+        Object.entries({
+          ...globals.browser,
+          ...globals.jest,
+        }).filter(([key]) => key.trim() === key)
+      ),
     },
     plugins: {
       js,
