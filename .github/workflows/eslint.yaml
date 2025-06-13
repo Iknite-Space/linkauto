@@ -1,0 +1,46 @@
+name: Lint React
+
+on:
+  push:
+    branches: ["CI"]
+
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  react-lint:
+    name: ESLint (React)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --no-audit --prefer-offline
+
+      - name: Run ESLint
+        run: npx eslint .
+
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.24
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: v2.1
+          working-directory: api
