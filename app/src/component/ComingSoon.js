@@ -18,7 +18,7 @@ const ComingSoon = () => {
     >
       <h1 style={{ fontSize: "48px", marginBottom: "10px" , color: "white"}}>AutoLink</h1>
       <FloatingCar />
-      <p style={{ fontSize: "20px", maxWidth: "600px", margin: "0 auto 30px"}}>
+      <p style={{ fontSize: "20px", maxWidth: "600px", margin: "0 auto 30px", color:"white"}}>
         Rent cars easily anywhere, anytime. Just pick, drive, and go.
       </p>
       <h2 style={{ fontSize: "32px", color: "#0077cc" }}>Coming Soon Near You!</h2>
