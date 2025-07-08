@@ -4,14 +4,15 @@ import (
 	"net/http"
 
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/repo"
+	"github.com/Iknite-Space/c4-project-boilerplate/api/db/store"
 	"github.com/gin-gonic/gin"
 )
 
 type MessageHandler struct {
-	querier repo.Querier
+	querier store.Store
 }
 
-func NewMessageHandler(querier repo.Querier) *MessageHandler {
+func NewMessageHandler(querier store.Store) *MessageHandler {
 	return &MessageHandler{
 		querier: querier,
 	}
@@ -46,7 +47,7 @@ func (h *MessageHandler) handleCreateMessage(c *gin.Context) {
 		return
 	}
 
-	message, err := h.querier.CreateMessage(c, req)
+	message, err := h.querier.Do().CreateMessage(c, req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -62,7 +63,7 @@ func (h *MessageHandler) handleGetMessage(c *gin.Context) {
 		return
 	}
 
-	message, err := h.querier.GetMessageByID(c, id)
+	message, err := h.querier.Do().GetMessageByID(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -78,7 +79,7 @@ func (h *MessageHandler) handleGetThreadMessages(c *gin.Context) {
 		return
 	}
 
-	messages, err := h.querier.GetMessagesByThread(c, id)
+	messages, err := h.querier.Do().GetMessagesByThread(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -98,7 +99,7 @@ func (h *MessageHandler) handleDeleteMessage(c *gin.Context) {
 		return
 	}
 
-	err := h.querier.DeleteMessage(c, id)
+	err := h.querier.Do().DeleteMessage(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
