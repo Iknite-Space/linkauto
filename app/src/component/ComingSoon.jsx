@@ -22,6 +22,8 @@ const ComingSoon = () => {
         Rent cars easily anywhere, anytime. Just pick, drive, and go.
       </p>
       <h2 style={{ fontSize: "32px", color: "#0077cc" }}>Coming Soon Near You!</h2>
+
+      {/* <p className="text-red-500 text-2xl">tailwind</p> */}
     </div>
   );
 };
