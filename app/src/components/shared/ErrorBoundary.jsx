@@ -1,4 +1,4 @@
-
+import PropTypes from 'prop-types';
 const ErrorFallback = ({error, resetErrorBoundary}) => {
   return (
     <div role="alert" className="text-center text-red-600">
@@ -11,5 +11,12 @@ const ErrorFallback = ({error, resetErrorBoundary}) => {
     </div>
   )
 }
+
+ErrorFallback.propTypes = {
+  error: PropTypes.shape({
+    message: PropTypes.string,
+  }).isRequired,
+  resetErrorBoundary: PropTypes.func.isRequired,
+};
 
 export default ErrorFallback
