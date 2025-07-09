@@ -4,7 +4,7 @@ const FloatingCar = () => {
   return (
     <>
       <img
-        src="app/src/component/FloatingCar.js"
+        src="../../public/assets/Pic.png"
         alt="Floating Car"
         style={{
           width: "220px",
