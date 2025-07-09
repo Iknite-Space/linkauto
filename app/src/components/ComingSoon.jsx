@@ -10,6 +10,7 @@ const ComingSoon = () => {
         // padding: "80px 20px",
         backgroundColor: "#000",
         minHeight: "100vh",
+        width: "100%",
         color: "#333",
         margin: 0,
         padding: 0,
@@ -21,7 +22,9 @@ const ComingSoon = () => {
       <p style={{ fontSize: "20px", maxWidth: "600px", margin: "0 auto 30px", color:"white"}}>
         Rent cars easily anywhere, anytime. Just pick, drive, and go.
       </p>
-      <h2 style={{ fontSize: "32px", color: "#0077cc" }}>Coming Soon Near You!</h2>
+      <h2 className="text-primary">Coming Soon Near You!</h2>
+
+      {/* <p className="text-red-500 text-2xl">tailwind</p> */}
     </div>
   );
 };
