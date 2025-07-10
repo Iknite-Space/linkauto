@@ -32,7 +32,7 @@ export default defineConfig([
     rules: {
       ...pluginReact.configs.recommended.rules,
       "react/react-in-jsx-scope": "off",
-      "react/prop-types": "off",
+      // "react/prop-types": "off",
     },
     settings: {
       react: {

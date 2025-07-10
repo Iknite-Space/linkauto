@@ -4,6 +4,7 @@ import ErrorFallback from './ErrorBoundary';
 import { FaBell, FaSearch, FaBars } from 'react-icons/fa';
 import SearchBar from '../SearchBar';
 import Loading from './Loading';
+import PropTypes from 'prop-types';
 
 const Modal = lazy(() => import('../UI/Modal'));
 
@@ -74,6 +75,10 @@ const Navbar = ({toggleMenu}) => {
       </div>
     </div>
   )
+}
+
+Navbar.propTypes = {
+  toggleMenu: PropTypes.func.isRequired,
 }
 
 export default Navbar
