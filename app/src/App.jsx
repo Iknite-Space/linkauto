@@ -29,13 +29,13 @@ function App() {
             <Route element={<AuthLayout />}>
               <Route path="/" element={<ComingSoon />} />
               <Route path="/login" element={<Login />} />
-              <Route path="*" element={<NotFound />} />
             </Route>
 
             {/* protected */}
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<Login />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
         <ToastContainer />

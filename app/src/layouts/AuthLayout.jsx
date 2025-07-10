@@ -1,11 +1,14 @@
 import {Outlet} from "react-router-dom";
-
-const AuthLayout = () => {
+import PropTypes from "prop-types";
+const AuthLayout = ({children}) => {
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
-        <Outlet />
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        {children || <Outlet />}
     </div>
   )
 }
 
+AuthLayout.propTypes = {
+  children: PropTypes.node,
+}
 export default AuthLayout
