@@ -3,13 +3,14 @@ import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./components/shared/ErrorBoundary";
 import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css'
+import Loading from "./components/shared/Loading";
 
 //lazy imports
 
 //layouts and other shared c
 const AuthLayout = lazy(() => import("./layouts/AuthLayout"));
+const DashboardLayout = lazy(() => import("./layouts/DashboardLayout"));
 const ToastContainer = lazy(() => import("react-toastify").then(module => ({ default: module.ToastContainer })));
-const Loading = lazy(() => import("./components/shared/Loading"));
 const NotFound = lazy(() => import("./components/shared/NotFound"));
 
 //public components/pages
@@ -32,6 +33,9 @@ function App() {
             </Route>
 
             {/* protected */}
+            <Route element={<DashboardLayout />}>
+              <Route path="/dashboard" element={<Login />} />
+            </Route>
           </Routes>
         </Suspense>
         <ToastContainer />
