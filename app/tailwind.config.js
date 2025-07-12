@@ -15,6 +15,7 @@ export const theme = {
             SecondaryTextColor: "#4F4F4F", // Dark gray
             green: "#28A745", // Green for success messages
             red: "#DC3545", // Red for error messages
+            whiteColor: "white", // WHite text
         },
 
         fontFamily: {
@@ -22,8 +23,8 @@ export const theme = {
         },
 
         fontSize: {
-            heading: ['24pt', { lineHeight: '1.3', fontWeight: '700' }], // Roboto Bold
-            body: ['14pt', { lineHeight: '1.6', fontWeight: '400' }],    // Roboto Regular
+            heading: ['20pt', { lineHeight: '1.3', fontWeight: '700' }], // Roboto Bold
+            body: ['12pt', { lineHeight: '1.6', fontWeight: '400' }],    // Roboto Regular
             caption: ['12pt', { lineHeight: '1.4', fontWeight: '300' }], // Roboto Light or Regular
        },
     },

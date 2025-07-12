@@ -16,6 +16,7 @@ const NotFound = lazy(() => import("./components/shared/NotFound"));
 //public components/pages
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const Login = lazy(() => import("./pages/auth/Login"));
+const Register = lazy(() => import("./pages/auth/Register"));
 
 //protected components
 
@@ -29,6 +30,7 @@ function App() {
             <Route element={<AuthLayout />}>
               <Route path="/" element={<ComingSoon />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
               <Route path="*" element={<NotFound />} />
             </Route>
 
