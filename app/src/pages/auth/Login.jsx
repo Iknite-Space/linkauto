@@ -31,23 +31,24 @@ const Login = () => {
   };
   return (
     <>
-      <div className="login-container flex justify-around content-center gap-80 ">
-        <div className="left-description">
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam,
-            reiciendis.
-          </p>
+      <div className="grid grid-cols-12 w-7/8 max-w-4xl bg-white shadow-lg rounded-2xl overflow-hidden m-[30px] ">
+        {/* Left Side */}
+        <div className="col-span-12 md:col-span-3 bg-secondary flex items-center justify-center p-6">
+          <div className="text-white text-center">
+            <h1 className="text-heading font-bold mb-2">Welcome</h1>
+            <p className="text-body">Get a car for your trip easily</p>
+          </div>
         </div>
-        <div className="form flex flex-col gap-4 content-start ">
-          <h2 className="login-heading">Login</h2>
-          <form
-            className="form-input flex flex-col gap-4"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+
+        {/* Right Side */}
+        <div className="col-span-12 md:col-span-9 p-8 ">
+          <h2 className="text-heading font-heading mb-6">Login</h2>
+
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <label htmlFor="email">Email</label>
             <input
               {...register("email")}
-              className="border border-gray-300 p-2 rounded w-[400px]"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md"
               type="email"
               placeholder="Enter email"
             />
@@ -57,7 +58,7 @@ const Login = () => {
             <label htmlFor="password">Password: </label>
             <input
               {...register("password")}
-              className="border border-gray-300 p-2 rounded "
+              className="w-full px-4 py-2 border border-gray-300 rounded-md"
               type="password"
               placeholder="Enter password"
             ></input>
@@ -69,7 +70,7 @@ const Login = () => {
               type="submit"
               className="bg-primary text-white p-2 rounded"
             >
-              {isSubmitting ? "Loading" : "Login"}
+              {isSubmitting ? "Loading" : "Sign In"}
             </button>
           </form>
         </div>

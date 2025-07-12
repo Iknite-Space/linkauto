@@ -16,6 +16,8 @@ import (
 	"github.com/Iknite-Space/c4-project-boilerplate/api/api"
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/repo"
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/store"
+	"github.com/Iknite-Space/c4-project-boilerplate/api/service/campay"
+	"github.com/Iknite-Space/c4-project-boilerplate/api/service/cloudinary"
 )
 
 // DBConfig holds the database configuration. This struct is populated from the .env in the current directory.
@@ -32,6 +34,7 @@ type DBConfig struct {
 type Config struct {
 	ListenPort     uint16 `conf:"env:LISTEN_PORT,required"`
 	MigrationsPath string `conf:"env:MIGRATIONS_PATH,required"`
+	CAPIKEY        string `conf:"CLOUNDINARY_APIKEY"`
 	DB             DBConfig
 }
 
@@ -77,12 +80,17 @@ func run() error {
 	}
 
 	querier := store.NewStore(db)
+	campay := campay.New("https://api.campay.com", "token")
+	cloudinary := cloudinary.New("https://api.cloudinary.com/v1_1/" + config.CAPIKEY)
 
 	// We create a new http handler using the database querier.
-	handler := api.NewMessageHandler(querier).WireHttpHandler()
+	handler := api.NewMessageHandler(querier, campay, cloudinary).WireHttpHandler()
+
+	// Wrap the handler with CORS middleware
+	handlerWithCORS := corsMiddleware(handler)
 
 	// And finally we start the HTTP server on the configured port.
-	err = http.ListenAndServe(fmt.Sprintf(":%d", config.ListenPort), handler)
+	err = http.ListenAndServe(fmt.Sprintf(":%d", config.ListenPort), handlerWithCORS)
 	if err != nil {
 		fmt.Println("Error starting server:", err)
 	}
@@ -129,4 +137,22 @@ func getPostgresConnectionURL(config DBConfig) string {
 	}
 
 	return dbURL.String()
+}
+
+// cors middleware
+// corsMiddleware adds CORS headers to responses
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Adjust this to your frontend's actual origin
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }

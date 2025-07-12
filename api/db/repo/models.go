@@ -5,13 +5,96 @@
 package repo
 
 import (
+	"time"
+
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type Message struct {
+type Car struct {
+	Uuid            string `json:"uuid"`
+	OwnerUuid       string `json:"owner_uuid"`
+	Status          string `json:"status"`
+	PickupLocation  string `json:"pickup_location"`
+	DropoffLocation string `json:"dropoff_location"`
+	Visibility      string `json:"visibility"`
+}
+
+type CarDetail struct {
+	Uuid               string           `json:"uuid"`
+	CarUuid            string           `json:"car_uuid"`
+	Name               string           `json:"name"`
+	Model              string           `json:"model"`
+	EnergyType         string           `json:"energy_type"`
+	TransmissionType   string           `json:"transmission_type"`
+	Brand              string           `json:"brand"`
+	NoSeats            *int32           `json:"no_seats"`
+	Color              string           `json:"color"`
+	ChassisNo          string           `json:"chassis_no"`
+	Vin                string           `json:"vin"`
+	PricePerDay        pgtype.Numeric   `json:"price_per_day"`
+	CatDoc             string           `json:"cat_doc"`
+	VisiteTechniqueDoc string           `json:"visite_technique_doc"`
+	InsuranceDoc       string           `json:"insurance_doc"`
+	DateAdded          pgtype.Timestamp `json:"date_added"`
+}
+
+type CarGallery struct {
+	Uuid       string           `json:"uuid"`
+	CarUuid    string           `json:"car_uuid"`
+	Image      string           `json:"image"`
+	UploadedAt pgtype.Timestamp `json:"uploaded_at"`
+}
+
+type Payment struct {
+	Uuid          string           `json:"uuid"`
+	RentalUuid    *string          `json:"rental_uuid"`
+	AmountPaid    pgtype.Numeric   `json:"amount_paid"`
+	PaymentMethod string           `json:"payment_method"`
+	Reference     string           `json:"reference"`
+	Status        string           `json:"status"`
+	DatePaid      pgtype.Timestamp `json:"date_paid"`
+}
+
+type Reservation struct {
+	Uuid          string           `json:"uuid"`
+	CarUuid       *string          `json:"car_uuid"`
+	CustomerUuid  string           `json:"customer_uuid"`
+	StartDate     time.Time        `json:"start_date"`
+	EndDate       time.Time        `json:"end_date"`
+	RentalAmount  pgtype.Numeric   `json:"rental_amount"`
+	PenaltyAmount pgtype.Numeric   `json:"penalty_amount"`
+	Status        string           `json:"status"`
+	CreatedAt     pgtype.Timestamp `json:"created_at"`
+}
+
+type Thread struct {
 	ID        string           `json:"id"`
-	Thread    string           `json:"thread"`
-	Sender    string           `json:"sender"`
-	Content   string           `json:"content"`
+	Topic     string           `json:"topic"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
+	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+}
+
+type User struct {
+	Uuid          string           `json:"uuid"`
+	Fname         string           `json:"fname"`
+	Lname         string           `json:"lname"`
+	Email         string           `json:"email"`
+	Gender        string           `json:"gender"`
+	Phone         string           `json:"phone"`
+	ZipCode       string           `json:"zip_code"`
+	City          string           `json:"city"`
+	Street        string           `json:"street"`
+	Region        string           `json:"region"`
+	PhotoUrl      string           `json:"photo_url"`
+	Role          string           `json:"role"`
+	AccountStatus string           `json:"account_status"`
+	CreatedAt     pgtype.Timestamp `json:"created_at"`
+}
+
+type Verification struct {
+	Uuid             string `json:"uuid"`
+	UserUuid         string `json:"user_uuid"`
+	VerificationType string `json:"verification_type"`
+	VerDoc1Url       string `json:"ver_doc1_url"`
+	VerDoc2Url       string `json:"ver_doc2_url"`
 }

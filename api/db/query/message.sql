@@ -1,17 +1,4 @@
--- name: CreateMessage :one
-INSERT INTO message (thread, sender, content)
-VALUES ($1, $2, $3)
-RETURNING *;
-
--- name: GetMessageByID :one
-SELECT * FROM message
-WHERE id = $1;
-
--- name: GetMessagesByThread :many
-SELECT * FROM message
-WHERE thread = $1
-ORDER BY created_at DESC;
-
--- name: DeleteMessage :exec
-DELETE FROM message
-WHERE id = $1;
+-- name: CreateUser :one
+INSERT INTO "user" (fname,lname,email,gender,phone,zip_code,city,street,region,role)
+VALUES ($1, $2, $3,$4,$5,$6,$7,$8,$9,$10)
+RETURNING email;
