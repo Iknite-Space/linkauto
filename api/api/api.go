@@ -5,16 +5,22 @@ import (
 
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/repo"
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/store"
+	"github.com/Iknite-Space/c4-project-boilerplate/api/service/campay"
+	"github.com/Iknite-Space/c4-project-boilerplate/api/service/cloudinary"
 	"github.com/gin-gonic/gin"
 )
 
 type MessageHandler struct {
-	querier store.Store
+	querier    store.Store
+	campay     *campay.Client
+	cloudinary *cloudinary.Client
 }
 
-func NewMessageHandler(querier store.Store) *MessageHandler {
+func NewMessageHandler(querier store.Store, campay *campay.Client, cloudinary *cloudinary.Client) *MessageHandler {
 	return &MessageHandler{
-		querier: querier,
+		querier:    querier,
+		campay:     campay,
+		cloudinary: cloudinary,
 	}
 }
 

@@ -16,6 +16,8 @@ import (
 	"github.com/Iknite-Space/c4-project-boilerplate/api/api"
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/repo"
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/store"
+	"github.com/Iknite-Space/c4-project-boilerplate/api/service/campay"
+	"github.com/Iknite-Space/c4-project-boilerplate/api/service/cloudinary"
 )
 
 // DBConfig holds the database configuration. This struct is populated from the .env in the current directory.
@@ -32,6 +34,7 @@ type DBConfig struct {
 type Config struct {
 	ListenPort     uint16 `conf:"env:LISTEN_PORT,required"`
 	MigrationsPath string `conf:"env:MIGRATIONS_PATH,required"`
+	CAPIKEY        string `conf:"CLOUNDINARY_APIKEY"`
 	DB             DBConfig
 }
 
@@ -77,9 +80,11 @@ func run() error {
 	}
 
 	querier := store.NewStore(db)
+	campay := campay.New("https://api.campay.com", "token")
+	cloudinary := cloudinary.New("https://api.cloudinary.com/v1_1/" + config.CAPIKEY)
 
 	// We create a new http handler using the database querier.
-	handler := api.NewMessageHandler(querier).WireHttpHandler()
+	handler := api.NewMessageHandler(querier, campay, cloudinary).WireHttpHandler()
 
 	// And finally we start the HTTP server on the configured port.
 	err = http.ListenAndServe(fmt.Sprintf(":%d", config.ListenPort), handler)
