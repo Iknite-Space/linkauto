@@ -61,7 +61,7 @@ const Navbar = ({toggleMenu}) => {
             <span className="absolute px-1 text-xs text-white rounded-full -top-1 -right-1 bg-accent">3</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs font-medium leading-3">ichami</span>
+            <span className="text-xs font-medium leading-3">Ichami</span>
             <span className="text-SecondaryTextColor text-right text-[10px]">Admin</span>
           </div>
           <img
