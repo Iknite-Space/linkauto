@@ -1,20 +1,23 @@
 // Register.jsx
-import React from "react";
+import {useState} from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Select from "react-select";
+import api from "../../services/axios";
+import { auth,createUserWithEmailAndPassword,sendEmailVerification } from "../../services/firebase";
+import { toast } from 'react-toastify';
+import Button from "../../components/UI/Button";
 
 // Gender and Role Options
 const genderOptions = [
   { value: "male", label: "Male" },
   { value: "female", label: "Female" },
-  { value: "other", label: "Other" },
 ];
 
 const roleOptions = [
-  { value: "user", label: "Customer" },
-  { value: "carOwner", label: "Car Owner" },
+  { value: "customer", label: "Customer" },
+  { value: "car_owner", label: "Car Owner" },
 ];
 
 // Zod Schema
@@ -48,10 +51,47 @@ export default function Register() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = () => {
-  console.log(FormData);
-};
+  const [loading,setLoading] = useState(false)
 
+  const onSubmit = async (data) => {
+      setLoading(true)
+       //format the request body
+       const user = {
+        fname: data.fname,
+        lname: data.lname,
+        email: data.email,
+        gender: data.gender,
+        phone: data.phone,
+        zip_code: data.zip_code,
+        city: data.city,
+        street: data.street,
+        region: data.region,
+        role: data.role,
+      }
+    try {
+      //first add the user to firebase
+      const userCredential = await createUserWithEmailAndPassword(auth,user.email,data.password)
+      const registeredUser = userCredential.user;
+      //now send email verification link to the registered user
+      await sendEmailVerification(registeredUser)
+      const res = await api.post("/register",user)
+      if(res.data.success){
+        toast.success("user created successfully")
+      }else{
+        //if the db operation was not successfull, delete the user from firebase 
+        await registeredUser.delete();
+        toast.error("Failed to register user, Please try again later")
+      }
+    } catch (error) {
+      if (error.code === "auth/email-already-in-use") {
+        toast.error("Email already in use.");
+      }else{
+        console.error("unexpected error",error)
+      }
+    }finally{
+      setLoading(false)
+    }
+};
 
   return (
     <div className="grid grid-cols-12 w-11/12 max-w-5xl bg-white shadow-lg rounded-2xl overflow-hidden m-[30px]">
@@ -106,8 +146,10 @@ export default function Register() {
               <Select
                 {...field}
                 options={genderOptions}
+                getOptionLabel={(option) => option.label}
+                value={genderOptions.find(option => option.value === field.value)} // ensure correct initial value
+                onChange={(option) => field.onChange(option?.value)} // pass only string
                 placeholder="Select Gender"
-                onChange={(option) => field.onChange(option?.value)}
               />
             )}
           />
@@ -123,8 +165,11 @@ export default function Register() {
               <Select
                 {...field}
                 options={roleOptions}
+                getOptionValue={(option) => option.value}
+                getOptionLabel={(option) => option.label}
+                value={roleOptions.find(option => option.value === field.value)} // ensure correct initial value
+                onChange={(option) => field.onChange(option?.value)} // pass only string
                 placeholder="Select Role"
-                onChange={(option) => field.onChange(option?.value)}
               />
             )}
           />
@@ -136,10 +181,13 @@ export default function Register() {
           </div>
           {(errors.password || errors.confirm_password) && (<p className="text-red text-sm"> {[errors.password?.message, errors.confirm_password?.message] .filter(Boolean) .join(" and ")}</p>)}
 
-
-          <button type="submit" className="w-full bg-primary text-whiteColor py-2 rounded-md hover:bg-secondary transition">
-            SignUp
-          </button>
+          <Button
+          type="submit"
+          ariaLabel="create user"
+          loading={loading}
+          className="w-full">
+            Sign Up
+          </Button>
         </form>
       </div>
     </div>

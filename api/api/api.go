@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/repo"
@@ -33,10 +34,11 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	}))
 
 	r.GET("//healthcheck", h.handleHealthcheck)
-	r.POST("/message", h.handleCreateMessage)
-	r.GET("/message/:id", h.handleGetMessage)
-	r.DELETE("/message/:id", h.handleDeleteMessage)
-	r.GET("/thread/:id/messages", h.handleGetThreadMessages)
+	r.POST("/register", h.handleCreateUser)
+	// r.POST("/message", h.handleCreateMessage)
+	// r.GET("/message/:id", h.handleGetMessage)
+	// r.DELETE("/message/:id", h.handleDeleteMessage)
+	// r.GET("/thread/:id/messages", h.handleGetThreadMessages)
 
 	return r
 }
@@ -45,71 +47,58 @@ func (h *MessageHandler) handleHealthcheck(c *gin.Context) {
 	c.String(http.StatusOK, "ok")
 }
 
-func (h *MessageHandler) handleCreateMessage(c *gin.Context) {
-	var req repo.CreateMessageParams
-	err := c.ShouldBindBodyWithJSON(&req)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+// func (h *MessageHandler) handleCreateMessage(c *gin.Context) {
+// 	var req repo.CreateMessageParams
+// 	err := c.ShouldBindBodyWithJSON(&req)
+// 	if err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
 
-	message, err := h.querier.Do().CreateMessage(c, req)
-	if err != nil {
+// 	message, err := h.querier.Do().CreateMessage(c, req)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	c.JSON(http.StatusOK, message)
+// }
+
+// func (h *MessageHandler) handleGetMessage(c *gin.Context) {
+// 	id := c.Param("id")
+// 	if id == "" {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": "id is required"})
+// 		return
+// 	}
+
+// 	message, err := h.querier.Do().GetMessageByID(c, id)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	c.JSON(http.StatusOK, message)
+// }
+
+func (h *MessageHandler) handleCreateUser(c *gin.Context) {
+	var req repo.CreateUserParams
+
+	//confirm the submitted request body
+	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, message)
-}
-
-func (h *MessageHandler) handleGetMessage(c *gin.Context) {
-	id := c.Param("id")
-	if id == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "id is required"})
-		return
-	}
-
-	message, err := h.querier.Do().GetMessageByID(c, id)
+	//insert the new user to db
+	email, err := h.querier.Do().CreateUser(c, req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, message)
-}
-
-func (h *MessageHandler) handleGetThreadMessages(c *gin.Context) {
-	id := c.Param("id")
-	if id == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "id is required"})
-		return
-	}
-
-	messages, err := h.querier.Do().GetMessagesByThread(c, id)
-	if err != nil {
+		fmt.Println("CreateUser error:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"thread":   id,
-		"topic":    "example",
-		"messages": messages,
+		"success": true,
+		"email":   email,
 	})
-}
-
-func (h *MessageHandler) handleDeleteMessage(c *gin.Context) {
-	id := c.Param("id")
-	if id == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "id is required"})
-		return
-	}
-
-	err := h.querier.Do().DeleteMessage(c, id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, "ok")
 }
