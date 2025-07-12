@@ -1,24 +1,20 @@
-import {Suspense,lazy} from "react";
+import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./components/shared/ErrorBoundary";
-import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
-import 'react-toastify/dist/ReactToastify.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import 'react-toastify/dist/ReactToastify.css';
 import Loading from "./components/shared/Loading";
 
-//lazy imports
-
-//layouts and other shared c
+// Lazy imports
 const AuthLayout = lazy(() => import("./layouts/AuthLayout"));
 const DashboardLayout = lazy(() => import("./layouts/DashboardLayout"));
 const ToastContainer = lazy(() => import("react-toastify").then(module => ({ default: module.ToastContainer })));
 const NotFound = lazy(() => import("./components/shared/NotFound"));
 
-//public components/pages
+// Public pages
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const Login = lazy(() => import("./pages/auth/Login"));
 const Register = lazy(() => import("./pages/auth/Register"));
-
-//protected components
 
 function App() {
   return (
@@ -26,26 +22,26 @@ function App() {
       <Router>
         <Suspense fallback={<Loading />}>
           <Routes>
-            {/* public routes */}
+            {/* Public routes */}
             <Route element={<AuthLayout />}>
               <Route path="/" element={<ComingSoon />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="*" element={<NotFound />} />
             </Route>
 
-            {/* protected */}
+            {/* Protected routes */}
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<Login />} />
             </Route>
+
+            {/* Catch-all */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
         <ToastContainer />
       </Router>
     </ErrorBoundary>
-
   );
 }
 
 export default App;
-
