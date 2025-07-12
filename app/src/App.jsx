@@ -4,6 +4,7 @@ import ErrorFallback from "./components/shared/ErrorBoundary";
 import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css'
 import Loading from "./components/shared/Loading";
+import { AuthProvider } from "./contexts/AuthContext";
 
 //lazy imports
 
@@ -22,6 +23,7 @@ const Login = lazy(() => import("./pages/auth/Login"));
 function App() {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <AuthProvider>
       <Router>
         <Suspense fallback={<Loading />}>
           <Routes>
@@ -40,6 +42,7 @@ function App() {
         </Suspense>
         <ToastContainer />
       </Router>
+      </AuthProvider>
     </ErrorBoundary>
 
   );
