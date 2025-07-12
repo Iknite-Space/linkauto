@@ -35,6 +35,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 
 	r.GET("//healthcheck", h.handleHealthcheck)
 	r.POST("/register", h.handleCreateUser)
+	r.POST("/login", h.handleLogin)
 	// r.POST("/message", h.handleCreateMessage)
 	// r.GET("/message/:id", h.handleGetMessage)
 	// r.DELETE("/message/:id", h.handleDeleteMessage)
@@ -100,5 +101,29 @@ func (h *MessageHandler) handleCreateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"email":   email,
+	})
+}
+
+type loginParam struct {
+	Email string `json:"email"`
+}
+
+func (h *MessageHandler) handleLogin(c *gin.Context) {
+	var req loginParam
+
+	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err := h.querier.Do().GetUserByEmail(c, req.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"user":    user,
 	})
 }
