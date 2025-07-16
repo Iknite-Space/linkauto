@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../../components/shared/Input";
 import SelectInput from "../../components/shared/SelectInput";
+import Select from "react-select";
 
 
 // Options
