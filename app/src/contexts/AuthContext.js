@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext } from "react";
 import { auth } from "../services/firebase";
+import api from "../services/axios";
 import { onAuthStateChanged } from "firebase/auth";
 import PropTypes from "prop-types";
 
@@ -10,23 +11,41 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setCurrentUser({
-          uid: user.uid,
-          email: email,
-        });
+        try {
+          // Send request to your Go backend login endpoint
+          const response = await api.post("/login", {
+            email: user.email,
+          });
+  
+          const userDetails = response.data.user;
+  
+          setCurrentUser({
+            uuid: userDetails.Uuid,
+            email: userDetails.email,
+            role: userDetails.role,
+            lName: userDetails.lname,
+            status: userDetails.account_status,
+            // add other fields as needed
+          });
+        } catch (err) {
+          console.error("Failed to fetch user data from backend:", err);
+          setCurrentUser({
+            uid: user.uid,
+            email: user.email,
+          }); // fallback
+        }
       } else {
-        setCurrentUser({
-          uid:"012",
-          email:"ichami"
-        });
+        setCurrentUser(null);
       }
+  
       setLoading(false);
     });
-
+  
     return unsubscribe;
   }, []);
+  
 
   return (
     <AuthContext.Provider value={{ currentUser,loading }}>
