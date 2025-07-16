@@ -5,10 +5,14 @@ import { FaBell, FaSearch, FaBars } from 'react-icons/fa';
 import SearchBar from '../SearchBar';
 import Loading from './Loading';
 import PropTypes from 'prop-types';
+import { useUser } from '../../hooks/UseAuth';
 
 const Modal = lazy(() => import('../UI/Modal'));
 
 const Navbar = ({toggleMenu}) => {
+  const { currentUser } = useUser();
+  //if user is not logged in, return null
+  if (!currentUser) return null;
   const [isModalOpen, setIsModalOpen] = useState(false);
   //handle search
   const handleSearch = (e) => {
@@ -19,7 +23,7 @@ const Navbar = ({toggleMenu}) => {
     <div className="grid grid-cols-2 gap-4">
       {/* left */}
       <div className="flex-col hidden gap-2 lg:flex">
-        <h2 className="text-xl leading-3 text-PrimaryTextColor">Welcome, Ichami!</h2>
+        <h2 className="text-xl leading-3 text-PrimaryTextColor">Welcome, {currentUser.lName}!</h2>
         <p className="text-xs text-SecondaryTextColor">Today is a great day for car rental service</p>
       </div>
 
@@ -62,7 +66,7 @@ const Navbar = ({toggleMenu}) => {
           </div>
           <div className="flex flex-col">
             <span className="text-xs font-medium leading-3">Ichami</span>
-            <span className="text-SecondaryTextColor text-right text-[10px]">Admin</span>
+            <span className="text-SecondaryTextColor text-right text-[10px]">{currentUser.role}</span>
           </div>
           <img
             src="/logo192.png"

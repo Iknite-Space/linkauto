@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import Loading from "./components/shared/Loading";
 import { AuthProvider } from "./contexts/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Lazy imports
 const AuthLayout = lazy(() => import("./layouts/AuthLayout"));
@@ -26,15 +27,16 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route element={<AuthLayout />}>
-              <Route path="/" element={<ComingSoon />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
             </Route>
 
             {/* Protected routes */}
-            <Route element={<DashboardLayout />}>
-              <Route path="/dashboard" element={<Login />} />
+            <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+              <Route index element={<ComingSoon />} />
+              {/* <Route path="profile" element={<ComingSoon />} /> */}
             </Route>
+
 
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
