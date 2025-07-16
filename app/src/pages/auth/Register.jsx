@@ -1,15 +1,14 @@
+
 // Register.jsx
-import {useState} from "react";
-import { useForm, Controller } from "react-hook-form";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Select from "react-select";
-import api from "../../services/axios";
-import { auth,createUserWithEmailAndPassword,sendEmailVerification } from "../../services/firebase";
-import { toast } from 'react-toastify';
-import Button from "../../components/UI/Button";
+import Input from "../../components/shared/Input";
+import SelectInput from "../../components/shared/SelectInput";
 
-// Gender and Role Options
+
+// Options
 const genderOptions = [
   { value: "male", label: "Male" },
   { value: "female", label: "Female" },
@@ -20,7 +19,7 @@ const roleOptions = [
   { value: "car_owner", label: "Car Owner" },
 ];
 
-// Zod Schema
+// Schema
 const schema = z
   .object({
     fname: z.string().min(1, "First Name is required"),
@@ -51,47 +50,9 @@ export default function Register() {
     resolver: zodResolver(schema),
   });
 
-  const [loading,setLoading] = useState(false)
-
-  const onSubmit = async (data) => {
-      setLoading(true)
-       //format the request body
-       const user = {
-        fname: data.fname,
-        lname: data.lname,
-        email: data.email,
-        gender: data.gender,
-        phone: data.phone,
-        zip_code: data.zip_code,
-        city: data.city,
-        street: data.street,
-        region: data.region,
-        role: data.role,
-      }
-    try {
-      //first add the user to firebase
-      const userCredential = await createUserWithEmailAndPassword(auth,user.email,data.password)
-      const registeredUser = userCredential.user;
-      //now send email verification link to the registered user
-      await sendEmailVerification(registeredUser)
-      const res = await api.post("/register",user)
-      if(res.data.success){
-        toast.success("user created successfully")
-      }else{
-        //if the db operation was not successfull, delete the user from firebase 
-        await registeredUser.delete();
-        toast.error("Failed to register user, Please try again later")
-      }
-    } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
-        toast.error("Email already in use.");
-      }else{
-        console.error("unexpected error",error)
-      }
-    }finally{
-      setLoading(false)
-    }
-};
+  const onSubmit = (data) => {
+    console.log("Form Submitted:", data);
+  };
 
   return (
     <div className="grid grid-cols-12 w-11/12 max-w-5xl bg-white shadow-lg rounded-2xl overflow-hidden m-[30px]">
@@ -106,7 +67,7 @@ export default function Register() {
       {/* Right Side */}
       <div className="col-span-12 md:col-span-9 p-8">
         <div className="text-right text-body text-PrimaryTextColor mb-4">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <a href="./Login" className="text-accent font-body hover:underline">
             Sign in
           </a>
@@ -114,32 +75,28 @@ export default function Register() {
 
         <h2 className="text-heading font-heading mb-6">Create Account</h2>
 
-        
-
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Name */}
           <div className="flex gap-4">
-            <input {...register("fname")} placeholder="First Name" className="w-1/2 px-4 py-2 border border-gray-300 rounded-md" />
-            <input {...register("lname")} placeholder="Last Name" className="w-1/2 px-4 py-2 border border-gray-300 rounded-md" />
+            <Input name="fname" register={register} error={errors.fname} placeholder="First Name" />
+            <Input name="lname" register={register} error={errors.lname} placeholder="Last Name" />
           </div>
-          {(errors.fname || errors.lname) && (<p className="text-red text-sm">{[errors.fname?.message, errors.lname?.message].filter(Boolean) .join(" and ")}</p>)}
 
+          {/* Email and Phone */}
+          <Input name="email" register={register} error={errors.email} placeholder="Email" />
+          <Input name="phone" register={register} error={errors.phone} placeholder="Phone Number" />
 
-          <input {...register("email")} placeholder="Email" className="w-full px-4 py-2 border border-gray-300 rounded-md" />
-          {errors.email && <p className="text-red text-sm">{errors.email.message}</p>}
-          <input {...register("phone")} placeholder="Phone Number" className="w-full px-4 py-2 border border-gray-300 rounded-md" />
-          {errors.phone && <p className="text-red text-sm">{errors.phone.message}</p>}
-
+          {/* Address */}
           <div className="flex gap-4">
-            <input {...register("zip_code")} placeholder="Zip Code" className="w-1/3 px-4 py-2 border border-gray-300 rounded-md" />
-            <input {...register("city")} placeholder="City" className="w-1/3 px-4 py-2 border border-gray-300 rounded-md" />
-            <input {...register("region")} placeholder="Region" className="w-1/3 px-4 py-2 border border-gray-300 rounded-md" />
+            <Input name="zip_code" register={register} error={errors.zip_code} placeholder="Zip Code" className="w-1/3" />
+            <Input name="city" register={register} error={errors.city} placeholder="City" className="w-1/3" />
+            <Input name="region" register={register} error={errors.region} placeholder="Region" className="w-1/3" />
           </div>
-          {(errors.zip_code || errors.city || errors.region) && (<p className="text-red text-sm">{[[errors.zip_code?.message, errors.city?.message].filter(Boolean).join(" , "), errors.region?.message] .filter(Boolean) .join(" and ")}</p> )}
 
-          <input {...register("street")} placeholder="Street" className="w-full px-4 py-2 border border-gray-300 rounded-md" />
-          {errors.street && <p className="text-red text-sm">{errors.street.message}</p>}
+          <Input name="street" register={register} error={errors.street} placeholder="Street" />
 
-          <Controller
+          {/* Gender and Role */}
+          <SelectInput
             name="gender"
             control={control}
             render={({ field }) => (
@@ -152,13 +109,12 @@ export default function Register() {
                 placeholder="Select Gender"
               />
             )}
+            options={genderOptions}
+            placeholder="Select Gender"
+            error={errors.gender}
           />
-          {errors.gender && <p className="text-red text-sm">{errors.gender.message}</p>}
 
-          {/* <input {...register("photo_url")} placeholder="Photo URL" className="w-full px-4 py-2 border border-gray-300 rounded-md" />
-          {errors.photo_url && <p className="text-red-500 text-sm">{errors.photo_url.message}</p>} */}
-
-          <Controller
+          <SelectInput
             name="role"
             control={control}
             render={({ field }) => (
@@ -172,22 +128,36 @@ export default function Register() {
                 placeholder="Select Role"
               />
             )}
+            options={roleOptions}
+            placeholder="Select Role"
+            error={errors.role}
           />
-          {errors.role && <p className="text-red text-sm">{errors.role.message}</p>}
 
+          {/* Passwords */}
           <div className="flex gap-4">
-            <input type="password" {...register("password")} placeholder="Password" className="w-1/2 px-4 py-2 border border-gray-300 rounded-md" />
-            <input type="password" {...register("confirm_password")} placeholder="Confirm Password" className="w-1/2 px-4 py-2 border border-gray-300 rounded-md" />
+            <Input
+              name="password"
+              type="password"
+              register={register}
+              error={errors.password}
+              placeholder="Password"
+            />
+            <Input
+              name="confirm_password"
+              type="password"
+              register={register}
+              error={errors.confirm_password}
+              placeholder="Confirm Password"
+            />
           </div>
-          {(errors.password || errors.confirm_password) && (<p className="text-red text-sm"> {[errors.password?.message, errors.confirm_password?.message] .filter(Boolean) .join(" and ")}</p>)}
 
-          <Button
-          type="submit"
-          ariaLabel="create user"
-          loading={loading}
-          className="w-full">
+          {/* Submit */}
+          <button
+            type="submit"
+            className="w-full bg-primary text-whiteColor py-2 rounded-md hover:bg-secondary transition"
+          >
             Sign Up
-          </Button>
+          </button>
         </form>
       </div>
     </div>

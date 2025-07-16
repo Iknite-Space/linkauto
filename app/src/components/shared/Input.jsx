@@ -1,0 +1,29 @@
+import React from "react";
+
+export default function Input({
+  label,
+  name,
+  register,
+  error,
+  type = "text",
+  placeholder,
+  className = "",
+}) {
+  return (
+    <div className="w-full">
+      {label && (
+        <label htmlFor={name} className="block text-sm font-medium mb-1">
+          {label}
+        </label>
+      )}
+      <input
+        id={name}
+        type={type}
+        placeholder={placeholder}
+        {...register(name)}
+        className={`w-full px-4 py-2 border border-gray-300 rounded-md ${className}`}
+      />
+      {error && <p className="text-red text-sm mt-1">{error.message}</p>}
+    </div>
+  );
+}
