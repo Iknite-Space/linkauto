@@ -29,3 +29,17 @@ export default function SelectInput({
     </div>
   );
 }
+
+SelectInput.propTypes = {
+  name: PropTypes.string.isRequired,
+  control: PropTypes.object.isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string,
+    })
+  ).isRequired,
+  placeholder: PropTypes.string,
+  error: PropTypes.object,
+  className: PropTypes.string,
+};

@@ -27,3 +27,13 @@ export default function Input({
     </div>
   );
 }
+
+Input.propTypes = {
+    label: PropTypes.string,
+    name: PropTypes.string.isRequired,
+  register: PropTypes.func.isRequired,
+  error: PropTypes.object,
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
+  className: PropTypes.string,
+}
