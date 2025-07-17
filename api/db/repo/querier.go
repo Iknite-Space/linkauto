@@ -11,6 +11,7 @@ import (
 type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (string, error)
 	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
+	UploadVerificationDocs(ctx context.Context, arg UploadVerificationDocsParams) error
 }
 
 var _ Querier = (*Queries)(nil)

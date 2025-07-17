@@ -5,3 +5,7 @@ RETURNING email;
 
 -- name: GetUserByEmail :one
 SELECT Uuid,email,lname,role,account_status FROM "user" WHERE email = $1;
+
+-- name: UploadVerificationDocs :exec
+INSERT INTO verification (user_uuid, verification_type, ver_doc1_url,ver_doc2_url)
+VALUES ($1, $2, $3, $4);
