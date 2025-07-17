@@ -70,3 +70,25 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEm
 	)
 	return i, err
 }
+
+const uploadVerificationDocs = `-- name: UploadVerificationDocs :exec
+INSERT INTO verification (user_uuid, verification_type, ver_doc1_url,ver_doc2_url)
+VALUES ($1, $2, $3, $4)
+`
+
+type UploadVerificationDocsParams struct {
+	UserUuid         string `json:"user_uuid"`
+	VerificationType string `json:"verification_type"`
+	VerDoc1Url       string `json:"ver_doc1_url"`
+	VerDoc2Url       string `json:"ver_doc2_url"`
+}
+
+func (q *Queries) UploadVerificationDocs(ctx context.Context, arg UploadVerificationDocsParams) error {
+	_, err := q.db.Exec(ctx, uploadVerificationDocs,
+		arg.UserUuid,
+		arg.VerificationType,
+		arg.VerDoc1Url,
+		arg.VerDoc2Url,
+	)
+	return err
+}

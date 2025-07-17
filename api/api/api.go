@@ -127,3 +127,57 @@ func (h *MessageHandler) handleLogin(c *gin.Context) {
 		"user":    user,
 	})
 }
+
+// upload verification documents
+func (h *MessageHandler) handleUploadVerificationDocs(c *gin.Context) {
+	//parse multipart form data
+	if err := c.Request.ParseMultipartForm(10 << 20); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to parse form data"})
+		return
+	}
+
+	//retrive the file from the form data
+	file1, header, err := c.Request.FormFile("ver_doc1-url")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to retrieve ver_doc1"})
+		return
+	}
+	defer file1.Close()
+
+	file2, fileHeader, err := c.Request.FormFile("ver_doc2_url")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to retrieve ver_doc2"})
+		return
+	}
+	defer file2.Close()
+
+	//upload the file to cloudinary
+	uploadURL1, err := h.cloudinary.UploadFile(file1, header, "user_verification")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload ver_doc1: " + err.Error()})
+		return
+	}
+	uploadURL2, err := h.cloudinary.UploadFile(file2, fileHeader, "user_verification")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload ver_doc2: " + err.Error()})
+		return
+	}
+
+	//format the upload verification params
+	req := repo.UploadVerificationDocsParams{
+		UserUuid:         c.GetString("user_uuid"),
+		VerificationType: c.GetString("verification_type"),
+		VerDoc1Url:       uploadURL1,
+		VerDoc2Url:       uploadURL2,
+	}
+
+	//insert the verification docs to db
+	if err := h.querier.Do().UploadVerificationDocs(c, req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload verification documents: " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Verification documents uploaded successfully",
+	})
+}

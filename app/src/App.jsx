@@ -34,7 +34,7 @@ function App() {
             {/* Protected routes */}
             <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
               <Route index element={<ComingSoon />} />
-              {/* <Route path="profile" element={<ComingSoon />} /> */}
+              
             </Route>
 
 
