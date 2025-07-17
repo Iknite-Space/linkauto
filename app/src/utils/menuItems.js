@@ -25,15 +25,15 @@ import {
           visible: ["admin", "owner", "customer"],
         },
         {
-          label: "Fleet",
+          label: "Verifications",
           icon: <FiTruck />,
           visible: ["admin", "owner"],
           children: [
             {
-              label: "All Cars",
+              label: "users",
               icon: <FiList />,
-              href: "dashboard/fleet/cars",
-              visible: ["admin", "owner"],
+              href: "/dashboard/user-verification",
+              visible: ["admin"],
             },
             {
               label: "Add Car",
