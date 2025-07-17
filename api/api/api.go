@@ -36,6 +36,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.GET("//healthcheck", h.handleHealthcheck)
 	r.POST("/register", h.handleCreateUser)
 	r.POST("/login", h.handleLogin)
+	r.POST("/user-verification", h.handleUploadVerificationDocs)
 	// r.POST("/message", h.handleCreateMessage)
 	// r.GET("/message/:id", h.handleGetMessage)
 	// r.DELETE("/message/:id", h.handleDeleteMessage)
@@ -142,14 +143,23 @@ func (h *MessageHandler) handleUploadVerificationDocs(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to retrieve ver_doc1"})
 		return
 	}
-	defer file1.Close()
+	defer func() {
+		if err := file1.Close(); err != nil {
+			// Log or ignore if non-critical
+			fmt.Println("warning: failed to close file1:", err)
+		}
+	}()
 
 	file2, fileHeader, err := c.Request.FormFile("ver_doc2_url")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to retrieve ver_doc2"})
 		return
 	}
-	defer file2.Close()
+	defer func() {
+		if err := file2.Close(); err != nil {
+			fmt.Println("warning: failed to close file2:", err)
+		}
+	}()
 
 	//upload the file to cloudinary
 	uploadURL1, err := h.cloudinary.UploadFile(file1, header, "user_verification")

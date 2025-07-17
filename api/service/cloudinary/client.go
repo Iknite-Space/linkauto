@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -22,7 +23,12 @@ func New(baseURL string) *Client {
 }
 
 func (c *Client) UploadFile(file multipart.File, fileHeader *multipart.FileHeader, uploadPreset string) (string, error) {
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			fmt.Println("warning: failed to close uploaded file:", err)
+		}
+	}()
+
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
@@ -40,14 +46,20 @@ func (c *Client) UploadFile(file multipart.File, fileHeader *multipart.FileHeade
 		return "", err
 	}
 
-	writer.Close()
+	if err := writer.Close(); err != nil {
+		return "", err
+	}
 
 	//make new request
 	resp, err := http.Post(c.Client.BaseURL+"/upload", writer.FormDataContentType(), body)
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Println("warning: failed to close response body:", err)
+		}
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return "", errors.New("cloudinary upload failed: " + resp.Status)
