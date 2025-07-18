@@ -34,7 +34,7 @@ type DBConfig struct {
 type Config struct {
 	ListenPort     uint16 `conf:"env:LISTEN_PORT,required"`
 	MigrationsPath string `conf:"env:MIGRATIONS_PATH,required"`
-	CAPIKEY        string `conf:"CLOUNDINARY_APIKEY"`
+	Cloud_Name     string `conf:"env:CLOUD_NAME"`
 	DB             DBConfig
 }
 
@@ -81,7 +81,7 @@ func run() error {
 
 	querier := store.NewStore(db)
 	campay := campay.New("https://api.campay.com", "token")
-	cloudinary := cloudinary.New("https://api.cloudinary.com/v1_1/" + config.CAPIKEY)
+	cloudinary := cloudinary.New("https://api.cloudinary.com/v1_1/" + config.Cloud_Name)
 
 	// We create a new http handler using the database querier.
 	handler := api.NewMessageHandler(querier, campay, cloudinary).WireHttpHandler()

@@ -3,7 +3,6 @@ package cloudinary
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -51,7 +50,7 @@ func (c *Client) UploadFile(file multipart.File, fileHeader *multipart.FileHeade
 	}
 
 	//make new request
-	resp, err := http.Post(c.Client.BaseURL+"/upload", writer.FormDataContentType(), body)
+	resp, err := http.Post(c.Client.BaseURL+"/image/upload", writer.FormDataContentType(), body)
 	if err != nil {
 		return "", err
 	}
@@ -62,7 +61,8 @@ func (c *Client) UploadFile(file multipart.File, fileHeader *multipart.FileHeade
 	}()
 
 	if resp.StatusCode != http.StatusOK {
-		return "", errors.New("cloudinary upload failed: " + resp.Status)
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		return "", fmt.Errorf("cloudinary upload failed: %s — %s", resp.Status, string(bodyBytes))
 	}
 
 	var response Response

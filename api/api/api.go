@@ -132,6 +132,16 @@ func (h *MessageHandler) handleLogin(c *gin.Context) {
 
 // upload verification documents
 func (h *MessageHandler) handleUploadVerificationDocs(c *gin.Context) {
+	//check if user already submitted verification document
+	existing, err := h.querier.Do().GetVerificationByUserUuid(c, c.PostForm("user_uuid"))
+	if err == nil && existing.UserUuid != "" {
+		c.JSON(http.StatusConflict, gin.H{
+			"success": false,
+			"error":   "Verification documents have already been submitted for this user",
+		})
+		return
+	}
+
 	//parse multipart form data
 	if err := c.Request.ParseMultipartForm(10 << 20); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to parse form data"})
@@ -139,7 +149,7 @@ func (h *MessageHandler) handleUploadVerificationDocs(c *gin.Context) {
 	}
 
 	//retrive the file from the form data
-	file1, header, err := c.Request.FormFile("ver_doc1-url")
+	file1, header, err := c.Request.FormFile("ver_doc1_url")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to retrieve ver_doc1"})
 		return
@@ -163,12 +173,13 @@ func (h *MessageHandler) handleUploadVerificationDocs(c *gin.Context) {
 	}()
 
 	//upload the file to cloudinary
-	uploadURL1, err := h.cloudinary.UploadFile(file1, header, "user_verification")
+	uploadURL1, err := h.cloudinary.UploadFile(file1, header, "user-verification")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload ver_doc1: " + err.Error()})
+		fmt.Println("UploadFile error:", err.Error())
 		return
 	}
-	uploadURL2, err := h.cloudinary.UploadFile(file2, fileHeader, "user_verification")
+	uploadURL2, err := h.cloudinary.UploadFile(file2, fileHeader, "user-verification")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload ver_doc2: " + err.Error()})
 		return
@@ -176,8 +187,8 @@ func (h *MessageHandler) handleUploadVerificationDocs(c *gin.Context) {
 
 	//format the upload verification params
 	req := repo.UploadVerificationDocsParams{
-		UserUuid:         c.GetString("user_uuid"),
-		VerificationType: c.GetString("verification_type"),
+		UserUuid:         c.PostForm("user_uuid"),
+		VerificationType: c.PostForm("verification_type"),
 		VerDoc1Url:       uploadURL1,
 		VerDoc2Url:       uploadURL2,
 	}
