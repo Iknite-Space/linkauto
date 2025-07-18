@@ -22,6 +22,7 @@ export default function SelectInput({
             {...field}
             options={options}
             placeholder={placeholder}
+            value={options.find(option => option.value === field.value)}
             onChange={(option) => field.onChange(option?.value)}
           />
         )}
