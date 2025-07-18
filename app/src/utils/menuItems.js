@@ -53,6 +53,12 @@ import {
               href: "/dashboard/ver-document-input",
               visible: ["admin"],
             },
+            {
+              label: "Verification Page",
+              icon: <FiClipboard />,
+              href: "/dashboard/single-ver-page",
+              visible: ["admin"],
+            },
           ],
         },
         {
