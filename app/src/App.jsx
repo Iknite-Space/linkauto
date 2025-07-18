@@ -27,7 +27,7 @@ const UserVerification = lazy(() =>
   import("./pages/dashboard/UserVerification")
 );
 const VerDocumentInput = lazy(() => import("./pages/dashboard/VerDocumentInput"));
-const SingleVerPage = lazy(() => import("./pages/dashboard/SingleVerPage"));
+
 
 function App() {
   return (
@@ -49,7 +49,6 @@ function App() {
               {/* <Route path="profile" element={<ComingSoon />} /> */}
               <Route path="user-verification" element={<UserVerification />} />
               <Route path="ver-document-input" element={<VerDocumentInput />} />
-              <Route path="single-ver-page" element={<SingleVerPage />} />
             </Route>
 
 
