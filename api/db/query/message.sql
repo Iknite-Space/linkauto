@@ -10,6 +10,9 @@ SELECT Uuid,email,lname,role,account_status FROM "user" WHERE email = $1;
 INSERT INTO verification (user_uuid, verification_type, ver_doc1_url,ver_doc2_url)
 VALUES ($1, $2, $3, $4);
 
+-- name: GetVerificationByUserUuid :one
+SELECT * FROM verification WHERE user_uuid = $1 LIMIT 1;
+
 -- name: GetUsersPendingVerification :many
 SELECT Uuid, CONCAT(fname, ' ', lname) AS name, account_status AS status, email,role FROM "user"
 WHERE account_status = 'pending';

@@ -110,6 +110,23 @@ func (q *Queries) GetUsersPendingVerification(ctx context.Context) ([]GetUsersPe
 	return items, nil
 }
 
+const getVerificationByUserUuid = `-- name: GetVerificationByUserUuid :one
+SELECT uuid, user_uuid, verification_type, ver_doc1_url, ver_doc2_url FROM verification WHERE user_uuid = $1 LIMIT 1
+`
+
+func (q *Queries) GetVerificationByUserUuid(ctx context.Context, userUuid string) (Verification, error) {
+	row := q.db.QueryRow(ctx, getVerificationByUserUuid, userUuid)
+	var i Verification
+	err := row.Scan(
+		&i.Uuid,
+		&i.UserUuid,
+		&i.VerificationType,
+		&i.VerDoc1Url,
+		&i.VerDoc2Url,
+	)
+	return i, err
+}
+
 const uploadVerificationDocs = `-- name: UploadVerificationDocs :exec
 INSERT INTO verification (user_uuid, verification_type, ver_doc1_url,ver_doc2_url)
 VALUES ($1, $2, $3, $4)
