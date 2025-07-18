@@ -87,7 +87,7 @@ import {
         {
           label: "Logout",
           icon: <FiLogOut />,
-          href: "dashboard/logout",
+          href: "/dashboard/logout",
           visible: ["admin", "owner", "customer"],
         },
       ],

@@ -21,8 +21,9 @@ const NotFound = lazy(() => import("./components/shared/NotFound"));
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const Login = lazy(() => import("./pages/auth/Login"));
 const Register = lazy(() => import("./pages/auth/Register"));
-
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
 // Protected pages
+const Logout = lazy(() => import("./pages/auth/Logout"));
 const UserVerification = lazy(() =>
   import("./pages/dashboard/UserVerification")
 );
@@ -38,8 +39,9 @@ function App() {
             <Routes>
               {/* Public routes */}
               <Route element={<AuthLayout />}>
-                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
                 
               </Route>
 
@@ -49,6 +51,7 @@ function App() {
               {/* <Route path="profile" element={<ComingSoon />} /> */}
               <Route path="user-verification" element={<UserVerification />} />
               <Route path="ver-document-input" element={<VerDocumentInput />} />
+              <Route path="logout" element={<Logout />} />
             </Route>
 
 
