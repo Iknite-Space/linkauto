@@ -26,6 +26,8 @@ const Register = lazy(() => import("./pages/auth/Register"));
 const UserVerification = lazy(() =>
   import("./pages/dashboard/UserVerification")
 );
+const VerDocumentInput = lazy(() => import("./pages/dashboard/VerDocumentInput"));
+
 
 function App() {
   return (
@@ -38,6 +40,7 @@ function App() {
               <Route element={<AuthLayout />}>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                
               </Route>
 
             {/* Protected routes */}
@@ -45,6 +48,7 @@ function App() {
               <Route index element={<ComingSoon />} />
               {/* <Route path="profile" element={<ComingSoon />} /> */}
               <Route path="user-verification" element={<UserVerification />} />
+              <Route path="ver-document-input" element={<VerDocumentInput />} />
             </Route>
 
 

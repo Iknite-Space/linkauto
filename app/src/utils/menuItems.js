@@ -47,6 +47,12 @@ import {
               href: "dashboard/fleet/categories",
               visible: ["admin"],
             },
+            {
+              label: "Document Verification",
+              icon: <FiClipboard />,
+              href: "/dashboard/ver-document-input",
+              visible: ["admin"],
+            },
           ],
         },
         {
