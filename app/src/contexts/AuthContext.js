@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
           const userDetails = response.data.user;
   
           setCurrentUser({
-            uuid: userDetails.Uuid,
+            uuid: userDetails.uuid,
             email: userDetails.email,
             role: userDetails.role,
             lName: userDetails.lname,
