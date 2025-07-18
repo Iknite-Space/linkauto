@@ -38,10 +38,8 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.POST("/login", h.handleLogin)
 	r.POST("/user-verification", h.handleUploadVerificationDocs)
 	r.GET("/users/pending-verification", h.handleGetUsersPendingVerification)
-	// r.POST("/message", h.handleCreateMessage)
-	// r.GET("/message/:id", h.handleGetMessage)
-	// r.DELETE("/message/:id", h.handleDeleteMessage)
-	// r.GET("/thread/:id/messages", h.handleGetThreadMessages)
+	r.GET("/user-verification/:user_uuid", h.handleGetSingleUserVerification)
+	r.PATCH("/user-verification", h.handleUpdateUserVerificationStatus)
 
 	return r
 }
@@ -49,39 +47,6 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 func (h *MessageHandler) handleHealthcheck(c *gin.Context) {
 	c.String(http.StatusOK, "ok")
 }
-
-// func (h *MessageHandler) handleCreateMessage(c *gin.Context) {
-// 	var req repo.CreateMessageParams
-// 	err := c.ShouldBindBodyWithJSON(&req)
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	message, err := h.querier.Do().CreateMessage(c, req)
-// 	if err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	c.JSON(http.StatusOK, message)
-// }
-
-// func (h *MessageHandler) handleGetMessage(c *gin.Context) {
-// 	id := c.Param("id")
-// 	if id == "" {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": "id is required"})
-// 		return
-// 	}
-
-// 	message, err := h.querier.Do().GetMessageByID(c, id)
-// 	if err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	c.JSON(http.StatusOK, message)
-// }
 
 func (h *MessageHandler) handleCreateUser(c *gin.Context) {
 	var req repo.CreateUserParams
@@ -215,5 +180,47 @@ func (h *MessageHandler) handleGetUsersPendingVerification(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"users":   users,
+	})
+}
+
+// get single user verification details
+func (h *MessageHandler) handleGetSingleUserVerification(c *gin.Context) {
+	userUuid := c.Param("user_uuid")
+	if userUuid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "user_uuid is required"})
+		return
+	}
+
+	user, err := h.querier.Do().GetUserVerificationDetails(c, userUuid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve user verification: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"user":    user,
+	})
+}
+
+// update user verification status
+func (h *MessageHandler) handleUpdateUserVerificationStatus(c *gin.Context) {
+	var req repo.UpdateUserVerificationStatusParams
+
+	//confirm the submitted request body
+	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	//update user verification status in db
+	if err := h.querier.Do().UpdateUserVerificationStatus(c, req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user verification status: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "User verification status updated successfully",
 	})
 }

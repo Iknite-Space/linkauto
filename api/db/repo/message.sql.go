@@ -71,6 +71,42 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEm
 	return i, err
 }
 
+const getUserVerificationDetails = `-- name: GetUserVerificationDetails :one
+SELECT 
+    u.uuid AS user_uuid,
+    CONCAT(u.fname, ' ', u.lname) AS name,
+    u.gender,
+    v.verification_type,
+    v.ver_doc1_url,
+    v.ver_doc2_url
+FROM "user" u
+JOIN verification v ON u.uuid = v.user_uuid
+WHERE u.uuid = $1
+`
+
+type GetUserVerificationDetailsRow struct {
+	UserUuid         string      `json:"user_uuid"`
+	Name             interface{} `json:"name"`
+	Gender           string      `json:"gender"`
+	VerificationType string      `json:"verification_type"`
+	VerDoc1Url       string      `json:"ver_doc1_url"`
+	VerDoc2Url       string      `json:"ver_doc2_url"`
+}
+
+func (q *Queries) GetUserVerificationDetails(ctx context.Context, uuid string) (GetUserVerificationDetailsRow, error) {
+	row := q.db.QueryRow(ctx, getUserVerificationDetails, uuid)
+	var i GetUserVerificationDetailsRow
+	err := row.Scan(
+		&i.UserUuid,
+		&i.Name,
+		&i.Gender,
+		&i.VerificationType,
+		&i.VerDoc1Url,
+		&i.VerDoc2Url,
+	)
+	return i, err
+}
+
 const getUsersPendingVerification = `-- name: GetUsersPendingVerification :many
 SELECT Uuid, CONCAT(fname, ' ', lname) AS name, account_status AS status, email,role FROM "user"
 WHERE account_status = 'pending'
@@ -125,6 +161,22 @@ func (q *Queries) GetVerificationByUserUuid(ctx context.Context, userUuid string
 		&i.VerDoc2Url,
 	)
 	return i, err
+}
+
+const updateUserVerificationStatus = `-- name: UpdateUserVerificationStatus :exec
+UPDATE "user"
+SET account_status = $1
+WHERE uuid = $2
+`
+
+type UpdateUserVerificationStatusParams struct {
+	AccountStatus string `json:"account_status"`
+	Uuid          string `json:"uuid"`
+}
+
+func (q *Queries) UpdateUserVerificationStatus(ctx context.Context, arg UpdateUserVerificationStatusParams) error {
+	_, err := q.db.Exec(ctx, updateUserVerificationStatus, arg.AccountStatus, arg.Uuid)
+	return err
 }
 
 const uploadVerificationDocs = `-- name: UploadVerificationDocs :exec
