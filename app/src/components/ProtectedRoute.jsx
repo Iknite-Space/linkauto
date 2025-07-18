@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children }) => {
     return <div><Loading /></div>; // Or show a spinner component
   }
 
-  return currentUser ? children : <Navigate to="/login"/>;
+  return currentUser ? children : <Navigate to="/"/>;
 };
 
 ProtectedRoute.propTypes = {

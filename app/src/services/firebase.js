@@ -1,6 +1,6 @@
 
 import { initializeApp } from "firebase/app";
-import {getAuth, createUserWithEmailAndPassword,sendEmailVerification,signInWithEmailAndPassword} from "firebase/auth"
+import {getAuth, createUserWithEmailAndPassword,sendEmailVerification,signInWithEmailAndPassword, sendPasswordResetEmail, signOut} from "firebase/auth"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -22,6 +22,8 @@ export {
     createUserWithEmailAndPassword,
     sendEmailVerification,
     signInWithEmailAndPassword,
+    sendPasswordResetEmail,
+    signOut,
 }
 
 export default app;

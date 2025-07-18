@@ -55,7 +55,7 @@ const Login = () => {
 
         {/* Right Side */}
         <div className="col-span-12 p-8 md:col-span-9 ">
-          <div className="text-right text-body text-PrimaryTextColor mb-4">
+          <div className="mb-4 text-right text-body text-PrimaryTextColor">
             Don{"'"}t have an account?{" "}
             <a href="./Login" className="text-accent font-body hover:underline">
               Sign up
@@ -85,9 +85,9 @@ const Login = () => {
               <div className="text-red">{errors.password.message}</div>
             )}
 
-            <div className="flex justify-between items-center mt-4">
+            <div className="flex items-center justify-between mt-4">
               <a
-                href="./ForgotPassword"
+                href="/forgot-password"
                 className="text-accent font-body hover:underline"
               >
                 Forgot Password?
