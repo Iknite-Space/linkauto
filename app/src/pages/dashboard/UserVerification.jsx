@@ -1,7 +1,46 @@
 import DataTable from "react-data-table-component";
-import { id } from "zod/v4/locales";
+import { useEffect,useState } from "react";
+import api from "../../services/axios"
+import Loading from "../../components/shared/Loading"
+import {useNavigate} from "react-router-dom";
 
 const UserVerification = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [pendingUsers, setPendingUsers] = useState([]);
+  const handleVerify = (userId) => {
+    console.log("verify user with ID:", userId);
+    // navigate to the single user verification page
+    navigate(`/dashboard/user-verification/${userId}`)
+  }
+  // Fetch pending users for verification
+  useEffect(()=> {
+    const fetchPendingUsers = async () => {
+      try {
+        const res = await api.get('/users/pending-verification');
+        if(res.data.success){
+          const usersWithAction = res.data.users.map((user)=>({
+            ...user,
+            action: (
+              <button
+                onClick={() => handleVerify(user.uuid)}
+                title="click here to verify"
+                className="px-4 py-2 font-bold text-white rounded bg-primary hover:bg-blue-600"
+              >
+                Verify
+              </button>
+            )
+          }))
+          setPendingUsers(usersWithAction)
+        }
+      } catch (error) {
+        console.error("Error fetching pending users:", error);
+      }finally{
+        setLoading(false);
+      }
+    }
+    fetchPendingUsers();
+  },[])
   const customStyles = {
     headCells: {
       style: {
@@ -35,241 +74,14 @@ const UserVerification = () => {
       selector: (row) => row.action,
     },
   ];
-
-  const data = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "tony@gmail.com",
-      role: "car owner ",
-      status: "pending",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          Verify
-        </button>
-      ),
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "smith@gamil.com",
-      role: "car owner",
-      status: "verified",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      email: "alice@gmail.com",
-      role: "car owner",
-      status: "pending",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 4,
-      name: "Bob Brown",
-      email: "bob@gmail.com",
-      role: "car owner",
-      status: "verified",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 5,
-      name: "Charlie White",
-      email: "charlie@gmail.com",
-      role: "car owner",
-      status: "pending",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 6,
-      name: "David Green",
-      email: "david@gmail.com",
-      role: "car owner",
-      status: "verified",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 7,
-      name: "Eva Black",
-      email: "eva@gmail.com",
-      role: "car owner",
-      status: "pending",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 8,
-      name: "Frank Blue",
-      email: "frank@gmail.com",
-      role: "car owner",
-      status: "verified",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 9,
-      name: "Grace Yellow",
-      email: "grace@gmail.com",
-      role: "car owner",
-      status: "pending",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 10,
-      name: "Hank Purple",
-      email: "hank@gmail.com",
-      role: "car owner",
-      status: "verified",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 11,
-      name: "Ivy Orange",
-      email: "ivy@gmail.com",
-      role: "car owner",
-      status: "pending",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 12,
-      name: "Jack Pink",
-      email: "jack@gmail.com",
-      role: "car owner",
-      status: "verified",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 13,
-      name: "Lily Gray",
-      email: "lily@gmail.com",
-      role: "car owner",
-      status: "pending",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 14,
-      name: "Mike Cyan",
-      email: "mike@gmail.com",
-      role: "car owner",
-      status: "verified",
-      action: (
-        <button
-          title="click here to verify"
-          className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          verify
-        </button>
-      ),
-    },
-    {
-      id: 15,
-      name: "Nina Magenta",
-      email: "nina@gmail.com",
-      role: "car owner",
-      status: "pending",
-      action: (
-        <div>
-          <button
-            title="Click here to verify"
-            className="bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-          >
-            verify
-          </button>
-        </div>
-      ),
-    },
-  ];
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <DataTable
       columns={columns}
-      data={data}
+      data={pendingUsers}
       customStyles={customStyles}
       title="User Verification"
       pagination

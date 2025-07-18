@@ -37,6 +37,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.POST("/register", h.handleCreateUser)
 	r.POST("/login", h.handleLogin)
 	r.POST("/user-verification", h.handleUploadVerificationDocs)
+	r.GET("/users/pending-verification", h.handleGetUsersPendingVerification)
 	// r.POST("/message", h.handleCreateMessage)
 	// r.GET("/message/:id", h.handleGetMessage)
 	// r.DELETE("/message/:id", h.handleDeleteMessage)
@@ -189,5 +190,19 @@ func (h *MessageHandler) handleUploadVerificationDocs(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "Verification documents uploaded successfully",
+	})
+}
+
+// get users pending verification
+func (h *MessageHandler) handleGetUsersPendingVerification(c *gin.Context) {
+	users, err := h.querier.Do().GetUsersPendingVerification(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve users pending verification: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"users":   users,
 	})
 }

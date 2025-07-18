@@ -71,6 +71,45 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEm
 	return i, err
 }
 
+const getUsersPendingVerification = `-- name: GetUsersPendingVerification :many
+SELECT Uuid, CONCAT(fname, ' ', lname) AS name, account_status AS status, email,role FROM "user"
+WHERE account_status = 'pending'
+`
+
+type GetUsersPendingVerificationRow struct {
+	Uuid   string      `json:"uuid"`
+	Name   interface{} `json:"name"`
+	Status string      `json:"status"`
+	Email  string      `json:"email"`
+	Role   string      `json:"role"`
+}
+
+func (q *Queries) GetUsersPendingVerification(ctx context.Context) ([]GetUsersPendingVerificationRow, error) {
+	rows, err := q.db.Query(ctx, getUsersPendingVerification)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetUsersPendingVerificationRow{}
+	for rows.Next() {
+		var i GetUsersPendingVerificationRow
+		if err := rows.Scan(
+			&i.Uuid,
+			&i.Name,
+			&i.Status,
+			&i.Email,
+			&i.Role,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const uploadVerificationDocs = `-- name: UploadVerificationDocs :exec
 INSERT INTO verification (user_uuid, verification_type, ver_doc1_url,ver_doc2_url)
 VALUES ($1, $2, $3, $4)
