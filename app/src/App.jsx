@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Loading from "./components/shared/Loading";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 
 // Lazy imports
 const AuthLayout = lazy(() => import("./layouts/AuthLayout"));
@@ -41,6 +42,7 @@ function App() {
               <Route element={<AuthLayout />}>
                 <Route path="/" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgotpassword" element={<ForgotPassword />} />
               </Route>
 
               {/* Protected routes */}
