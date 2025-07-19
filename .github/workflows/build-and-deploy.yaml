@@ -53,11 +53,16 @@ jobs:
       - name: Build Docker Image and Push to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
         run: |
           commit_hash="$GITHUB_SHA"
           full_image_tag="${{ steps.read_aws_account_id.outputs.aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com/api:$commit_hash"
 
             cd api
+
+            # create a .env file for go app
+            echo "CLOUDINARY_CLOUD_NAME=$CLOUDINARY_CLOUD_NAME" >> .env
+            
             docker build -t "$full_image_tag" .
             docker push $full_image_tag
 
