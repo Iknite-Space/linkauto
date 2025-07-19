@@ -12,7 +12,7 @@ const firebaseConfig = {
   // messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   // appId: process.env.REACT_APP_FIREBASE_APP_ID
 
-  apiKey: "AIzaSyD-AIzaSyBJ_vipcWkelnSTwDG0RF7wfwinXWn5F3I-KEY",
+  apiKey: "AIzaSyBJ_vipcWkelnSTwDG0RF7wfwinXWn5F3I",
   authDomain: "autolink-883fc.firebaseapp.com",
   projectId: "autolink-883fc",
   storageBucket: "autolink-883fc.firebasestorage.app",
