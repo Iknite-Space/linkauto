@@ -16,3 +16,20 @@ SELECT * FROM verification WHERE user_uuid = $1 LIMIT 1;
 -- name: GetUsersPendingVerification :many
 SELECT Uuid, CONCAT(fname, ' ', lname) AS name, account_status AS status, email,role FROM "user"
 WHERE account_status = 'pending';
+
+-- name: GetUserVerificationDetails :one
+SELECT 
+    u.uuid AS user_uuid,
+    CONCAT(u.fname, ' ', u.lname) AS name,
+    u.gender,
+    v.verification_type,
+    v.ver_doc1_url,
+    v.ver_doc2_url
+FROM "user" u
+JOIN verification v ON u.uuid = v.user_uuid
+WHERE u.uuid = $1;
+
+-- name: UpdateUserVerificationStatus :exec
+UPDATE "user"
+SET account_status = $1
+WHERE uuid = $2;

@@ -1,95 +1,101 @@
 // src/pages/dashboard/SingleVerPage.jsx
 
-import React, { useState } from "react";
-import { CheckCircle, XCircle, LoaderCircle } from "lucide-react";
+import React, { useState,useEffect } from "react";
 import Button from "../../components/UI/Button";
+import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
+import api from "../../services/axios";
 
-export default function SingleVerPage() {
-  const [status, setStatus] = useState("active"); // "active" | "blocked" | "pending"
+export default function SingleUserVerification() {
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedAction, setSelectedAction] = useState(null); // "active" | "blocked"
+  const [selectedAction, setSelectedAction] = useState(null); 
+  const [userData, setUserData] = useState(null);
+  const [Loading, setLoading] = useState(false);
+  const { user_uuid } = useParams();
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const res = await api.get(`/user-verification/${user_uuid}`);
+      if (res.data.success) {
+        setUserData(res.data.user)
+      }
+    }
+
+    fetchUserData();
+  },[user_uuid]);
 
   const handleActionClick = (action) => {
     setSelectedAction(action);
     setModalVisible(true);
   };
 
-  const confirmAction = () => {
-    if (selectedAction) {
-      setStatus(selectedAction);
-      setModalVisible(false);
+  const handleStatusChange = async (newStatus) => {
+    setLoading(true);
+    try {
+      const res = await api.patch(`/user-verification`, {
+        account_status: newStatus,
+        uuid: userData?.user_uuid,
+      });
+      if (res.data.success) {
+        setModalVisible(false);
+        toast.success(`User ${newStatus} successfully!`);
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4">
-      <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-md p-8 space-y-10 relative">
+    <div className="min-h-screen px-4 py-10 bg-gray-100">
+      <div className="relative p-8 mx-auto space-y-10 bg-white shadow-md max-w-7xl rounded-2xl">
         {/* Profile Top Right */}
         <div className="flex justify-end">
           <div className="flex items-center gap-4">
             <img
               src="https://via.placeholder.com/80"
               alt="Profile"
-              className="w-20 h-20 object-cover rounded-full border"
+              className="object-cover w-20 h-20 border rounded-full"
             />
             <div>
-              <h2 className="text-xl font-semibold">John Doe</h2>
-              <p className="text-sm text-gray-600">Gender: Male</p>
+              <h2 className="text-xl font-semibold">{userData?.name}</h2>
+              <p className="text-sm text-gray-600">Gender: {userData?.gender}</p>
             </div>
           </div>
         </div>
 
+        <h4>Verification Type: <span className="text-accent">{userData?.verification_type}</span></h4>
+
         {/* Document Images Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {/* Document Front */}
-          <div className="rounded-xl border p-4">
-            <h3 className="text-lg font-medium mb-2">Document Front</h3>
-            <div className="w-full h-96 bg-gray-200 rounded-lg overflow-hidden">
+          <div className="p-4 border rounded-xl">
+            <h3 className="mb-2 text-lg font-medium">Document 1</h3>
+            <div className="w-full overflow-hidden bg-gray-200 rounded-lg h-96">
               <img
-                src="https://via.placeholder.com/800x500"
+                src={userData?.ver_doc1_url}
                 alt="Document Front"
-                className="w-full h-full object-cover"
+                className="object-cover w-full h-full"
               />
             </div>
           </div>
 
           {/* Document Back */}
-          <div className="rounded-xl border p-4">
-            <h3 className="text-lg font-medium mb-2">Document Back</h3>
-            <div className="w-full h-96 bg-gray-200 rounded-lg overflow-hidden">
+          <div className="p-4 border rounded-xl">
+            <h3 className="mb-2 text-lg font-medium">Document 2</h3>
+            <div className="w-full overflow-hidden bg-gray-200 rounded-lg h-96">
               <img
-                src="https://via.placeholder.com/800x500"
+                src={userData?.ver_doc2_url}
                 alt="Document Back"
-                className="w-full h-full object-cover"
+                className="object-cover w-full h-full"
               />
             </div>
           </div>
         </div>
 
-        {/* Status Indicator */}
-        <div className="flex justify-center mt-6">
-          {status === "active" && (
-            <div className="flex items-center gap-2 text-green-600">
-              <CheckCircle className="w-5 h-5" />
-              <span className="font-semibold">Status: Activated</span>
-            </div>
-          )}
-          {status === "blocked" && (
-            <div className="flex items-center gap-2 text-red-600">
-              <XCircle className="w-5 h-5" />
-              <span className="font-semibold">Status: Blocked</span>
-            </div>
-          )}
-          {status === "pending" && (
-            <div className="flex items-center gap-2 text-yellow-600">
-              <LoaderCircle className="w-5 h-5 animate-spin" />
-              <span className="font-semibold">Status: Pending</span>
-            </div>
-          )}
-        </div>
 
         {/* Action Buttons */}
-        <div className="absolute bottom-6 right-8 flex gap-4">
+        <div className="absolute flex gap-4 bottom-2 right-8">
           <Button
             className="bg-green "
             onClick={() => handleActionClick("active")}
@@ -102,18 +108,12 @@ export default function SingleVerPage() {
           >
             Block
           </Button>
-          <Button
-            className="bg-accent "
-            onClick={() => setStatus("pending")}
-          >
-            Pending
-          </Button>
         </div>
 
         {/* Confirmation Modal */}
         {modalVisible && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow-lg max-w-sm w-full p-6 space-y-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="w-full max-w-sm p-6 space-y-4 bg-white shadow-lg rounded-xl">
               <h2 className="text-lg font-semibold text-gray-800">
                 Confirm Action
               </h2>
@@ -123,14 +123,15 @@ export default function SingleVerPage() {
               </p>
               <div className="flex justify-end gap-3 mt-4">
                 <Button
-                  className="bg-red text-gray-800 hover:bg-gray-500"
+                  className="text-gray-800 bg-red hover:bg-gray-500"
                   onClick={() => setModalVisible(false)}
                 >
                   Cancel
                 </Button>
                 <Button
-                  className="bg-green text-white hover:bg-blue-700"
-                  onClick={confirmAction}
+                  className="text-white bg-green hover:bg-blue-700"
+                  onClick={() => handleStatusChange(selectedAction)}
+                  loading={Loading}
                 >
                   Confirm
                 </Button>

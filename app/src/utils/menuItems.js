@@ -13,6 +13,7 @@ import {
     FiUser,
     FiClipboard,
   } from "react-icons/fi";
+
   
   export const menuItems = [
     {
@@ -51,12 +52,6 @@ import {
               label: "Document Verification",
               icon: <FiClipboard />,
               href: "/dashboard/ver-document-input",
-              visible: ["admin"],
-            },
-            {
-              label: "Verification Page",
-              icon: <FiClipboard />,
-              href: "/dashboard/single-ver-page",
               visible: ["admin"],
             },
           ],
