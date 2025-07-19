@@ -57,7 +57,7 @@ const Login = () => {
         <div className="col-span-12 p-8 md:col-span-9 ">
           <div className="mb-4 text-right text-body text-PrimaryTextColor">
             Don{"'"}t have an account?{" "}
-            <a href="./Login" className="text-accent font-body hover:underline">
+            <a href="/register" className="text-accent font-body hover:underline">
               Sign up
             </a>
           </div>

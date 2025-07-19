@@ -56,7 +56,7 @@ const ForgotPassword = () => {
       <div className="col-span-12 p-8 md:col-span-9">
         <div className="mb-4 text-right text-body text-PrimaryTextColor">
           Don&apos;t have an account?{" "}
-          <Link to="/Register" className="text-accent font-body hover:underline">
+          <Link to="/register" className="text-accent font-body hover:underline">
             Sign up
           </Link>
         </div>
