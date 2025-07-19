@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Loading from "./components/shared/Loading";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Register from "./pages/auth/Register";
 
 // Lazy imports
 const AuthLayout = lazy(() => import("./layouts/AuthLayout"));
@@ -20,7 +21,7 @@ const NotFound = lazy(() => import("./components/shared/NotFound"));
 // Public pages
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const Login = lazy(() => import("./pages/auth/Login"));
-const Register = lazy(() => import("./pages/auth/Register"));
+// const Register = lazy(() => import("./pages/auth/Register"));
 const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
 // Protected pages
 const Logout = lazy(() => import("./pages/auth/Logout"));

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth, signInWithEmailAndPassword } from "../../services/firebase";
 import { toast } from "react-toastify";
 import z from "zod";
@@ -57,9 +57,9 @@ const Login = () => {
         <div className="col-span-12 p-8 md:col-span-9 ">
           <div className="mb-4 text-right text-body text-PrimaryTextColor">
             Don{"'"}t have an account?{" "}
-            <a href="/register" className="text-accent font-body hover:underline">
+            <Link to="/register" className="text-accent font-body hover:underline">
               Sign up
-            </a>
+            </Link>
           </div>
           <h2 className="mb-6 text-heading font-heading">Login</h2>
 
@@ -86,12 +86,12 @@ const Login = () => {
             )}
 
             <div className="flex items-center justify-between mt-4">
-              <a
-                href="/forgot-password"
+              <Link
+                to="/forgot-password"
                 className="text-accent font-body hover:underline"
               >
                 Forgot Password?
-              </a>
+              </Link>
             </div>
             <Button
               type="submit"
