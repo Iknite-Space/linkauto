@@ -91,12 +91,31 @@ jobs:
           node-version: 18
 
       - name: Build React App and Push to Amazon S3
+
+        env:
+          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
+          REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
+          REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}
+          REACT_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET }}
+          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
+          REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }}
+          REACT_APP_AXIOS_BASE_URL: ${{ secrets.REACT_APP_AXIOS_BASE_URL }}
         run: |
           commit_hash="$GITHUB_SHA"
           full_image_tag="${{ steps.read_aws_account_id.outputs.aws_account_id }}.dkr.ecr.us-east-1.amazonaws.com/api:$commit_hash"
           s3_path="s3://app-artifacts-${{ steps.read_aws_account_id.outputs.aws_account_id }}/$commit_hash/"
 
             cd app
+
+            # inject the environment variables into the app
+            echo "REACT_APP_FIREBASE_API_KEY=${{ secrets.REACT_APP_FIREBASE_API_KEY }}" >> .env
+            echo "REACT_APP_FIREBASE_AUTH_DOMAIN=${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}" >> .env
+            echo "REACT_APP_FIREBASE_PROJECT_ID=${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}" >> .env
+            echo "REACT_APP_FIREBASE_STORAGE_BUCKET=${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET }}" >> .env
+            echo "REACT_APP_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}" >> .env
+            echo "REACT_APP_FIREBASE_APP_ID=${{ secrets.REACT_APP_FIREBASE_APP_ID }}" >> .env
+            echo "REACT_APP_AXIOS_BASE_URL=${{ secrets.REACT_APP_AXIOS_BASE_URL }}" >> .env
+            
             npm install
             npm run build
             aws s3 cp ./build "$s3_path" --recursive
