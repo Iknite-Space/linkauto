@@ -108,8 +108,15 @@ func (q *Queries) GetUserVerificationDetails(ctx context.Context, uuid string) (
 }
 
 const getUsersPendingVerification = `-- name: GetUsersPendingVerification :many
-SELECT Uuid, CONCAT(fname, ' ', lname) AS name, account_status AS status, email,role FROM "user"
-WHERE account_status = 'pending'
+SELECT 
+  u.uuid,
+  CONCAT(u.fname, ' ', u.lname) AS name,
+  u.account_status AS status,
+  u.email,
+  u.role
+FROM "user" u
+INNER JOIN verification v ON v.user_uuid = u.uuid
+WHERE u.account_status = 'pending'
 `
 
 type GetUsersPendingVerificationRow struct {

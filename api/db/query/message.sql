@@ -14,8 +14,15 @@ VALUES ($1, $2, $3, $4);
 SELECT * FROM verification WHERE user_uuid = $1 LIMIT 1;
 
 -- name: GetUsersPendingVerification :many
-SELECT Uuid, CONCAT(fname, ' ', lname) AS name, account_status AS status, email,role FROM "user"
-WHERE account_status = 'pending';
+SELECT 
+  u.uuid,
+  CONCAT(u.fname, ' ', u.lname) AS name,
+  u.account_status AS status,
+  u.email,
+  u.role
+FROM "user" u
+INNER JOIN verification v ON v.user_uuid = u.uuid
+WHERE u.account_status = 'pending';
 
 -- name: GetUserVerificationDetails :one
 SELECT 
