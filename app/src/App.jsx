@@ -11,6 +11,7 @@ import Register from "./pages/auth/Register";
 // Lazy imports
 const AuthLayout = lazy(() => import("./layouts/AuthLayout"));
 const DashboardLayout = lazy(() => import("./layouts/DashboardLayout"));
+const HomeLayout = lazy(() => import("./layouts/HomeLayout"));
 const ToastContainer = lazy(() =>
   import("react-toastify").then((module) => ({
     default: module.ToastContainer,
@@ -19,6 +20,7 @@ const ToastContainer = lazy(() =>
 const NotFound = lazy(() => import("./components/shared/NotFound"));
 
 // Public pages
+const HomePage = lazy(() => import("./components/HomePage"));
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const Login = lazy(() => import("./pages/auth/Login"));
 // const Register = lazy(() => import("./pages/auth/Register"));
@@ -39,12 +41,15 @@ function App() {
         <Router>
           <Suspense fallback={<Loading />}>
             <Routes>
+              {/* Home layout with public routes */}
+              <Route path="/" element={<HomeLayout />}>
+                <Route index element={<HomePage />} />
+              </Route>
               {/* Public routes */}
               <Route element={<AuthLayout />}>
-                <Route path="/" element={<Login />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
-                
               </Route>
 
             {/* Protected routes */}
