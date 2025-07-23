@@ -36,13 +36,15 @@ export default function SingleUserVerification() {
         uuid: userData?.user_uuid,
       });
       if (res.data.success) {
-        setModalVisible(false);
         toast.success(`User ${newStatus} successfully!`);
+      }else{
+        toast.error(res.data.message  || "Failed to update user status.");
       }
     } catch (error) {
       console.error("Error updating status:", error);
     }finally {
       setLoading(false);
+      setModalVisible(false);
     }
   };
 

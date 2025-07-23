@@ -11,7 +11,7 @@ import (
 type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (string, error)
 	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
-	GetUserByUuid(ctx context.Context, uuid string) (User, error)
+	GetUserByUuid(ctx context.Context, uuid string) (GetUserByUuidRow, error)
 	GetUserVerificationDetails(ctx context.Context, uuid string) (GetUserVerificationDetailsRow, error)
 	GetUsersPendingVerification(ctx context.Context) ([]GetUsersPendingVerificationRow, error)
 	GetVerificationByUserUuid(ctx context.Context, userUuid string) (Verification, error)
