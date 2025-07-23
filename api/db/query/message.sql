@@ -4,7 +4,7 @@ VALUES ($1, $2, $3,$4,$5,$6,$7,$8,$9,$10)
 RETURNING email;
 
 -- name: GetUserByUuid :one
-SELECT * FROM "user" WHERE uuid = $1;
+SELECT Uuid,account_status FROM "user" WHERE uuid = $1;
 
 -- name: GetUserByEmail :one
 SELECT Uuid,email,lname,role,account_status FROM "user" WHERE email = $1;
