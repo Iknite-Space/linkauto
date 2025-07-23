@@ -9,7 +9,7 @@ import Button from "../../components/UI/Button";
 
 const schema = z.object({
   email: z.email(1, "Invalid email format").nonempty("Email is required"),
-  password: z.string().min(1, "Password must be at least 8 characters"),
+  password: z.string().min(1, "Password is required"),
 });
 
 const Login = () => {
@@ -18,9 +18,6 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      email: "example@gmail.com",
-    },
     resolver: zodResolver(schema),
   });
   const [loading, setLoading] = useState(false);
