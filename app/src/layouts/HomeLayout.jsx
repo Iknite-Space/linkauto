@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom"
+import HomeFooter from "../components/shared/HomeFooter"
 
 const HomeLayout = () => {
   return (
@@ -11,9 +12,8 @@ const HomeLayout = () => {
             <Outlet />
         </main>
 
-        <footer>
-            {/* the footer component comes here */}
-            <p>footer here</p>
+        <footer className="p-6">
+            <HomeFooter />
         </footer>
     </div>
   )
