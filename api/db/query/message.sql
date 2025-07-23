@@ -3,6 +3,9 @@ INSERT INTO "user" (fname,lname,email,gender,phone,zip_code,city,street,region,r
 VALUES ($1, $2, $3,$4,$5,$6,$7,$8,$9,$10)
 RETURNING email;
 
+-- name: GetUserByUuid :one
+SELECT * FROM "user" WHERE uuid = $1;
+
 -- name: GetUserByEmail :one
 SELECT Uuid,email,lname,role,account_status FROM "user" WHERE email = $1;
 
@@ -14,8 +17,15 @@ VALUES ($1, $2, $3, $4);
 SELECT * FROM verification WHERE user_uuid = $1 LIMIT 1;
 
 -- name: GetUsersPendingVerification :many
-SELECT Uuid, CONCAT(fname, ' ', lname) AS name, account_status AS status, email,role FROM "user"
-WHERE account_status = 'pending';
+SELECT 
+  u.uuid,
+  CONCAT(u.fname, ' ', u.lname) AS name,
+  u.account_status AS status,
+  u.email,
+  u.role
+FROM "user" u
+INNER JOIN verification v ON v.user_uuid = u.uuid
+WHERE u.account_status = 'pending';
 
 -- name: GetUserVerificationDetails :one
 SELECT 

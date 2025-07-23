@@ -213,7 +213,20 @@ func (h *MessageHandler) handleUpdateUserVerificationStatus(c *gin.Context) {
 		return
 	}
 
-	//update user verification status in db
+	//fetch the current user
+	currentUser, err := h.querier.Do().GetUserByUuid(c, req.Uuid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch user: " + err.Error()})
+		return
+	}
+
+	//only allow update if current user is pending verification
+	if currentUser.AccountStatus != "pending" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User is not in pending verification status, current account status: " + currentUser.AccountStatus})
+		return
+	}
+
+	//proceed to update the user verification status
 	if err := h.querier.Do().UpdateUserVerificationStatus(c, req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user verification status: " + err.Error()})
 		return

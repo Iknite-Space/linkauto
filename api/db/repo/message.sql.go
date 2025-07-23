@@ -71,6 +71,32 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEm
 	return i, err
 }
 
+const getUserByUuid = `-- name: GetUserByUuid :one
+SELECT uuid, fname, lname, email, gender, phone, zip_code, city, street, region, photo_url, role, account_status, created_at FROM "user" WHERE uuid = $1
+`
+
+func (q *Queries) GetUserByUuid(ctx context.Context, uuid string) (User, error) {
+	row := q.db.QueryRow(ctx, getUserByUuid, uuid)
+	var i User
+	err := row.Scan(
+		&i.Uuid,
+		&i.Fname,
+		&i.Lname,
+		&i.Email,
+		&i.Gender,
+		&i.Phone,
+		&i.ZipCode,
+		&i.City,
+		&i.Street,
+		&i.Region,
+		&i.PhotoUrl,
+		&i.Role,
+		&i.AccountStatus,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const getUserVerificationDetails = `-- name: GetUserVerificationDetails :one
 SELECT 
     u.uuid AS user_uuid,
@@ -108,8 +134,15 @@ func (q *Queries) GetUserVerificationDetails(ctx context.Context, uuid string) (
 }
 
 const getUsersPendingVerification = `-- name: GetUsersPendingVerification :many
-SELECT Uuid, CONCAT(fname, ' ', lname) AS name, account_status AS status, email,role FROM "user"
-WHERE account_status = 'pending'
+SELECT 
+  u.uuid,
+  CONCAT(u.fname, ' ', u.lname) AS name,
+  u.account_status AS status,
+  u.email,
+  u.role
+FROM "user" u
+INNER JOIN verification v ON v.user_uuid = u.uuid
+WHERE u.account_status = 'pending'
 `
 
 type GetUsersPendingVerificationRow struct {
