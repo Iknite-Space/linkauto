@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }) => {
 
   // Redirect ONLY if loading is false and currentUser is still null
   if (!currentUser) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
 
   return children;

@@ -89,7 +89,7 @@ const ForgotPassword = () => {
           </Button>
 
           <Link
-            to="/"
+            to="/login"
             className="flex items-center gap-2 text-accent font-body hover:underline"
           >
             <FaChevronLeft />

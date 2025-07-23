@@ -104,23 +104,23 @@ export default function Register() {
   return (
     <div className="grid grid-cols-12 w-11/12 max-w-5xl bg-white shadow-lg rounded-2xl overflow-hidden m-[30px]">
       {/* Left Side */}
-      <div className="col-span-12 md:col-span-3 bg-secondary flex items-center justify-center p-6">
-        <div className="text-white text-center">
-          <h1 className="text-heading font-bold mb-2">Welcome</h1>
+      <div className="flex items-center justify-center col-span-12 p-6 md:col-span-3 bg-secondary">
+        <div className="text-center text-white">
+          <h1 className="mb-2 font-bold text-heading">Welcome</h1>
           <p className="text-body">Get a car for your trip easily</p>
         </div>
       </div>
 
       {/* Right Side */}
-      <div className="col-span-12 md:col-span-9 p-8">
-        <div className="text-right text-body text-PrimaryTextColor mb-4">
+      <div className="col-span-12 p-8 md:col-span-9">
+        <div className="mb-4 text-right text-body text-PrimaryTextColor">
           Already have an account?{" "}
-          <a href="/" className="text-accent font-body hover:underline">
+          <a href="/login" className="text-accent font-body hover:underline">
             Sign in
           </a>
         </div>
 
-        <h2 className="text-heading font-heading mb-6">Create Account</h2>
+        <h2 className="mb-6 text-heading font-heading">Create Account</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="flex gap-4">
@@ -136,7 +136,7 @@ export default function Register() {
             />
           </div>
           {(errors.fname || errors.lname) && (
-            <p className="text-red text-sm">
+            <p className="text-sm text-red">
               {[errors.fname?.message, errors.lname?.message]
                 .filter(Boolean)
                 .join(" and ")}
@@ -149,7 +149,7 @@ export default function Register() {
             className="w-full px-4 py-2 border border-gray-300 rounded-md"
           />
           {errors.email && (
-            <p className="text-red text-sm">{errors.email.message}</p>
+            <p className="text-sm text-red">{errors.email.message}</p>
           )}
           <input
             {...register("phone")}
@@ -157,7 +157,7 @@ export default function Register() {
             className="w-full px-4 py-2 border border-gray-300 rounded-md"
           />
           {errors.phone && (
-            <p className="text-red text-sm">{errors.phone.message}</p>
+            <p className="text-sm text-red">{errors.phone.message}</p>
           )}
 
           <div className="flex gap-4">
@@ -178,7 +178,7 @@ export default function Register() {
             />
           </div>
           {(errors.zip_code || errors.city || errors.region) && (
-            <p className="text-red text-sm">
+            <p className="text-sm text-red">
               {[
                 [errors.zip_code?.message, errors.city?.message]
                   .filter(Boolean)
@@ -196,7 +196,7 @@ export default function Register() {
             className="w-full px-4 py-2 border border-gray-300 rounded-md"
           />
           {errors.street && (
-            <p className="text-red text-sm">{errors.street.message}</p>
+            <p className="text-sm text-red">{errors.street.message}</p>
           )}
 
           <Controller
@@ -216,11 +216,11 @@ export default function Register() {
             )}
           />
           {errors.gender && (
-            <p className="text-red text-sm">{errors.gender.message}</p>
+            <p className="text-sm text-red">{errors.gender.message}</p>
           )}
 
           {/* <input {...register("photo_url")} placeholder="Photo URL" className="w-full px-4 py-2 border border-gray-300 rounded-md" />
-          {errors.photo_url && <p className="text-red-500 text-sm">{errors.photo_url.message}</p>} */}
+          {errors.photo_url && <p className="text-sm text-red-500">{errors.photo_url.message}</p>} */}
 
           <Controller
             name="role"
@@ -240,7 +240,7 @@ export default function Register() {
             )}
           />
           {errors.role && (
-            <p className="text-red text-sm">{errors.role.message}</p>
+            <p className="text-sm text-red">{errors.role.message}</p>
           )}
 
           <div className="flex gap-4">
@@ -258,7 +258,7 @@ export default function Register() {
             />
           </div>
           {(errors.password || errors.confirm_password) && (
-            <p className="text-red text-sm">
+            <p className="text-sm text-red">
               {" "}
               {[errors.password?.message, errors.confirm_password?.message]
                 .filter(Boolean)
