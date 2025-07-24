@@ -4,7 +4,7 @@ import Navbar from "../components/NavBar"
 
 const HomeLayout = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen overflow-x-hidden">
         <header >
           {/* the header component comes here */}
           <Navbar /> 
@@ -13,7 +13,7 @@ const HomeLayout = () => {
             <Outlet />
         </main>
 
-        <footer className="px-4 py-10 md:px-20">
+        <footer className="lg:px-7 py-10 md:px-20">
             <HomeFooter />
         </footer>
     </div>
