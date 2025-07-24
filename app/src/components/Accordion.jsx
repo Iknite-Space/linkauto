@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import * as Accordion from "@radix-ui/react-accordion";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { motion } from "framer-motion";
 
-// Move this above AccordionDemo
+// AccordionItem Component
 const AccordionItem = React.forwardRef(
   ({ children, className, ...props }, ref) => (
     <Accordion.Item
@@ -25,6 +26,7 @@ AccordionItem.propTypes = {
   className: PropTypes.string,
 };
 
+// AccordionTrigger Component
 const AccordionTrigger = React.forwardRef(
   ({ children, className, ...props }, ref) => (
     <Accordion.Header className="flex">
@@ -53,6 +55,7 @@ AccordionTrigger.propTypes = {
   className: PropTypes.string,
 };
 
+// AccordionContent Component
 const AccordionContent = React.forwardRef(
   ({ children, className, ...props }, ref) => (
     <Accordion.Content
@@ -73,7 +76,7 @@ AccordionContent.propTypes = {
   className: PropTypes.string,
 };
 
-// Main component
+// Main Component
 const AccordionDemo = () => (
   <Accordion.Root
     className="w-full max-w-2xl mx-auto bg-white shadow-md rounded-md"
@@ -81,27 +84,45 @@ const AccordionDemo = () => (
     defaultValue="item-1"
     collapsible
   >
-    <AccordionItem value="item-1">
-      <AccordionTrigger>Is it accessible?</AccordionTrigger>
-      <AccordionContent>
-        Yes. It adheres to the WAI-ARIA design pattern.
-      </AccordionContent>
-    </AccordionItem>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
+    >
+      <AccordionItem value="item-1">
+        <AccordionTrigger>Is it accessible?</AccordionTrigger>
+        <AccordionContent>
+          Yes. It adheres to the WAI-ARIA design pattern.
+        </AccordionContent>
+      </AccordionItem>
+    </motion.div>
 
-    <AccordionItem value="item-2">
-      <AccordionTrigger>Is it unstyled?</AccordionTrigger>
-      <AccordionContent>
-        Yes. It’s unstyled by default, giving you full control over the look and
-        feel.
-      </AccordionContent>
-    </AccordionItem>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
+    >
+      <AccordionItem value="item-2">
+        <AccordionTrigger>Is it unstyled?</AccordionTrigger>
+        <AccordionContent>
+          Yes. It’s unstyled by default, giving you full control over the look
+          and feel.
+        </AccordionContent>
+      </AccordionItem>
+    </motion.div>
 
-    <AccordionItem value="item-3">
-      <AccordionTrigger>Can it be animated?</AccordionTrigger>
-      <AccordionContent>
-        Yes! You can animate the Accordion with CSS or JavaScript.
-      </AccordionContent>
-    </AccordionItem>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }}
+    >
+      <AccordionItem value="item-3">
+        <AccordionTrigger>Can it be animated?</AccordionTrigger>
+        <AccordionContent>
+          Yes! You can animate the Accordion with CSS or JavaScript.
+        </AccordionContent>
+      </AccordionItem>
+    </motion.div>
   </Accordion.Root>
 );
 
