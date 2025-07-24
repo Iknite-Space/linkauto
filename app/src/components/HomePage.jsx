@@ -1,14 +1,14 @@
 import React from 'react'
-import ComingSoon from './ComingSoon'
 import HeroSection from './HeroSection'
 import WhyChooseUs from './WhyChooseUs'
+import AboutUs from './AboutUs'
 
 
 const HomePage = () => {
   return (
     <>
     <div id='hero-section'><HeroSection /></div>
-    <div className='my-4' id='hero'><ComingSoon /></div>
+    <div id="about-us" className="my-4"><AboutUs /></div>
     <div className="my-4"><WhyChooseUs /></div>
     </>
   )

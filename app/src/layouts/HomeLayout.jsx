@@ -8,11 +8,11 @@ const HomeLayout = () => {
             {/* the header component comes here */}
             <h2>header here</h2>
         </header>
-        <main className="flex-grow p-10">
+        <main className="flex-grow px-6 md:px-20">
             <Outlet />
         </main>
 
-        <footer className="p-10">
+        <footer className="px-6 py-10 md:px-20">
             <HomeFooter />
         </footer>
     </div>
