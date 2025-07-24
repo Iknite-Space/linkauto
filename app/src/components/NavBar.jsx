@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -6,12 +7,12 @@ const Navbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
-    <nav className="bg-primary fixed top-0 left-0 w-full z-50">
+    <nav className="bg-primary fixed top-0 left-0 w-full z-50 ">
       <div className="flex items-center justify-between p-4 md:px-10 md:py-6">
         {/* Left: Logo and Brand */}
         <div className="flex items-center space-x-0">
           <img
-            src="./../assets/he.png"
+            src="./../assets/single-logo-accent.png"
             alt="Logo"
             className="h-10 w-10 object-contain md:h-12 md:w-12"
           />
@@ -36,7 +37,7 @@ const Navbar = () => {
             <a href="#" className="hover:text-accent">FAQ</a>
           </div>
           <div className="flex items-center space-x-4">
-            <a href="#" className="text-white hover:text-accent">Login</a>
+            <Link to="/login" className="text-white hover:text-accent">Login</Link>
             <a
               href="#"
               className="bg-accent text-white text-button px-4 py-2 rounded hover:bg-secondary shadow"
