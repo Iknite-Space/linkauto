@@ -5,12 +5,12 @@ export default function App() {
   return (
     <div className="font-sans text-gray-800">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-blue-900 to-indigo-700 text-white py-10 px-6 overflow-hidden">
+      <section className="relative bg-primary text-white py-10 px-6 overflow-hidden">
         {/* Decorative Background Circle (Top Left) */}
-        <div className="absolute top-[-100px] left-[-150px] w-[400px] h-[400px] bg-indigo-600 rounded-full opacity-30 z-0"></div>
+        <div className="absolute top-[-100px] left-[-150px] w-[400px] h-[400px] bg-secondary rounded-full opacity-30 z-0"></div>
 
         {/* Half-Ellipse Behind Car */}
-        <div className="absolute -bottom-28 right-[-180px] w-[800px] h-[400px] bg-accent rounded-[50%] z-0 rotate-[12deg]"></div>
+        <div className="absolute -bottom-28 right-[-180px] w-[800px] h-[400px] bg-accent rounded-[50%] z-0 rotate-[12deg] opacity-17"></div>
 
         <div className="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between">
           {/* Text Content */}
@@ -55,11 +55,23 @@ export default function App() {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8, type: "spring" }}
           >
-            <img
-              src="./../assets/car3.png"
-              alt="Car"
-              className="w-[1000px] object-contain"
-            />
+            {/* Inner motion.div for smooth continuous float */}
+            <motion.div
+              animate={{ y: ["0px", "-15px"] }}
+              transition={{
+                duration: 2,
+                ease: "linear",
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+              style={{ width: "100%" }}
+            >
+              <img
+                src="./../assets/car3.png"
+                alt="Car"
+                className="w-[1000px] object-contain"
+              />
+            </motion.div>
           </motion.div>
         </div>
       </section>
