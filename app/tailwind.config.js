@@ -26,6 +26,10 @@ export const theme = {
             heading: ['20pt', { lineHeight: '1.3', fontWeight: '700' }], // Roboto Bold
             body: ['12pt', { lineHeight: '1.6', fontWeight: '400' }],    // Roboto Regular
             caption: ['12pt', { lineHeight: '1.4', fontWeight: '300' }], // Roboto Light or Regular
+            slogan: ['9pt', { lineHeight: '0.3', fontWeight: '400' }], // Roboto Medium
+            logoName: ['25pt', { lineHeight: '1.2', fontWeight: '700' }], // Roboto Semi-Bold
+            heading2: ['13pt', { lineHeight: '1.3', fontWeight: '500' }], // Roboto Bold
+            button: ['14pt', { lineHeight: '1.2', fontWeight: '500' }], // Roboto Medium
        },
     },
 };
