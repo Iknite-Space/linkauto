@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 
 export default function App() {
   return (
-    <div className="font-sans">
+    <div className="font-sans mt-[90px]">
       {/* Hero Section */}
-      <section className="relative bg-primary text-white py-12 px-4 md:px-10 lg:px-16 overflow-hidden">
+      <section id="home" className="relative bg-primary text-white py-12 px-4 md:px-7 lg:px-7 overflow-hidden">
         {/* Decorative Background Circle (Top Left) */}
         <div className="absolute top-[20px] left-[20px] 
           w-[150px] h-[150px] md:top-[-100px] md:left-[-150px] md:w-[400px] md:h-[400px] 
@@ -18,7 +18,7 @@ export default function App() {
         </div>
 
         {/* Content Section */}
-        <div className="relative z-10 max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between gap-10">
+        <div className="relative py-5 z-10 max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between gap-10">
           {/* Text Content */}
           <motion.div
             className="w-full md:w-1/2 -mt-4 md:mt-0 text-center md:text-left 
@@ -75,7 +75,7 @@ export default function App() {
               className="w-full max-w-[450px] sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1000px]"
             >
               <img
-                src="./../assets/car3.png"
+                src="./../assets/car1-herosection.png"
                 alt="Car"
                 className="w-full object-contain"
               />
