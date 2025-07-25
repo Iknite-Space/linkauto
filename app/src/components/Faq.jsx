@@ -3,8 +3,8 @@ import AccordionDemo from "./Accordion";
 
 const Faq = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full p-4">
-      <div className="w-screen bg-white shadow-md rounded-lg p-6">
+    <div className="flex flex-col items-center justify-center w-full h-full p-4  ">
+      <div className="w-screen bg-gray-100 shadow-xl rounded-lg p-6 py-10 border-t border-gray-300  mt-8">
         <div className="flex flex-col lg:flex-row gap-10 items-start">
           {/* Left: Image with animation */}
           <motion.div
