@@ -54,6 +54,12 @@ import {
               href: "/dashboard/ver-document-input",
               visible: ["admin"],
             },
+            {
+              label: "Car Listing",
+              icon: <FiClipboard />,
+              href: "/dashboard/car-listing",
+              visible: ["admin"],
+            },
           ],
         },
         {

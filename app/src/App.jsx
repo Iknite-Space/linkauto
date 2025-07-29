@@ -59,6 +59,7 @@ function App() {
               <Route path="user-verification" element={<UserVerification />} />
               <Route path="ver-document-input" element={<VerDocumentInput />} />
               <Route path="user-verification/:user_uuid" element={<SingleUserVerification />} />
+              <Route path="car-listing" element={<CarListing />} />
               <Route path="logout" element={<Logout />} />
             </Route>
 
