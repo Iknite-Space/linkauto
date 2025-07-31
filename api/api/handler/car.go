@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"fmt"
 	"mime/multipart"
 	"net/http"
@@ -151,7 +152,9 @@ func (h *CarHandler) UploadCar(c *gin.Context) {
 		return
 	}
 	defer func() {
-		tx.Rollback(c)
+		if err := tx.Rollback(c); err != nil && err != sql.ErrTxDone {
+			fmt.Println("warning: failed to rollback transaction:", err)
+		}
 	}()
 
 	car_uuid, err := q.CreateCar(c, req.Car)

@@ -108,7 +108,7 @@ export default function CarUploadForm() {
       toast.error("Upload failed: " + (error.response?.data?.error || error.message));
     } finally {
       setLoader(false);
-      window.location.reload()
+      
     }
   };
   
