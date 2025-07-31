@@ -27,7 +27,7 @@ export default function SelectInput({
           />
         )}
       />
-      {error && <p className="text-red text-sm mt-1">{error.message}</p>}
+      {error && <p className="mt-1 text-sm text-red">{error.message}</p>}
     </div>
   );
 }
