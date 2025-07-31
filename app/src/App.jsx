@@ -30,6 +30,7 @@ const Logout = lazy(() => import("./pages/auth/Logout"));
 const UserVerification = lazy(() =>
   import("./pages/dashboard/UserVerification")
 );
+const CarUploadForm = lazy(()=>import("./components/form/CarUploadForm"));
 const VerDocumentInput = lazy(() => import("./pages/dashboard/VerDocumentInput"));
 const SingleUserVerification = lazy(() => import("./pages/dashboard/SingleVerPage"));
 
@@ -59,6 +60,7 @@ function App() {
               <Route path="user-verification" element={<UserVerification />} />
               <Route path="ver-document-input" element={<VerDocumentInput />} />
               <Route path="user-verification/:user_uuid" element={<SingleUserVerification />} />
+              <Route path="upload" element={<CarUploadForm />} />
               <Route path="logout" element={<Logout />} />
             </Route>
 

@@ -43,3 +43,16 @@ WHERE u.uuid = $1;
 UPDATE "user"
 SET account_status = $1
 WHERE uuid = $2;
+
+-- name: CreateCar :one
+INSERT INTO "car" (owner_uuid,pickup_location,dropoff_location)
+VALUES($1,$2,$3)
+RETURNING uuid;
+
+-- name: CreateCarDetails :exec
+INSERT INTO "car_details" (car_uuid,name,model,energy_type,transmission_type,brand,no_seats,color,chassis_no,vin,price_per_day,cat_doc,visite_technique_doc,insurance_doc)
+VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14);
+
+-- name: UploadCarImage :exec
+INSERT INTO "car_gallery" (car_uuid,image)
+VALUES ($1,$2);
