@@ -48,14 +48,13 @@ function App() {
               {/* Home layout with public routes */}
               <Route path="/" element={<HomeLayout />}>
                 <Route index element={<HomePage />} />
-                <Route path="/carlisting" element = {<CarListing/>}/>
+                <Route path="/carlisting" element={<CarListing />} />
               </Route>
               {/* Public routes */}
               <Route element={<AuthLayout />}>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
-
               </Route>
 
               {/* Protected routes */}
