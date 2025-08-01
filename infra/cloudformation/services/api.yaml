@@ -177,6 +177,7 @@ Resources:
                 Resource:
                   - !Ref AppDatabaseSecret
                   - !Ref DbAdminSecretArn
+                  - !Ref CloudinarySecret
 
   # A role for the containers
   TaskRole:
