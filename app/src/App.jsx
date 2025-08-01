@@ -30,9 +30,13 @@ const Logout = lazy(() => import("./pages/auth/Logout"));
 const UserVerification = lazy(() =>
   import("./pages/dashboard/UserVerification")
 );
-const VerDocumentInput = lazy(() => import("./pages/dashboard/VerDocumentInput"));
-const SingleUserVerification = lazy(() => import("./pages/dashboard/SingleVerPage"));
-
+const CarListing = lazy(() => import("./pages/listings/CarListing"));
+const VerDocumentInput = lazy(() =>
+  import("./pages/dashboard/VerDocumentInput")
+);
+const SingleUserVerification = lazy(() =>
+  import("./pages/dashboard/SingleVerPage")
+);
 
 function App() {
   return (
@@ -44,24 +48,41 @@ function App() {
               {/* Home layout with public routes */}
               <Route path="/" element={<HomeLayout />}>
                 <Route index element={<HomePage />} />
+                <Route path="/carlisting" element = {<CarListing/>}/>
               </Route>
               {/* Public routes */}
               <Route element={<AuthLayout />}>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
+
               </Route>
 
-            {/* Protected routes */}
-            <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-              <Route index element={<ComingSoon />} />
-              {/* <Route path="profile" element={<ComingSoon />} /> */}
-              <Route path="user-verification" element={<UserVerification />} />
-              <Route path="ver-document-input" element={<VerDocumentInput />} />
-              <Route path="user-verification/:user_uuid" element={<SingleUserVerification />} />
-              <Route path="logout" element={<Logout />} />
-            </Route>
-
+              {/* Protected routes */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<ComingSoon />} />
+                {/* <Route path="profile" element={<ComingSoon />} /> */}
+                <Route
+                  path="user-verification"
+                  element={<UserVerification />}
+                />
+                <Route
+                  path="ver-document-input"
+                  element={<VerDocumentInput />}
+                />
+                <Route
+                  path="user-verification/:user_uuid"
+                  element={<SingleUserVerification />}
+                />
+                <Route path="logout" element={<Logout />} />
+              </Route>
 
               {/* Catch-all */}
               <Route path="*" element={<NotFound />} />
