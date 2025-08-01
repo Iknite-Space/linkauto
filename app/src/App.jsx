@@ -57,7 +57,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
-
+              </Route>
 
               
 
@@ -96,7 +96,7 @@ function App() {
                   path="user-verification/:user_uuid"
                   element={<SingleUserVerification />}
                 />
-                <Route path="logout" element={<Logout />} />
+                <Route path="logout" element={<Logout /react>} />
               </Route>
 
               {/* Catch-all */}
