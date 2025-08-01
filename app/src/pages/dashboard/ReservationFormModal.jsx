@@ -1,6 +1,5 @@
-// ReservationFormModal.jsx
-
 import React from "react";
+import PropTypes from "prop-types"; // 👈 import PropTypes
 
 export default function ReservationFormModal({ onClose }) {
   return (
@@ -58,3 +57,7 @@ export default function ReservationFormModal({ onClose }) {
     </div>
   );
 }
+
+ReservationFormModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+};

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types"; 
+
 import {
   Car,
   BadgeInfo,
@@ -67,3 +69,14 @@ function DetailItem({ icon, label, value }) {
     </div>
   );
 }
+
+
+DetailItem.propTypes = {
+  icon: PropTypes.node.isRequired,
+  label: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.node,
+  ]).isRequired,
+};
