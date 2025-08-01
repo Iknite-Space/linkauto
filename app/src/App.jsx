@@ -19,7 +19,6 @@ const ToastContainer = lazy(() =>
   }))
 );
 const NotFound = lazy(() => import("./components/shared/NotFound"));
-const CarListing = lazy(() => import("./pages/dashboard/CarListing"));
 const SingleCar = lazy(() => import("./pages/dashboard/SingleCar"));
 const SingleCarPage = lazy(() => import("./pages/dashboard/SingleCarPage"));
 const SingleCarDetails = lazy(() => import("./pages/dashboard/SingleCarDetails"));
