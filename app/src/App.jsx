@@ -96,7 +96,7 @@ function App() {
                   path="user-verification/:user_uuid"
                   element={<SingleUserVerification />}
                 />
-                <Route path="logout" element={<Logout /react>} />
+                <Route path="logout" element={<Logout />} />
               </Route>
 
               {/* Catch-all */}
