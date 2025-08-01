@@ -61,6 +61,19 @@ Parameters:
 
 Resources:
 
+  CloudinarySecret:
+    Type: "AWS::SecretsManager::Secret"
+    Properties:
+      Name: !Sub "/${EnvId}/Cloudinary"
+      GenerateSecretString:
+        SecretStringTemplate: !Sub '{}'
+        GenerateStringKey: "name"
+        PasswordLength: 30
+        ExcludePunctuation: true
+      Tags:
+        - Key: EnvId
+          Value: !Ref EnvId
+
   AppDatabaseSecret:
     Type: "AWS::SecretsManager::Secret"
     Properties:
@@ -133,6 +146,8 @@ Resources:
               ValueFrom: !Sub "${DbAdminSecretArn}:port::"
             - Name: DB_PASSWORD
               ValueFrom: !Sub "${AppDatabaseSecret}:password::"
+            - Name: CLOUDINARY_CLOUD_NAME
+              ValueFrom: !Sub "${CloudinarySecret}:name::"
 
     # A role needed by ECS to Start the Ecs Service
   ExecutionRole:
