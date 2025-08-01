@@ -24,7 +24,7 @@ const HomePage = lazy(() => import("./components/HomePage"));
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const Login = lazy(() => import("./pages/auth/Login"));
 // const Register = lazy(() => import("./pages/auth/Register"));
-const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword")); 
 // Protected pages
 const Logout = lazy(() => import("./pages/auth/Logout"));
 const UserVerification = lazy(() =>
