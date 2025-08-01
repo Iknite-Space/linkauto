@@ -59,7 +59,7 @@ import {
         {
           label: "Bookings",
           icon: <FiBookOpen />,
-          href: "dashboard/bookings",
+          href: "/dashboard/upload",
           visible: ["admin", "owner", "customer"],
         },
         {
