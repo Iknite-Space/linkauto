@@ -35,6 +35,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	authHandler := handler.NewAuthHandler(h.store)
 	verHandler := handler.NewVerHandler(h.store, h.cloudinary)
 	userHandler := handler.NewUserHandler(h.store)
+	carHandler := handler.NewCarHandler(h.store, h.cloudinary)
 
 	//routes
 	r.GET("//healthcheck", h.handleHealthcheck)
@@ -44,6 +45,8 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.GET("/users/pending-verification", userHandler.GetUserPendingVer)
 	r.GET("/user-verification/:user_uuid", userHandler.GetSingleUserVerification)
 	r.PATCH("/user-verification", userHandler.UpdateUserVerificationStatus)
+
+	r.POST("/car", carHandler.UploadCar)
 
 	return r
 }

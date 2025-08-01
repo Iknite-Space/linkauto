@@ -83,7 +83,7 @@ import {
         {
           label: "Bookings",
           icon: <FiBookOpen />,
-          href: "dashboard/bookings",
+          href: "/dashboard/upload",
           visible: ["admin", "owner", "customer"],
         },
         {
@@ -112,4 +112,120 @@ import {
       ],
     },
   ];
+
+  export const cars = [
+  {
+    id: 1,
+    name: "Toyota Corolla",
+    image: "/assets/filthy.png",
+    pricePerDay: 45,
+    brand: "Toyota",
+    transmission: "Automatic",
+    energy_type: "Petrol",
+    no_seats: "5",
+  },
+  {
+    id: 2,
+    name: "Honda Civic",
+    image: "/assets/luxury.webp",
+    pricePerDay: 50,
+    brand: "Honda",
+    transmission: "Manual",
+    energy_type: "Diesel",
+    no_seats: "5",
+    
+  },
+  {
+    id: 3,
+    name: "Ford Focus",
+    image: "/assets/luxurylaunches.jpg",
+    pricePerDay: 48,
+    brand: "Ford",
+    transmission: "Automatic",
+    energy_type: "Petrol",
+    no_seats: "5",
+    
+  },
+  {
+    id: 4,
+    name: "Chevrolet Malibu",
+    image: "/assets/face.jpeg",
+    pricePerDay: 55,
+    brand: "Chevrolet",
+    transmission: "Automatic",
+    energy_type: "Petrol",
+    no_seats: "5",
+    
+  },
+  {
+    id: 5,
+    name: "Hyundai Elantra",
+    image: "/assets/faq.png",
+    pricePerDay: 47,
+    brand: "Hyundai",
+    transmission: "Manual",
+    energy_type: "Petrol",
+    no_seats: "5",
+    
+  },
+  {
+    id: 6,
+    name: "Nissan Altima",
+    image: "/assets/car2.png",
+    pricePerDay: 52,
+    brand: "Nissan",
+    transmission: "Automatic",
+    energy_type: "Petrol",
+    no_seats: "5",
+    
+  },
+  {
+    id: 7,
+    name: "Kia Forte",
+    image: "/assets/sport.webp",
+    pricePerDay: 43,
+    brand: "Kia",
+    transmission: "Manual",
+    energy_type: "Diesel",
+    no_seats: "5",
+    
+  },
+  {
+    id: 8,
+    name: "Volkswagen Jetta",
+    image: "/assets/carbuzz.avif",
+    pricePerDay: 54,
+    brand: "Volkswagen",
+    transmission: "Automatic",
+    energy_type: "Petrol",
+    no_seats: "5",
+    
+  },
+  {
+    id: 9,
+    name: "Mazda 3",
+    image: "/assets/face.jpeg",
+    pricePerDay: 49,
+    brand: "Mazda",
+    transmission: "Manual",
+    energy_type: "Diesel",
+    no_seats: "5",
+    
+  },
+  {
+    id: 10,
+    name: "Subaru Impreza",
+    image: "/assets/car1.png",
+    pricePerDay: 46,
+    brand: "Subaru",
+    transmission: "Automatic",
+    energy_type: "Petrol",
+    no_seats: "5",
+    
+  },
+  
+];
+
+
+
   
