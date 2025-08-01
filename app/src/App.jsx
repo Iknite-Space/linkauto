@@ -24,15 +24,20 @@ const HomePage = lazy(() => import("./components/HomePage"));
 const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const Login = lazy(() => import("./pages/auth/Login"));
 // const Register = lazy(() => import("./pages/auth/Register"));
-const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword")); 
 // Protected pages
 const Logout = lazy(() => import("./pages/auth/Logout"));
 const UserVerification = lazy(() =>
   import("./pages/dashboard/UserVerification")
 );
+
+
+
+const CarListing = lazy(() => import("./pages/listings/CarListing"));
 const CarUploadForm = lazy(()=>import("./components/form/CarUploadForm"));
 const VerDocumentInput = lazy(() => import("./pages/dashboard/VerDocumentInput"));
 const SingleUserVerification = lazy(() => import("./pages/dashboard/SingleVerPage"));
+
 
 
 function App() {
@@ -45,6 +50,7 @@ function App() {
               {/* Home layout with public routes */}
               <Route path="/" element={<HomeLayout />}>
                 <Route index element={<HomePage />} />
+                <Route path="/carlisting" element = {<CarListing/>}/>
               </Route>
               {/* Public routes */}
               <Route element={<AuthLayout />}>
@@ -52,6 +58,8 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
               </Route>
+
+              
 
             {/* Protected routes */}
             <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
@@ -64,6 +72,32 @@ function App() {
               <Route path="logout" element={<Logout />} />
             </Route>
 
+
+              {/* Protected routes */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<ComingSoon />} />
+                {/* <Route path="profile" element={<ComingSoon />} /> */}
+                <Route
+                  path="user-verification"
+                  element={<UserVerification />}
+                />
+                <Route
+                  path="ver-document-input"
+                  element={<VerDocumentInput />}
+                />
+                <Route
+                  path="user-verification/:user_uuid"
+                  element={<SingleUserVerification />}
+                />
+                <Route path="logout" element={<Logout />} />
+              </Route>
 
               {/* Catch-all */}
               <Route path="*" element={<NotFound />} />
