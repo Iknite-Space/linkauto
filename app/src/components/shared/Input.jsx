@@ -9,12 +9,13 @@ export default function Input({
   type = "text",
   placeholder,
   className = "",
+  isRequired = false
 }) {
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={name} className="block text-sm font-medium mb-1">
-          {label}
+        <label htmlFor={name} className="block mb-1 text-sm font-medium">
+          {label} {isRequired && (<span className='text-red'>*</span>)}
         </label>
       )}
       <input
@@ -24,7 +25,7 @@ export default function Input({
         {...register(name)}
         className={`w-full px-4 py-2 border border-gray-300 rounded-md ${className}`}
       />
-      {error && <p className="text-red text-sm mt-1">{error.message}</p>}
+      {error && <p className="mt-1 text-sm text-red">{error.message}</p>}
     </div>
   );
 }
@@ -36,5 +37,6 @@ Input.propTypes = {
   error: PropTypes.object,
   type: PropTypes.string,
   placeholder: PropTypes.string,
+  isRequired: PropTypes.bool,
   className: PropTypes.string,
 }

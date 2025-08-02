@@ -54,12 +54,36 @@ import {
               href: "/dashboard/ver-document-input",
               visible: ["admin"],
             },
+            {
+              label: "Car Listing",
+              icon: <FiClipboard />,
+              href: "/dashboard/car-listing",
+              visible: ["admin"],
+            },
+            {
+              label: "Single Car",
+              icon: <FiClipboard />,
+              href: "/dashboard/single-car",
+              visible: ["admin"],
+            },
+            {
+              label: "Single Car Page",
+              icon: <FiClipboard />,
+              href: "/dashboard/single-car-page",
+              visible: ["admin"],
+            },
+            {
+              label: "Single Car Details",
+              icon: <FiClipboard />,
+              href: "/dashboard/single-car-details",
+              visible: ["admin"],
+            },
           ],
         },
         {
           label: "Bookings",
           icon: <FiBookOpen />,
-          href: "dashboard/bookings",
+          href: "/dashboard/upload",
           visible: ["admin", "owner", "customer"],
         },
         {
