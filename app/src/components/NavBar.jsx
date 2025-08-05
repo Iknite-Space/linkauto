@@ -7,14 +7,14 @@ const Navbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
-    <nav className="bg-primary fixed top-0 left-0 w-full z-50 ">
+    <nav className="fixed top-0 left-0 z-50 w-full bg-primary ">
       <div className="flex items-center justify-between p-4 md:px-10 md:py-6">
         {/* Left: Logo and Brand */}
         <div className="flex items-center space-x-0">
           <img
             src="./../assets/single-logo-accent.png"
             alt="Logo"
-            className="h-10 w-10 object-contain md:h-12 md:w-12"
+            className="object-contain w-10 h-10 md:h-12 md:w-12"
           />
           <div className="flex flex-col items-start">
             <span className="text-logoName text-[23px] md:text-logoName font-bold text-backgroundColor">
@@ -27,26 +27,24 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center w-full">
-          <div className="flex-1 flex justify-center space-x-6 text-heading2 text-backgroundColor">
-            <a href="#home" className="hover:text-accent">Home</a>
-            <a href="#about-us" className="hover:text-accent">About Us</a>
-            <a href="#why-choose-us" className="hover:text-accent">Why Choose Us</a>
-            <a href="#testimonials" className="hover:text-accent">Testimonials</a>
-            <a href="#contact" className="hover:text-accent">Contact</a>
-            <a href="#faq" className="hover:text-accent">FAQ</a>
+        <div className="items-center hidden w-full md:flex">
+          <div className="flex justify-center flex-1 space-x-6 text-heading2 text-backgroundColor">
+            <a href="/#home" className="hover:text-accent">Home</a>
+            <a href="/#about-us" className="hover:text-accent">About Us</a>
+            <a href="/#contact" className="hover:text-accent">Contact</a>
+            <Link to="/carlisting" className="hover:text-accent">Cars</Link>
           </div>
           <div className="flex items-center space-x-4">
             <Link to="/login" className="text-white hover:text-accent">Login</Link>
-            <Link to="/register" className="bg-accent text-white text-button px-4 py-2 rounded hover:bg-secondary shadow">Register</Link>
+            <Link to="/register" className="px-4 py-2 text-white rounded shadow bg-accent text-button hover:bg-secondary">Register</Link>
           </div>
         </div>
 
         {/* Small screen: Login Button (styled) */}
-        <div className="flex items-center md:hidden space-x-3">
+        <div className="flex items-center space-x-3 md:hidden">
           <a
             href="#"
-            className="bg-accent text-white px-3 py-2 rounded text-sm shadow hover:bg-secondary"
+            className="px-3 py-2 text-sm text-white rounded shadow bg-accent hover:bg-secondary"
           >
             Login
           </a>
@@ -70,7 +68,7 @@ const Navbar = () => {
 
       {/* Mobile Dropdown Menu with hover and active styles */}
       {isOpen && (
-        <div className="md:hidden flex flex-col px-6 pb-4 space-y-2 text-sm bg-primary text-white">
+        <div className="flex flex-col px-6 pb-4 space-y-2 text-sm text-white md:hidden bg-primary">
           {[
             "Home",
             "About Us",
@@ -82,10 +80,7 @@ const Navbar = () => {
             <a
               key={label}
               href="#"
-              className="px-3 py-2 rounded transition duration-200
-                         hover:bg-secondary hover:text-accent
-                         focus:bg-secondary focus:text-accent
-                         active:bg-secondary active:text-accent"
+              className="px-3 py-2 transition duration-200 rounded hover:bg-secondary hover:text-accent focus:bg-secondary focus:text-accent active:bg-secondary active:text-accent"
             >
               {label}
             </a>

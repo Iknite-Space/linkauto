@@ -23,6 +23,7 @@ function CarListing() {
   const currentCars = cars.slice(offset, offset + itemsPerPage);
 
   return (
+
     <section className="px-10 py-16 mt-16 lg:mx-auto">
       <h2 className="text-3xl text-primary font-bold mb-8 text-center">
         Book a car and Unleash Your Adventure!
@@ -63,10 +64,12 @@ function CarListing() {
                   />
                 </AnimatePresence>
               </div>
+   
               <div className="p-4 space-y-2">
                 <h3 className="text-xl font-semibold text-primary">
                   {car.name}
                 </h3>
+
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-1 text-sm text-gray-500">
                     <TbManualGearboxFilled className="text-primary" />
@@ -95,6 +98,8 @@ function CarListing() {
                 <button className="mt-3 w-full bg-primary text-white py-2 rounded-md hover:bg-secondary transition-colors">
                   View Details
                 </button>
+
+
               </div>
             </motion.div>
           );
