@@ -5,6 +5,7 @@ import { MdPeopleAlt } from "react-icons/md";
 import { TbManualGearboxFilled } from "react-icons/tb";
 import { BsFillFuelPumpDieselFill } from "react-icons/bs";
 import { IoLogoModelS } from "react-icons/io";
+import { motion, AnimatePresence } from "framer-motion";
 
 function CarListing() {
   const [hoveredId, setHoveredId] = useState(null);
@@ -33,17 +34,35 @@ function CarListing() {
           const image = isHovered ? car.images.back : car.images.front;
 
           return (
-            <div
+            <motion.div
               key={car.id}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
               onMouseEnter={() => setHoveredId(car.id)}
               onMouseLeave={() => setHoveredId(null)}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0px 10px 20px rgba(0,0,0,0.1)",
+              }}
+              whileTap={{ scale: 0.97 }}
             >
-              <img
-                src={image}
-                alt={car.name}
-                className="w-full h-48 object-cover"
-              />
+              {" "}
+              <div className="relative w-full h-48 overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={image}
+                    src={image}
+                    alt={car.name}
+                    className="absolute w-full h-48 object-cover"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                  />
+                </AnimatePresence>
+              </div>
               <div className="p-4 space-y-2">
                 <h3 className="text-xl font-semibold text-primary">
                   {car.name}
@@ -77,12 +96,11 @@ function CarListing() {
                   View Details
                 </button>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
 
-      {/* Pagination controls */}
       <div className="mt-10 flex justify-center">
         <ReactPaginate
           previousLabel={"← Prev"}
