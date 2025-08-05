@@ -117,7 +117,10 @@ import {
   {
     id: 1,
     name: "Toyota Corolla",
-    image: "/assets/filthy.png",
+    images:{
+      front: "/assets/filthy.png",
+      back: "/assets/car2.png",
+    } ,
     pricePerDay: 45,
     brand: "Toyota",
     transmission: "Automatic",
@@ -127,7 +130,10 @@ import {
   {
     id: 2,
     name: "Honda Civic",
-    image: "/assets/luxury.webp",
+    images:{front: "/assets/luxury.webp",
+       back: "/assets/car3.png"
+
+    } ,
     pricePerDay: 50,
     brand: "Honda",
     transmission: "Manual",
@@ -138,7 +144,8 @@ import {
   {
     id: 3,
     name: "Ford Focus",
-    image: "/assets/luxurylaunches.jpg",
+    images: {front: "/assets/luxurylaunches.jpg",
+      back: "/assets/car1.png"},
     pricePerDay: 48,
     brand: "Ford",
     transmission: "Automatic",
@@ -149,7 +156,8 @@ import {
   {
     id: 4,
     name: "Chevrolet Malibu",
-    image: "/assets/face.jpeg",
+    images: {front: "/assets/face.jpeg",
+      back: "/assets/car2.png"},
     pricePerDay: 55,
     brand: "Chevrolet",
     transmission: "Automatic",
@@ -160,7 +168,8 @@ import {
   {
     id: 5,
     name: "Hyundai Elantra",
-    image: "/assets/faq.png",
+    images: {front: "/assets/faq.png",
+      back: "/assets/sport.webp"},
     pricePerDay: 47,
     brand: "Hyundai",
     transmission: "Manual",
@@ -171,7 +180,8 @@ import {
   {
     id: 6,
     name: "Nissan Altima",
-    image: "/assets/car2.png",
+    images: {front: "/assets/car2.png",
+      back: "/assets/car3.png"},
     pricePerDay: 52,
     brand: "Nissan",
     transmission: "Automatic",
@@ -182,7 +192,8 @@ import {
   {
     id: 7,
     name: "Kia Forte",
-    image: "/assets/sport.webp",
+    images: {front: "/assets/sport.webp",
+      back: "/assets/faq.png"},  
     pricePerDay: 43,
     brand: "Kia",
     transmission: "Manual",
@@ -193,7 +204,8 @@ import {
   {
     id: 8,
     name: "Volkswagen Jetta",
-    image: "/assets/carbuzz.avif",
+    images: {front: "/assets/carbuzz.avif",
+      back: "/assets/face.jpeg"}, 
     pricePerDay: 54,
     brand: "Volkswagen",
     transmission: "Automatic",
@@ -204,7 +216,8 @@ import {
   {
     id: 9,
     name: "Mazda 3",
-    image: "/assets/face.jpeg",
+    images: {front: "/assets/face.jpeg",
+      back: "/assets/car1.png"},  
     pricePerDay: 49,
     brand: "Mazda",
     transmission: "Manual",
@@ -215,7 +228,8 @@ import {
   {
     id: 10,
     name: "Subaru Impreza",
-    image: "/assets/car1.png",
+    images: {front: "/assets/car1.png",
+      back: "/assets/luxurylaunches.jpg"},
     pricePerDay: 46,
     brand: "Subaru",
     transmission: "Automatic",
