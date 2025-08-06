@@ -7,6 +7,7 @@ import { BsFillFuelPumpDieselFill } from "react-icons/bs";
 import { IoLogoModelS } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../../services/axios"
+import {Link} from "react-router-dom"
 
 function CarListing() {
   const [hoveredId, setHoveredId] = useState(null);
@@ -56,6 +57,7 @@ function CarListing() {
           const image = isHovered ? car.images[1] : car.images[0];
 
           return (
+            <Link to={`/carlisting/car/${car.id}`} key={car.id}>
             <motion.div
               key={car.id}
               className="overflow-hidden transition-shadow bg-white shadow-md rounded-xl hover:shadow-lg"
@@ -123,6 +125,7 @@ function CarListing() {
 
               </div>
             </motion.div>
+            </Link>
           );
         })}
       </div>
