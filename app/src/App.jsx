@@ -19,9 +19,7 @@ const ToastContainer = lazy(() =>
   }))
 );
 const NotFound = lazy(() => import("./components/shared/NotFound"));
-const SingleCar = lazy(() => import("./pages/dashboard/SingleCar"));
-const SingleCarPage = lazy(() => import("./pages/dashboard/SingleCarPage"));
-const SingleCarDetails = lazy(() => import("./pages/dashboard/SingleCarDetails"));
+const SingleCarPage = lazy(() => import("./pages/listings/SingleCarPage"));
 
 // Public pages
 const HomePage = lazy(() => import("./components/HomePage"));
@@ -55,6 +53,7 @@ function App() {
               <Route path="/" element={<HomeLayout />}>
                 <Route index element={<HomePage />} />
                 <Route path="/carlisting" element={<CarListing />} />
+                <Route path="/carlisting/car/:id" element={<SingleCarPage />}/>
               </Route>
               {/* Public routes */}
               <Route element={<AuthLayout />}>
@@ -75,9 +74,6 @@ function App() {
               <Route path="car-listing" element={<CarListing />} />
               <Route path="upload" element={<CarUploadForm />} />
               <Route path="logout" element={<Logout />} />
-              <Route path="single-car" element={<SingleCar />} />
-              <Route path="single-car-page" element={<SingleCarPage />} />
-              <Route path="single-car-details" element={<SingleCarDetails />} />
             </Route>
 
 

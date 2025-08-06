@@ -1,6 +1,7 @@
 
 import React, { useRef, useState } from "react";
 import "../../App.css";
+import PropTypes from "prop-types";
 import {
   ChevronUp,
   ChevronDown,
@@ -8,9 +9,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-const images = ["/assets/carousel1.png","/assets/testimonial1.png","/assets/car1.png","/assets/car2.png","/assets/testimonial5.png","/assets/testimonial4.png","/assets/testimonial5.png","/assets/testimonial6.png","/assets/car1-herosection.png","/assets/testimonial4.png","/assets/car3.png"];
 
-export default function CarCarousel() {
+export default function CarCarousel({images = []}) {
   const [mainIndex, setMainIndex] = useState(0);
   const sideScrollRef = useRef(null);
 
@@ -33,13 +33,13 @@ export default function CarCarousel() {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-100 p-4">
-      <div className="flex w-full max-w-6xl items-start gap-4">
+    <div className="flex items-center justify-center h-screen p-4 bg-gray-100">
+      <div className="flex items-start w-full max-w-6xl gap-4">
         {/* Side Carousel with Arrows */}
-        <div className="flex flex-col items-center rounded bg-white p-2 shadow-md">
+        <div className="flex flex-col items-center p-2 bg-white rounded shadow-md">
           <button
             onClick={() => scrollSide("up")}
-            className="mb-2 rounded bg-gray-200 p-1 hover:bg-gray-300"
+            className="p-1 mb-2 bg-gray-200 rounded hover:bg-gray-300"
           >
             <ChevronUp />
           </button>
@@ -66,7 +66,7 @@ export default function CarCarousel() {
 
           <button
             onClick={() => scrollSide("down")}
-            className="mt-2 rounded bg-gray-200 p-1 hover:bg-gray-300"
+            className="p-1 mt-2 bg-gray-200 rounded hover:bg-gray-300"
           >
             <ChevronDown />
           </button>
@@ -82,14 +82,14 @@ export default function CarCarousel() {
 
           <button
             onClick={goToPrev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow hover:bg-white"
+            className="absolute p-2 -translate-y-1/2 rounded-full shadow left-2 top-1/2 bg-white/80 hover:bg-white"
           >
             <ChevronLeft size={24} />
           </button>
 
           <button
             onClick={goToNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 shadow hover:bg-white"
+            className="absolute p-2 -translate-y-1/2 rounded-full shadow right-2 top-1/2 bg-white/80 hover:bg-white"
           >
             <ChevronRight size={24} />
           </button>
@@ -98,5 +98,9 @@ export default function CarCarousel() {
     </div>
   );
 }
+
+CarCarousel.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.string),
+};
 
 
