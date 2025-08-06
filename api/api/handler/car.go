@@ -186,3 +186,44 @@ func (h *CarHandler) UploadCar(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Car uploaded successfully and awaiting admin approval"})
 }
+
+func (h *CarHandler) CarListings(c *gin.Context) {
+	// Step 1: Get all approved car listings
+	carRows, err := h.store.Do().GetCarListings(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	var listings []CarListingsResponse
+
+	// Step 2: For each car, fetch its first two images
+	for _, car := range carRows {
+		images, err := h.store.Do().GetCarListingImages(c, car.Uuid)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Extract image strings from the result
+		var imageUrls []string
+		imageUrls = append(imageUrls, images...)
+
+		listings = append(listings, CarListingsResponse{
+			Uuid:             car.Uuid,
+			Name:             car.Name,
+			TransmissionType: car.TransmissionType,
+			NoSeats:          car.NoSeats,
+			EnergyType:       car.EnergyType,
+			Brand:            car.Brand,
+			PricePerDay:      car.PricePerDay,
+			Images:           imageUrls,
+		})
+	}
+
+	// Step 3: Return the listings
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"cars":    listings,
+	})
+}

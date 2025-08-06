@@ -47,6 +47,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.PATCH("/user-verification", userHandler.UpdateUserVerificationStatus)
 
 	r.POST("/car", carHandler.UploadCar)
+	r.GET("/carlistings", carHandler.CarListings)
 
 	return r
 }

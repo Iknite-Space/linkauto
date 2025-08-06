@@ -56,3 +56,12 @@ VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14);
 -- name: UploadCarImage :exec
 INSERT INTO "car_gallery" (car_uuid,image)
 VALUES ($1,$2);
+
+-- name: GetCarListings :many
+SELECT c.uuid,cd.name,cd.transmission_type,cd.no_seats,cd.energy_type,cd.brand,cd.price_per_day FROM car c
+JOIN car_details cd ON c.uuid = cd.car_uuid
+ORDER BY cd.date_added;
+
+-- name: GetCarListingImages :many
+SELECT image FROM car_gallery WHERE car_uuid = $1
+LIMIT 2; 
