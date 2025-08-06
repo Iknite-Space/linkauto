@@ -55,6 +55,7 @@ function App() {
               <Route path="/" element={<HomeLayout />}>
                 <Route index element={<HomePage />} />
                 <Route path="/carlisting" element={<CarListing />} />
+                <Route path="/carlisting/car/:id" element={<SingleCarPage />}/>
               </Route>
               {/* Public routes */}
               <Route element={<AuthLayout />}>

@@ -65,3 +65,14 @@ ORDER BY cd.date_added;
 -- name: GetCarListingImages :many
 SELECT image FROM car_gallery WHERE car_uuid = $1
 LIMIT 2; 
+
+-- name: GetCarDetails :one
+SELECT c.pickup_location,c.dropoff_location,cd.name,
+cd.model,cd.energy_type,cd.transmission_type,cd.brand,cd.no_seats,
+cd.color,cd.chassis_no,cd.vin,cd.price_per_day FROM car c
+JOIN car_details cd ON c.uuid = cd.car_uuid
+WHERE c.uuid = $1;
+
+-- name: GetCarImages :many
+SELECT image FROM car_gallery WHERE car_uuid = $1;
+

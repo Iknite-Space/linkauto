@@ -227,3 +227,31 @@ func (h *CarHandler) CarListings(c *gin.Context) {
 		"cars":    listings,
 	})
 }
+
+func (h *CarHandler) CarDetails(c *gin.Context) {
+	id := c.Param("id")
+	if id == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	//get the car details
+	cardetails, err := h.store.Do().GetCarDetails(c, id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	carimages, err := h.store.Do().GetCarImages(c, id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success":      true,
+		"cardetails":   cardetails,
+		"carimageurls": carimages,
+	})
+
+}

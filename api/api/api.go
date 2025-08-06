@@ -48,6 +48,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 
 	r.POST("/car", carHandler.UploadCar)
 	r.GET("/carlistings", carHandler.CarListings)
+	r.GET("/cardetails/:id", carHandler.CarDetails)
 
 	return r
 }

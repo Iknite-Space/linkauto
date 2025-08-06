@@ -109,6 +109,73 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (string,
 	return email, err
 }
 
+const getCarDetails = `-- name: GetCarDetails :one
+SELECT c.pickup_location,c.dropoff_location,cd.name,
+cd.model,cd.energy_type,cd.transmission_type,cd.brand,cd.no_seats,
+cd.color,cd.chassis_no,cd.vin,cd.price_per_day FROM car c
+JOIN car_details cd ON c.uuid = cd.car_uuid
+WHERE c.uuid = $1
+`
+
+type GetCarDetailsRow struct {
+	PickupLocation   string         `json:"pickup_location"`
+	DropoffLocation  string         `json:"dropoff_location"`
+	Name             string         `json:"name"`
+	Model            string         `json:"model"`
+	EnergyType       string         `json:"energy_type"`
+	TransmissionType string         `json:"transmission_type"`
+	Brand            string         `json:"brand"`
+	NoSeats          *int32         `json:"no_seats"`
+	Color            string         `json:"color"`
+	ChassisNo        string         `json:"chassis_no"`
+	Vin              string         `json:"vin"`
+	PricePerDay      pgtype.Numeric `json:"price_per_day"`
+}
+
+func (q *Queries) GetCarDetails(ctx context.Context, uuid string) (GetCarDetailsRow, error) {
+	row := q.db.QueryRow(ctx, getCarDetails, uuid)
+	var i GetCarDetailsRow
+	err := row.Scan(
+		&i.PickupLocation,
+		&i.DropoffLocation,
+		&i.Name,
+		&i.Model,
+		&i.EnergyType,
+		&i.TransmissionType,
+		&i.Brand,
+		&i.NoSeats,
+		&i.Color,
+		&i.ChassisNo,
+		&i.Vin,
+		&i.PricePerDay,
+	)
+	return i, err
+}
+
+const getCarImages = `-- name: GetCarImages :many
+SELECT image FROM car_gallery WHERE car_uuid = $1
+`
+
+func (q *Queries) GetCarImages(ctx context.Context, carUuid string) ([]string, error) {
+	rows, err := q.db.Query(ctx, getCarImages, carUuid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []string{}
+	for rows.Next() {
+		var image string
+		if err := rows.Scan(&image); err != nil {
+			return nil, err
+		}
+		items = append(items, image)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getCarListingImages = `-- name: GetCarListingImages :many
 SELECT image FROM car_gallery WHERE car_uuid = $1
 LIMIT 2
