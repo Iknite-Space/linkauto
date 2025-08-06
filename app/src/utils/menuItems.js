@@ -54,12 +54,12 @@ import {
               href: "/dashboard/ver-document-input",
               visible: ["admin"],
             },
-            {
-              label: "Single Car Page",
-              icon: <FiClipboard />,
-              href: "/dashboard/single-car-page",
-              visible: ["admin"],
-            },
+            // {
+            //   label: "Single Car Page",
+            //   icon: <FiClipboard />,
+            //   href: "/dashboard/single-car-page",
+            //   visible: ["admin"],
+            // },
           ],
         },
         {
