@@ -1,13 +1,13 @@
 import React from 'react'
 import SingleCar from "./SingleCar"
-import CarInfo from "./SingleCarDetails"
+import CarDetails from "./SingleCarDetails"
 
 function SingleCarPage() {
   return (
     <>
     <div><SingleCar /></div>
 
-    <div><CarInfo /></div>
+    <div><CarDetails /></div>
     </>
   )
 }
