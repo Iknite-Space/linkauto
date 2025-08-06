@@ -1,6 +1,6 @@
 import React from 'react'
-import SingleCar from "./SingleCar"
-import CarDetails from "./SingleCarDetails"
+import SingleCar from "../dashboard/SingleCar"
+import CarDetails from "../dashboard/SingleCarDetails"
 
 function SingleCarPage() {
   return (
