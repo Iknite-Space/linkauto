@@ -1,4 +1,4 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,11 +36,12 @@ const schema = z.object({
 
 export default function VerDocumentInput() {
   const { currentUser, loading } = useUser();
-  const [ loader,setLoader ] = useState(false);
+  const [loader, setLoader] = useState(false);
   const {
     control,
     handleSubmit,
     setValue,
+    reset,
     register,
     formState: { errors, isSubmitting },
   } = useForm({
@@ -69,9 +70,15 @@ export default function VerDocumentInput() {
         },
       });
       if (res.data.success) {
-        toast.success("Documents uploaded successfully,Verification typically 1 to 2 hours");
-      }else{
-        toast.error("Failed to upload documents,Please try again",res.data.error);
+        toast.success("Documents uploaded successfully, Verification typically takes 1 to 2 hours");
+        reset({
+          document_type: "",
+          document_front: [],
+          document_back: [],
+          user_uuid: currentUser?.uuid || "", 
+        }); 
+      } else {
+        toast.error("Failed to upload documents, Please try again", res.data.error);
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
@@ -79,7 +86,7 @@ export default function VerDocumentInput() {
       } else {
         console.error("Something went wrong. Please try again later.");
       }
-    }finally{
+    } finally {
       setLoader(false);
     }
   };

@@ -1,5 +1,3 @@
-// src/pages/dashboard/SingleVerPage.jsx
-
 import React, { useState,useEffect } from "react";
 import Button from "../../components/UI/Button";
 import { toast } from "react-toastify";
@@ -61,7 +59,7 @@ export default function SingleUserVerification() {
             />
             <div>
               <h2 className="text-xl font-semibold">{userData?.name}</h2>
-              <p className="text-sm text-gray-600">Gender: {userData?.gender}</p>
+              <p className="text-sm text-gray-600"> {userData?.gender}</p>
             </div>
           </div>
         </div>
@@ -72,7 +70,7 @@ export default function SingleUserVerification() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {/* Document Front */}
           <div className="p-4 border rounded-xl">
-            <h3 className="mb-2 text-lg font-medium">Document 1</h3>
+            <h3 className="mb-2 text-lg font-medium">Front Side</h3>
             <div className="w-full overflow-hidden bg-gray-200 rounded-lg h-96">
               <img
                 src={userData?.ver_doc1_url}
@@ -84,7 +82,7 @@ export default function SingleUserVerification() {
 
           {/* Document Back */}
           <div className="p-4 border rounded-xl">
-            <h3 className="mb-2 text-lg font-medium">Document 2</h3>
+            <h3 className="mb-2 text-lg font-medium">Back Side</h3>
             <div className="w-full overflow-hidden bg-gray-200 rounded-lg h-96">
               <img
                 src={userData?.ver_doc2_url}
@@ -97,7 +95,7 @@ export default function SingleUserVerification() {
 
 
         {/* Action Buttons */}
-        <div className="absolute flex gap-4 bottom-2 right-8">
+        <div className="absolute flex gap-4  right-8">
           <Button
             className="bg-green "
             onClick={() => handleActionClick("active")}
