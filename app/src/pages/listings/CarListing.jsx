@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import { cars } from "../../utils/menuItems";
 import { MdPeopleAlt } from "react-icons/md";
@@ -6,8 +6,12 @@ import { TbManualGearboxFilled } from "react-icons/tb";
 import { BsFillFuelPumpDieselFill } from "react-icons/bs";
 import { IoLogoModelS } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
+
+
+
 import api from "../../services/axios"
 import {Link} from "react-router-dom"
+
 
 function CarListing() {
   const [hoveredId, setHoveredId] = useState(null);
@@ -17,19 +21,19 @@ function CarListing() {
   const itemsPerPage = 8;
   const pageCount = Math.ceil(cars.length / itemsPerPage);
 
-  useEffect(()=>{
-    const carListings = async ()=>{
+  useEffect(() => {
+    const carListings = async () => {
       try {
         const res = await api.get("/carlistings");
-        if(res.data.success){
+        if (res.data.success) {
           setCars(res.data.cars);
         }
       } catch (error) {
-        console.error("An unexpected error occured",error());
+        console.error("An unexpected error occured", error());
       }
-    }
+    };
     carListings();
-  },[])
+  }, []);
 
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
@@ -38,14 +42,11 @@ function CarListing() {
 
   const offset = currentPage * itemsPerPage;
   const currentCars = cars.slice(offset, offset + itemsPerPage);
-  if(cars.length === 0){
-    return ( 
-      <p className="text-center text-red">** No car Listed yet **</p>
-    )
+  if (cars.length === 0) {
+    return <p className="text-center text-red">** No car Listed yet **</p>;
   }
 
   return (
-
     <section className="px-10 py-16 mt-16 lg:mx-auto">
       <h2 className="mb-8 text-3xl font-bold text-center text-primary">
         Book a car and Unleash Your Adventure!
@@ -61,8 +62,6 @@ function CarListing() {
             <motion.div
               key={car.id}
               className="overflow-hidden transition-shadow bg-white shadow-md rounded-xl hover:shadow-lg"
-              onMouseEnter={() => setHoveredId(car.id)}
-              onMouseLeave={() => setHoveredId(null)}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
@@ -83,11 +82,12 @@ function CarListing() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                    onMouseEnter={() => setHoveredId(car.id)}
+                    onMouseLeave={() => setHoveredId(null)}
                   />
                 </AnimatePresence>
               </div>
-   
               <div className="p-4 space-y-2">
                 <h3 className="text-xl font-semibold capitalize text-primary">
                   {car.name}
@@ -121,8 +121,6 @@ function CarListing() {
                 <button className="w-full py-2 mt-3 text-white transition-colors rounded-md bg-primary hover:bg-secondary">
                   View Details
                 </button>
-
-
               </div>
             </motion.div>
             </Link>
