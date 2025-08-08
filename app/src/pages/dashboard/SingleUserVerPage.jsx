@@ -93,17 +93,16 @@ export default function SingleUserVerification() {
           </div>
         </div>
 
-
         {/* Action Buttons */}
         <div className="absolute flex gap-4  right-8">
           <Button
-            className="bg-green "
+            variant="green"
             onClick={() => handleActionClick("active")}
           >
             Activate
           </Button>
           <Button
-            className="bg-red "
+            variant="red"
             onClick={() => handleActionClick("blocked")}
           >
             Block
@@ -123,15 +122,15 @@ export default function SingleUserVerification() {
               </p>
               <div className="flex justify-end gap-3 mt-4">
                 <Button
-                  className="text-gray-800 bg-red hover:bg-gray-500"
                   onClick={() => setModalVisible(false)}
+                  variant="red"
                 >
                   Cancel
                 </Button>
                 <Button
-                  className="text-white bg-green hover:bg-blue-700"
                   onClick={() => handleStatusChange(selectedAction)}
                   loading={Loading}
+                  variant="green"
                 >
                   Confirm
                 </Button>

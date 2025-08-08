@@ -255,3 +255,23 @@ func (h *CarHandler) CarDetails(c *gin.Context) {
 	})
 
 }
+
+func (h *CarHandler) GetCarVerificationDocs(c *gin.Context) {
+	carUuid := c.Param("car_uuid")
+	if carUuid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "car_uuid is required"})
+		return
+	}
+
+	//fetch the car verification docs
+	carVerDocs, err := h.store.Do().GetCarVerificationDetails(c, carUuid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve car verification documents: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"docs":    carVerDocs,
+	})
+}	

@@ -23,6 +23,10 @@ const Button = ({
       'bg-red text-white hover:bg-red focus:ring-red disabled:bg-red',
     outline:
       'bg-transparent border border-gray-300 text-gray-700 hover:bg-gray-100 focus:ring-gray-300',
+    green:
+      'bg-green text-white hover:bg-green focus:ring-green disabled:bg-green',
+    accent:
+      'bg-accent text-white hover:bg-accent focus:ring-accent disabled:bg-accent',
   };
 
   return (
@@ -62,7 +66,7 @@ const Button = ({
 
 Button.propTypes = {
   type: PropTypes.oneOf(['button', 'submit', 'reset']),
-  variant: PropTypes.oneOf(['primary', 'secondary', 'outline', 'danger']),
+  variant: PropTypes.oneOf(['primary', 'secondary', 'outline', 'danger', 'green']),
   loading: PropTypes.bool,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
