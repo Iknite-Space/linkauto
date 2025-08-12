@@ -34,6 +34,7 @@ CREATE TABLE car (
     dropoff_location TEXT
 );
 
+
 -- carDetails table
 CREATE TABLE car_details (
     uuid VARCHAR(36) PRIMARY KEY DEFAULT gen_random_uuid()::varchar(36),
