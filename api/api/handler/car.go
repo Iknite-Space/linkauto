@@ -266,7 +266,14 @@ func (h *CarHandler) GetCarPendingVer(c *gin.Context) {
 
 	if len(cars) == 0 {
 		c.JSON(http.StatusOK, gin.H{"message": "No cars pending verification"})
+		return
+	}
 
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"cars":    cars,
+	})
+}
 
 func (h *CarHandler) GetCarVerificationDocs(c *gin.Context) {
 	carUuid := c.Param("car_uuid")
@@ -275,22 +282,15 @@ func (h *CarHandler) GetCarVerificationDocs(c *gin.Context) {
 		return
 	}
 
-	//fetch the car verification docs
+	// Fetch the car verification docs
 	carVerDocs, err := h.store.Do().GetCarVerificationDetails(c, carUuid)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve car verification documents: " + err.Error()})
-
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
-
-		"cars":    cars,
-	})
-}
-
 		"docs":    carVerDocs,
 	})
-}	
-
+}

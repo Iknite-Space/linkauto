@@ -41,17 +41,15 @@ const CarListing = lazy(() => import("./pages/listings/CarListing"));
 const VerDocumentInput = lazy(() =>
   import("./pages/dashboard/VerDocumentInput")
 );
-const SingleUserVerification = lazy(() =>
-  import("./pages/dashboard/SingleVerPage")
-);
 
-const CarUploadForm = lazy(()=>import("./components/form/CarUploadForm"));
+const CarUploadForm = lazy(() => import("./components/form/CarUploadForm"));
 const UserVerDocForm = lazy(() => import("./pages/dashboard/UserVerDocForm"));
-const SingleUserVerification = lazy(() => import("./pages/dashboard/SingleUserVerPage"));
-const CarVerificationPage = lazy(() => import("./pages/dashboard/SingleCarVerPage"))
-
-
-
+const SingleUserVerification = lazy(() =>
+  import("./pages/dashboard/SingleUserVerPage")
+);
+const CarVerificationPage = lazy(() =>
+  import("./pages/dashboard/SingleCarVerPage")
+);
 
 function App() {
   return (
@@ -73,36 +71,41 @@ function App() {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
               </Route>
 
-
-              
-
-            {/* Protected routes */}
-            <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-              <Route index element={<ComingSoon />} />
-              {/* <Route path="profile" element={<ComingSoon />} /> */}
-              <Route path="user-verification" element={<UserVerification />} />
-              <Route path="user-ver-doc-form" element={<UserVerDocForm />} />
-              <Route path="user-verification/:user_uuid" element={<SingleUserVerification />} />
-              <Route path="car-listing" element={<CarListing />} />
-              <Route path="upload" element={<CarUploadForm />} />
-              <Route path="logout" element={<Logout />} />
-              <Route path="car-ver-page" element={<CarVerificationPage />} />
-            </Route>
-
-
+              {/* Protected routes */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<ComingSoon />} />
+                {/* <Route path="profile" element={<ComingSoon />} /> */}
                 <Route
-                  path="ver-document-input"
-                  element={<VerDocumentInput />}
+                  path="user-verification"
+                  element={<UserVerification />}
                 />
+                <Route path="user-ver-doc-form" element={<UserVerDocForm />} />
                 <Route
                   path="user-verification/:user_uuid"
                   element={<SingleUserVerification />}
                 />
-                {/*<Route path="car-listing" element={<CarListing />} />*/}
-                <Route path="car-verification" element={<CarsVerification />} />
+                <Route path="car-listing" element={<CarListing />} />
                 <Route path="upload" element={<CarUploadForm />} />
                 <Route path="logout" element={<Logout />} />
+                <Route path="car-ver-page" element={<CarVerificationPage />} />
               </Route>
+
+              <Route path="ver-document-input" element={<VerDocumentInput />} />
+              <Route
+                path="user-verification/:user_uuid"
+                element={<SingleUserVerification />}
+              />
+              {/*<Route path="car-listing" element={<CarListing />} />*/}
+              <Route path="car-verification" element={<CarsVerification />} />
+              <Route path="upload" element={<CarUploadForm />} />
+              <Route path="logout" element={<Logout />} />
 
               {/* Protected routes */}
               <Route
@@ -122,10 +125,7 @@ function App() {
                 />
 
                 <Route path="car-verification" element={<CarsVerification />} />
-                <Route
-                  path="user-ver-doc-form"
-                  element={<UserVerDocForm/>}
-                />
+                <Route path="user-ver-doc-form" element={<UserVerDocForm />} />
                 <Route
                   path="user-verification/:user_uuid"
                   element={<SingleUserVerification />}
