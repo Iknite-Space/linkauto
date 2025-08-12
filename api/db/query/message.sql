@@ -76,3 +76,14 @@ WHERE c.uuid = $1;
 -- name: GetCarImages :many
 SELECT image FROM car_gallery WHERE car_uuid = $1;
 
+-- name: GetCarPendingVerifications :many
+SELECT 
+  CONCAT(u.fname, ' ', u.lname) AS owner_name,
+  c.uuid,
+  c.visibility,
+  cd.name
+FROM "user" u
+JOIN car c ON u.uuid::TEXT = c.owner_uuid
+JOIN car_details cd ON c.uuid = cd.car_uuid
+WHERE c.visibility = 'pending';
+

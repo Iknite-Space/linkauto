@@ -7,23 +7,23 @@ import { useNavigate } from "react-router-dom";
 const CarsVerification = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [pendingUsers, setPendingUsers] = useState([]);
-  const handleVerify = (userId) => {
-    console.log("verify user with ID:", userId);
-    // navigate to the single user verification page
-    navigate(`/dashboard/user-verification/${userId}`);
+  const [pendingCars, setPendingCars] = useState([]);
+  const handleVerify = (carId) => {
+    console.log("verify car with ID:", carId);
+    // navigate to the single car verification page
+    navigate(`/dashboard/car-verification/${carId}`);
   };
-  // Fetch pending users for verification
+  // Fetch pending cars for verification
   useEffect(() => {
-    const fetchPendingUsers = async () => {
+    const fetchPendingCars = async () => {
       try {
-        const res = await api.get("/users/pending-verification");
+        const res = await api.get("/cars/pending-verification");
         if (res.data.success) {
-          const usersWithAction = res.data.users.map((user) => ({
-            ...user,
+          const usersWithAction = res.data.cars.map((car) => ({
+            ...car,
             action: (
               <button
-                onClick={() => handleVerify(user.uuid)}
+                onClick={() => handleVerify(car.uuid)}
                 title="click here to verify"
                 className="px-4 py-2 font-bold text-white rounded bg-primary hover:bg-blue-600"
               >
@@ -31,7 +31,7 @@ const CarsVerification = () => {
               </button>
             ),
           }));
-          setPendingUsers(usersWithAction);
+          setPendingCars(usersWithAction);
         }
       } catch (error) {
         console.error("Error fetching pending users:", error);
@@ -39,15 +39,22 @@ const CarsVerification = () => {
         setLoading(false);
       }
     };
-    fetchPendingUsers();
+    fetchPendingCars();
   }, []);
   const customStyles = {
     headCells: {
       style: {
-        fontSize: "16px",
+        fontSize: "18px",
         fontWeight: "bold",
         backgroundColor: "rgb(1 40 91 / var(--tw-bg-opacity, 1));",
         color: "white",
+      },
+    },
+    cells: {
+      style: {
+        fontSize: "16px",
+        paddingLeft: "8px",
+        paddingRight: "8px",
       },
     },
   };
@@ -60,20 +67,11 @@ const CarsVerification = () => {
     },
     {
       name: "Car Owner",
-      selector: (row) => row.owner,
+      selector: (row) => row.owner_name,
       sortable: true,
     },
-    {
-      name: "Email",
-      selector: (row) => row.email,
-      sortable: true,
-    },
-    {
-      name: "Role",
-      selector: (row) => row.role,
-      sortable: true,
-    },
-    { name: "Status", selector: (row) => row.status, sortable: true },
+
+    { name: "Status", selector: (row) => row.visibility, sortable: true },
     {
       name: "Action",
       selector: (row) => row.action,
@@ -86,9 +84,9 @@ const CarsVerification = () => {
   return (
     <DataTable
       columns={columns}
-      data={pendingUsers}
+      data={pendingCars}
       customStyles={customStyles}
-      title="User Verification"
+      title="Car Verification"
       pagination
       fixedHeader
     />

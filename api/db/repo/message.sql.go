@@ -245,6 +245,50 @@ func (q *Queries) GetCarListings(ctx context.Context) ([]GetCarListingsRow, erro
 	return items, nil
 }
 
+const getCarPendingVerifications = `-- name: GetCarPendingVerifications :many
+SELECT 
+  CONCAT(u.fname, ' ', u.lname) AS owner_name,
+  c.uuid,
+  c.visibility,
+  cd.name
+FROM "user" u
+JOIN car c ON u.uuid::TEXT = c.owner_uuid
+JOIN car_details cd ON c.uuid::text = cd.car_uuid
+WHERE c.visibility = 'pending'
+`
+
+type GetCarPendingVerificationsRow struct {
+	OwnerName  interface{} `json:"owner_name"`
+	Uuid       string      `json:"uuid"`
+	Visibility string      `json:"visibility"`
+	Name       string      `json:"name"`
+}
+
+func (q *Queries) GetCarPendingVerifications(ctx context.Context) ([]GetCarPendingVerificationsRow, error) {
+	rows, err := q.db.Query(ctx, getCarPendingVerifications)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetCarPendingVerificationsRow{}
+	for rows.Next() {
+		var i GetCarPendingVerificationsRow
+		if err := rows.Scan(
+			&i.OwnerName,
+			&i.Uuid,
+			&i.Visibility,
+			&i.Name,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getUserByEmail = `-- name: GetUserByEmail :one
 SELECT Uuid,email,lname,role,account_status FROM "user" WHERE email = $1
 `

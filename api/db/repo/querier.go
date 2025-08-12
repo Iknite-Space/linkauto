@@ -16,6 +16,7 @@ type Querier interface {
 	GetCarImages(ctx context.Context, carUuid string) ([]string, error)
 	GetCarListingImages(ctx context.Context, carUuid string) ([]string, error)
 	GetCarListings(ctx context.Context) ([]GetCarListingsRow, error)
+	GetCarPendingVerifications(ctx context.Context) ([]GetCarPendingVerificationsRow, error)
 	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
 	GetUserByUuid(ctx context.Context, uuid string) (GetUserByUuidRow, error)
 	GetUserVerificationDetails(ctx context.Context, uuid string) (GetUserVerificationDetailsRow, error)

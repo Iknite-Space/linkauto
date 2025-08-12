@@ -255,3 +255,21 @@ func (h *CarHandler) CarDetails(c *gin.Context) {
 	})
 
 }
+func (h *CarHandler) GetCarPendingVer(c *gin.Context) {
+	// Fetch all cars pending verification
+	cars, err := h.store.Do().GetCarPendingVerifications(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch pending car verifications: " + err.Error()})
+		return
+	}
+
+	if len(cars) == 0 {
+		c.JSON(http.StatusOK, gin.H{"message": "No cars pending verification"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"cars":    cars,
+	})
+}
