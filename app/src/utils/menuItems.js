@@ -49,17 +49,17 @@ import {
               visible: ["admin"],
             },
             {
-              label: "Document Verification",
+              label: "User Verification Form",
               icon: <FiClipboard />,
-              href: "/dashboard/ver-document-input",
+              href: "/dashboard/user-ver-doc-form",
               visible: ["admin"],
             },
-            // {
-            //   label: "Single Car Page",
-            //   icon: <FiClipboard />,
-            //   href: "/dashboard/single-car-page",
-            //   visible: ["admin"],
-            // },
+            {
+              label: "Car Verification Page",
+              icon: <FiClipboard />,
+              href: "/dashboard/car-ver-page",
+              visible: ["admin"],
+            },
           ],
         },
         {

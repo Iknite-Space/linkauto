@@ -87,3 +87,15 @@ JOIN car c ON u.uuid::TEXT = c.owner_uuid
 JOIN car_details cd ON c.uuid = cd.car_uuid
 WHERE c.visibility = 'pending';
 
+-- name: GetCarVerificationDetails :one
+SELECT 
+  u.uuid AS user_uuid,
+  CONCAT(u.fname, ' ', u.lname) AS name,
+  u.gender,
+  cd.cat_doc,
+  cd.visite_technique_doc,
+  cd.insurance_doc
+FROM "car" c
+JOIN "user" u ON u.uuid = c.owner_uuid
+JOIN car_details cd ON c.uuid = cd.car_uuid
+WHERE c.uuid = $1;

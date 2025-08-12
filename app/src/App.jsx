@@ -29,7 +29,7 @@ const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
 // Protected pages
 const Logout = lazy(() => import("./pages/auth/Logout"));
 const UserVerification = lazy(() =>
-  import("./pages/dashboard/UserVerification")
+  import("./pages/dashboard/VerifyUserTable")
 );
 
 const CarsVerification = lazy(() =>
@@ -37,13 +37,11 @@ const CarsVerification = lazy(() =>
 );
 
 const CarListing = lazy(() => import("./pages/listings/CarListing"));
-const CarUploadForm = lazy(() => import("./components/form/CarUploadForm"));
-const VerDocumentInput = lazy(() =>
-  import("./pages/dashboard/VerDocumentInput")
-);
-const SingleUserVerification = lazy(() =>
-  import("./pages/dashboard/SingleVerPage")
-);
+const CarUploadForm = lazy(()=>import("./components/form/CarUploadForm"));
+const VerDocumentInput = lazy(() => import("./pages/dashboard/VerDocumentInput"));
+const SingleUserVerification = lazy(() => import("./pages/dashboard/SingleVerPage"));
+
+
 
 function App() {
   return (
@@ -64,6 +62,21 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
               </Route>
+
+              
+
+            {/* Protected routes */}
+            <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+              <Route index element={<ComingSoon />} />
+              {/* <Route path="profile" element={<ComingSoon />} /> */}
+              <Route path="user-verification" element={<UserVerification />} />
+              <Route path="ver-document-input" element={<VerDocumentInput />} />
+              <Route path="user-verification/:user_uuid" element={<SingleUserVerification />} />
+              <Route path="car-listing" element={<CarListing />} />
+              <Route path="upload" element={<CarUploadForm />} />
+              <Route path="logout" element={<Logout />} />
+            </Route>
+
 
               {/* Protected routes */}
               <Route
@@ -114,8 +127,8 @@ function App() {
 
                 <Route path="car-verification" element={<CarsVerification />} />
                 <Route
-                  path="ver-document-input"
-                  element={<VerDocumentInput />}
+                  path="user-ver-doc-form"
+                  element={<UserVerDocForm/>}
                 />
                 <Route
                   path="user-verification/:user_uuid"
