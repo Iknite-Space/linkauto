@@ -49,7 +49,11 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.POST("/car", carHandler.UploadCar)
 	r.GET("/carlistings", carHandler.CarListings)
 	r.GET("/cardetails/:id", carHandler.CarDetails)
+
+	r.GET("/cars/pending-verification", carHandler.GetCarPendingVer)
+
 	r.GET("/car-verification/:car_uuid", )
+
 
 	return r
 }
