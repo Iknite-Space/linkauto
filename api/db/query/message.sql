@@ -99,3 +99,6 @@ FROM "car" c
 JOIN "user" u ON u.uuid = c.owner_uuid
 JOIN car_details cd ON c.uuid = cd.car_uuid
 WHERE c.uuid = $1;
+
+-- name: UpdateCarVerificationStatus :exec
+UPDATE car SET visibility = $1 WHERE uuid = $2;

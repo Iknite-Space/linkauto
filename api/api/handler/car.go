@@ -292,3 +292,22 @@ func (h *CarHandler) GetCarVerificationDocs(c *gin.Context) {
 		"docs":    carVerDocs,
 	})
 }
+
+// update pending cars visibility status
+func (h *CarHandler) UpdateUserVerificationStatus(c *gin.Context) {
+	var req repo.UpdateCarVerificationStatusParams
+
+	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := h.store.Do().UpdateCarVerificationStatus(c, req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user verification status: " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Car verification status updated successfully",
+	})
+}
