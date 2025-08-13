@@ -37,10 +37,10 @@ import {
               visible: ["admin"],
             },
             {
-              label: "Add Car",
+              label: "Cars",
               icon: <FiPlusSquare />,
-              href: "dashboard/fleet/add",
-              visible: ["owner"],
+              href: "/dashboard/car-verification",
+              visible: ["admin"],
             },
             {
               label: "Categories",

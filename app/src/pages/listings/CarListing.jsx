@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
-import { cars } from "../../utils/menuItems";
 import { MdPeopleAlt } from "react-icons/md";
 import { TbManualGearboxFilled } from "react-icons/tb";
 import { BsFillFuelPumpDieselFill } from "react-icons/bs";
