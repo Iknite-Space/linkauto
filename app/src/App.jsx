@@ -36,6 +36,8 @@ const CarsVerification = lazy(() =>
   import("./pages/dashboard/CarsVerification")
 );
 
+const SingleCarVerPage = lazy(() => import("./pages/dashboard/SingleCarVerPage"));
+
 const CarListing = lazy(() => import("./pages/listings/CarListing"));
 const CarUploadForm = lazy(() => import("./components/form/CarUploadForm"));
 
@@ -61,71 +63,7 @@ function App() {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
               </Route>
 
-              {/* Protected routes */}
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <DashboardLayout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route index element={<ComingSoon />} />
-                {/* <Route path="profile" element={<ComingSoon />} /> */}
-                <Route
-                  path="user-verification"
-                  element={<UserVerification />}
-                />
-                {/*}
-                <Route
-                  path="ver-document-input"
-                  element={<VerDocumentInput />}
-                />
-                <Route
-                  path="user-verification/:user_uuid"
-                  element={<SingleUserVerification />}
-                />
-                */}
-
-                <Route path="car-listing" element={<CarListing />} />
-                <Route path="upload" element={<CarUploadForm />} />
-                <Route path="logout" element={<Logout />} />
-              </Route>
-
-              {/* Protected routes */}
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <DashboardLayout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route index element={<ComingSoon />} />
-                {/* <Route path="profile" element={<ComingSoon />} /> */}
-                <Route
-                  path="user-verification"
-                  element={<UserVerification />}
-                />
-                {/*}
-                <Route
-                  path="ver-document-input"
-                  element={<VerDocumentInput />}
-                />
-                */}
-                {/*}
-                <Route
-                  path="user-verification/:user_uuid"
-                  element={<SingleUserVerification />}
-                />
-                */}
-                {/*<Route path="car-listing" element={<CarListing />} />*/}
-                <Route path="car-verification" element={<CarsVerification />} />
-                <Route path="upload" element={<CarUploadForm />} />
-                <Route path="logout" element={<Logout />} />
-              </Route>
-
-              {/* Protected routes */}
+              {/* Protected dashboard routes */}
               <Route
                 path="/dashboard"
                 element={
@@ -143,6 +81,7 @@ function App() {
                 />
 
                 <Route path="car-verification" element={<CarsVerification />} />
+                <Route path="car-verification/:car_uuid" element={<SingleCarVerPage />} />
                 <Route path="user-ver-doc-form" element={<UserVerDocForm />} />
                 {/*}
                 <Route

@@ -18,8 +18,8 @@ export default function SingleUserVerification() {
       console.log("Fetching car data for UUID:", car_uuid); 
       const res = await api.get(`/car-verification/${car_uuid}`);
       if (res.data.success) {
-        setCarData(res.data.car); // // it stores the car data in the local state (using setCarData), making it available for rendering in your component.
-        console.log("Fetched Car Data:", res.data.car); 
+        setCarData(res.data.docs); // // it stores the car data in the local state (using setCarData), making it available for rendering in your component.
+        console.log("Fetched Car Data:", res.data.docs); 
       } else {
         toast.error("Failed to fetch car data.");
       }
@@ -114,7 +114,7 @@ export default function SingleUserVerification() {
 
 
         {/* Action Buttons */}
-        <div className="absolute flex gap-6  right-8">
+        <div className="absolute flex gap-6 right-8">
           <Button
             variant="green"
             onClick={() => handleActionClick("available")}

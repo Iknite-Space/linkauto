@@ -287,9 +287,8 @@ func (h *CarHandler) GetCarVerificationDocs(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve car verification documents: " + err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"docs":    carVerDocs,
 	})
-}	
+}
