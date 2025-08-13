@@ -53,6 +53,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.GET("/cars/pending-verification", carHandler.GetCarPendingVer)
 
 	r.GET("/car-verification/:car_uuid", carHandler.GetCarVerificationDocs)
+	r.PATCH("/car-verification", carHandler.UpdateUserVerificationStatus)
 
 	return r
 }

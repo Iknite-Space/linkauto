@@ -33,6 +33,7 @@ export default function SingleUserVerification() {
 }, [car_uuid]);
 
   const handleActionClick = (action) => {
+    
     setSelectedAction(action);
     setModalVisible(true);
   };
@@ -41,11 +42,11 @@ export default function SingleUserVerification() {
     setLoading(true);
     try {
       const res = await api.patch(`/car-verification`, {
-        account_status: newStatus,
-        uuid: carData?.car_uuid,
+        visibility: newStatus,
+        uuid: car_uuid,
       });
       if (res.data.success) {
-        toast.success(`Car ${newStatus} successfully!`);
+        toast.success(res.data.message);
       }else{
         toast.error(res.data.message  || "Failed to update car status.");
       }
@@ -117,21 +118,15 @@ export default function SingleUserVerification() {
         <div className="absolute flex gap-6 right-8">
           <Button
             variant="green"
-            onClick={() => handleActionClick("available")}
+            onClick={() => handleActionClick("approved")}
           >
-            Available
-          </Button>
-          <Button
-            variant="accent"
-            onClick={() => handleActionClick("rented")}
-          >
-            Rented
+            Approve
           </Button>
           <Button
             variant="danger"
-            onClick={() => handleActionClick("unavailable")}
+            onClick={() => handleActionClick("rejected")}
           >
-            Unavailable
+            Rejected
           </Button>
         </div>
 

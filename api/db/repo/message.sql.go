@@ -466,6 +466,20 @@ func (q *Queries) GetVerificationByUserUuid(ctx context.Context, userUuid string
 	return i, err
 }
 
+const updateCarVerificationStatus = `-- name: UpdateCarVerificationStatus :exec
+UPDATE car SET visibility = $1 WHERE uuid = $2
+`
+
+type UpdateCarVerificationStatusParams struct {
+	Visibility string `json:"visibility"`
+	Uuid       string `json:"uuid"`
+}
+
+func (q *Queries) UpdateCarVerificationStatus(ctx context.Context, arg UpdateCarVerificationStatusParams) error {
+	_, err := q.db.Exec(ctx, updateCarVerificationStatus, arg.Visibility, arg.Uuid)
+	return err
+}
+
 const updateUserVerificationStatus = `-- name: UpdateUserVerificationStatus :exec
 UPDATE "user"
 SET account_status = $1
