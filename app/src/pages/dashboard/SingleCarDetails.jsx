@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types"; 
+import { useUser } from "../../hooks/UseAuth";
 
 import {
   Car,
@@ -17,6 +18,7 @@ import Button from "../../components/UI/Button";
 import ReservationFormModal from "./ReservationFormModal";
 
 export default function CarDetails({ cardetails = {} }) {
+  const { currentUser = null, loading = true } = useUser() || {};
 CarDetails.propTypes = {
   cardetails: PropTypes.object.isRequired,
 };
@@ -58,7 +60,7 @@ CarDetails.propTypes = {
         <Button className="w-64 py-3 text-base" onClick={() => setShowModal(true)}>Reserve</Button>
       </div>
 
-      {showModal && <ReservationFormModal onClose={() => setShowModal(false)} />}
+      {showModal && <ReservationFormModal pricePerDay={cardetails.price_per_day} carId={cardetails.uuid} onClose={() => setShowModal(false)} />}
     </div>
   );
 }

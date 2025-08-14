@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useUser } from "../hooks/UseAuth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
-
+  const { currentUser = null} = useUser() || {};
   return (
     <nav className="fixed top-0 left-0 z-50 w-full bg-primary ">
       <div className="flex items-center justify-between p-4 md:px-10 md:py-6">
@@ -34,20 +35,25 @@ const Navbar = () => {
             <a href="/#contact" className="hover:text-accent">Contact</a>
             <Link to="/carlisting" className="hover:text-accent">Cars</Link>
           </div>
-          <div className="flex items-center space-x-4">
-            <Link to="/login" className="text-white hover:text-accent">Login</Link>
-            <Link to="/register" className="px-4 py-2 text-white rounded shadow bg-accent text-button hover:bg-secondary">Register</Link>
-          </div>
+          {(currentUser?.uuid) ? (
+            <Link title="Go to dashboard" to="/dashboard" className="px-4 py-2 text-white rounded shadow bg-accent text-button hover:bg-secondary">Dashboard</Link>
+          ) : (
+            <div className="flex items-center space-x-4">
+              <Link to="/login" className="text-white hover:text-accent">Login</Link>
+              <Link to="/register" className="px-4 py-2 text-white rounded shadow bg-accent text-button hover:bg-secondary">Register</Link>
+            </div>
+          )}
         </div>
 
         {/* Small screen: Login Button (styled) */}
         <div className="flex items-center space-x-3 md:hidden">
-          <a
-            href="#"
-            className="px-3 py-2 text-sm text-white rounded shadow bg-accent hover:bg-secondary"
-          >
-            Login
-          </a>
+          {(currentUser?.uuid) ? (
+            <Link title="Go to dashboard" to="/dashboard" className="px-4 py-2 text-white rounded shadow bg-accent text-button hover:bg-secondary">Dashboard</Link>
+          ) : (
+            <div className="flex items-center space-x-4">
+              <Link to="/login" className="px-3 py-2 text-sm text-white rounded shadow bg-accent hover:bg-secondary">Login</Link>
+            </div>
+          )}
           <button onClick={toggleMenu} className="text-white focus:outline-none">
             <svg
               className="w-6 h-6"

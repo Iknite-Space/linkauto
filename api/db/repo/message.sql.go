@@ -110,7 +110,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (string,
 }
 
 const getCarDetails = `-- name: GetCarDetails :one
-SELECT c.pickup_location,c.dropoff_location,cd.name,
+SELECT c.uuid,c.pickup_location,c.dropoff_location,cd.name,
 cd.model,cd.energy_type,cd.transmission_type,cd.brand,cd.no_seats,
 cd.color,cd.chassis_no,cd.vin,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
@@ -118,6 +118,7 @@ WHERE c.uuid = $1
 `
 
 type GetCarDetailsRow struct {
+	Uuid             string         `json:"uuid"`
 	PickupLocation   string         `json:"pickup_location"`
 	DropoffLocation  string         `json:"dropoff_location"`
 	Name             string         `json:"name"`
@@ -136,6 +137,7 @@ func (q *Queries) GetCarDetails(ctx context.Context, uuid string) (GetCarDetails
 	row := q.db.QueryRow(ctx, getCarDetails, uuid)
 	var i GetCarDetailsRow
 	err := row.Scan(
+		&i.Uuid,
 		&i.PickupLocation,
 		&i.DropoffLocation,
 		&i.Name,
