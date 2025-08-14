@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/Iknite-Space/c4-project-boilerplate/api/client"
@@ -41,7 +42,7 @@ func (c *Client) RequestPayment(number, amount, description string) (string, err
 		return "", err
 	}
 
-	// Use standard http.Client
+	//standard http.Client
 	httpClient := &http.Client{}
 
 	//set the headers
@@ -69,4 +70,36 @@ func (c *Client) RequestPayment(number, amount, description string) (string, err
 	}
 
 	return res.Reference, nil
+}
+
+// check the transaction status
+func (c *Client) TransactionStatus(ref string) (string, error) {
+	req, err := http.NewRequest("GET", c.Client.BaseURL+"/transaction/"+ref+"/", nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("Authorization", "Token "+c.Token)
+	req.Header.Set("Content-Type", "application/json")
+	httpClient := &http.Client{}
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			fmt.Println("warning: failed to close response body:", err)
+		}
+	}()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return "", fmt.Errorf("API error: %s\n%s", resp.Status, string(body))
+	}
+
+	var status Reference
+	if err := json.NewDecoder(resp.Body).Decode(&status); err != nil {
+		return "", err
+	}
+	return status.Status, nil
 }

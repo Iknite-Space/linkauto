@@ -32,3 +32,21 @@ func (h *ReservationHandler) CreateReservation(c *gin.Context) {
 		"ref":     ref,
 	})
 }
+
+func (h *ReservationHandler) Status(c *gin.Context) {
+	//d571df3b-4b29-4a51-beef-f51088350912
+	ref := c.Param("ref")
+	if ref == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "ref must not be null"})
+		return
+	}
+	status, err := h.campay.TransactionStatus(ref)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"status":  status,
+	})
+}
