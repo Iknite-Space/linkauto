@@ -11,6 +11,8 @@ import (
 type Querier interface {
 	CreateCar(ctx context.Context, arg CreateCarParams) (string, error)
 	CreateCarDetails(ctx context.Context, arg CreateCarDetailsParams) error
+	CreatePayment(ctx context.Context, arg CreatePaymentParams) (string, error)
+	CreateReservation(ctx context.Context, arg CreateReservationParams) (string, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (string, error)
 	GetCarDetails(ctx context.Context, uuid string) (GetCarDetailsRow, error)
 	GetCarImages(ctx context.Context, carUuid string) ([]string, error)

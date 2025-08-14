@@ -7,6 +7,7 @@ package repo
 
 import (
 	"context"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -70,6 +71,64 @@ func (q *Queries) CreateCarDetails(ctx context.Context, arg CreateCarDetailsPara
 		arg.InsuranceDoc,
 	)
 	return err
+}
+
+const createPayment = `-- name: CreatePayment :one
+INSERT INTO payment (rental_uuid,amount_paid,payment_method,reference,status
+) VALUES ($1, $2, $3, $4, $5)
+RETURNING uuid
+`
+
+type CreatePaymentParams struct {
+	RentalUuid    *string        `json:"rental_uuid"`
+	AmountPaid    pgtype.Numeric `json:"amount_paid"`
+	PaymentMethod string         `json:"payment_method"`
+	Reference     string         `json:"reference"`
+	Status        string         `json:"status"`
+}
+
+func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (string, error) {
+	row := q.db.QueryRow(ctx, createPayment,
+		arg.RentalUuid,
+		arg.AmountPaid,
+		arg.PaymentMethod,
+		arg.Reference,
+		arg.Status,
+	)
+	var uuid string
+	err := row.Scan(&uuid)
+	return uuid, err
+}
+
+const createReservation = `-- name: CreateReservation :one
+INSERT INTO reservation (car_uuid,customer_uuid,start_date,end_date,pickup_time,dropoff_time,rental_amount
+) VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING uuid
+`
+
+type CreateReservationParams struct {
+	CarUuid      *string        `json:"car_uuid"`
+	CustomerUuid string         `json:"customer_uuid"`
+	StartDate    time.Time      `json:"start_date"`
+	EndDate      time.Time      `json:"end_date"`
+	PickupTime   pgtype.Time    `json:"pickup_time"`
+	DropoffTime  pgtype.Time    `json:"dropoff_time"`
+	RentalAmount pgtype.Numeric `json:"rental_amount"`
+}
+
+func (q *Queries) CreateReservation(ctx context.Context, arg CreateReservationParams) (string, error) {
+	row := q.db.QueryRow(ctx, createReservation,
+		arg.CarUuid,
+		arg.CustomerUuid,
+		arg.StartDate,
+		arg.EndDate,
+		arg.PickupTime,
+		arg.DropoffTime,
+		arg.RentalAmount,
+	)
+	var uuid string
+	err := row.Scan(&uuid)
+	return uuid, err
 }
 
 const createUser = `-- name: CreateUser :one

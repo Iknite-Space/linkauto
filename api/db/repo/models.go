@@ -65,6 +65,8 @@ type Reservation struct {
 	PenaltyAmount pgtype.Numeric   `json:"penalty_amount"`
 	Status        string           `json:"status"`
 	CreatedAt     pgtype.Timestamp `json:"created_at"`
+	PickupTime    pgtype.Time      `json:"pickup_time"`
+	DropoffTime   pgtype.Time      `json:"dropoff_time"`
 }
 
 type Thread struct {

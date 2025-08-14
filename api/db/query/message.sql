@@ -102,3 +102,24 @@ WHERE c.uuid = $1;
 
 -- name: UpdateCarVerificationStatus :exec
 UPDATE car SET visibility = $1 WHERE uuid = $2;
+
+-- name: CreateReservation :one
+INSERT INTO reservation (car_uuid,customer_uuid,start_date,end_date,pickup_time,dropoff_time,rental_amount
+) VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING uuid;
+
+-- name: CreatePayment :one
+INSERT INTO payment (rental_uuid,amount_paid,payment_method,reference,status
+) VALUES ($1, $2, $3, $4, $5)
+RETURNING uuid;
+
+-- name: UpdateReservationStatus :exec
+UPDATE reservation
+SET status = $2
+WHERE uuid = $1;
+-- name: UpdatePaymentStatus :exec
+UPDATE payment
+SET status = $2
+WHERE uuid = $1;
+
+
