@@ -44,6 +44,8 @@ const CarUploadForm = lazy(() => import("./components/form/CarUploadForm"));
 
 const UserVerDocForm = lazy(() => import("./pages/dashboard/UserVerDocForm"));
 
+const Payment = lazy(() => import("./pages/Payment"));
+
 function App() {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -56,6 +58,7 @@ function App() {
                 <Route index element={<HomePage />} />
                 <Route path="/carlisting" element={<CarListing />} />
                 <Route path="/carlisting/car/:id" element={<SingleCarPage />} />
+                <Route path="/payment" element={<Payment />}/>
               </Route>
               {/* Public routes */}
               <Route element={<AuthLayout />}>
