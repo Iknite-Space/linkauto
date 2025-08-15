@@ -67,7 +67,7 @@ SELECT image FROM car_gallery WHERE car_uuid = $1
 LIMIT 2; 
 
 -- name: GetCarDetails :one
-SELECT c.pickup_location,c.dropoff_location,cd.name,
+SELECT c.uuid,c.pickup_location,c.dropoff_location,cd.name,
 cd.model,cd.energy_type,cd.transmission_type,cd.brand,cd.no_seats,
 cd.color,cd.chassis_no,cd.vin,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
@@ -102,3 +102,30 @@ WHERE c.uuid = $1;
 
 -- name: UpdateCarVerificationStatus :exec
 UPDATE car SET visibility = $1 WHERE uuid = $2;
+
+-- name: CreateReservation :one
+INSERT INTO reservation (car_uuid,customer_uuid,start_date,end_date,pickup_time,dropoff_time,rental_amount
+) VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING uuid;
+
+-- name: CreatePayment :one
+INSERT INTO payment (rental_uuid,amount_paid,payment_method,reference
+) VALUES ($1, $2, $3, $4)
+RETURNING uuid;
+
+-- name: UpdateReservationStatus :exec
+UPDATE reservation
+SET status = $2
+WHERE uuid = $1;
+-- name: UpdatePaymentStatus :exec
+UPDATE payment
+SET status = $2
+WHERE uuid = $1;
+
+-- name: DeleteReservation :exec
+DELETE FROM reservation WHERE uuid = $1;
+
+-- name: DeletePayment :exec
+DELETE FROM payment WHERE uuid = $1;
+
+

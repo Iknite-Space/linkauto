@@ -7,7 +7,7 @@ import ErrorFallback from '../shared/ErrorBoundary';
 const Loading = lazy(() => import("../shared/Loading"));
 const Button = lazy(() => import('./Button'));
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+const Modal = ({ isOpen, btnx= true, btn = true, onClose, title, children }) => {
   // Close modal on ESC key
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -30,26 +30,26 @@ const Modal = ({ isOpen, onClose, title, children }) => {
       <div className="bg-gray-100 rounded-lg shadow-lg w-[90%] max-w-md mx-auto animate-fade-in-up">
         <div className="flex items-center justify-between p-4 border-b">
           <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-          <button
+          {btnx && (<button
             onClick={onClose}
             className="text-gray-500 hover:text-red focus:outline-none"
             aria-label="Close modal"
             title='close modal'
           >
             ✕
-          </button>
+          </button>)}
         </div>
 
         <div className="p-4 text-gray-700">{children}</div>
 
         <div className="flex justify-end gap-2 p-4 border-t">
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
+            {btn && (<ErrorBoundary FallbackComponent={ErrorFallback}>
                 <Suspense fallback={<Loading />}>
                     <Button ariaLabel='close' variant="danger" onClick={onClose}>
                         Cancel
                     </Button>
                 </Suspense>
-            </ErrorBoundary>
+            </ErrorBoundary>)}
         </div>
       </div>
     </div>
@@ -59,6 +59,8 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 Modal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  btn: PropTypes.bool,
+  btnx: PropTypes.bool,
   title: PropTypes.string,
   children: PropTypes.node.isRequired,
 };

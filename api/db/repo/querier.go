@@ -11,7 +11,11 @@ import (
 type Querier interface {
 	CreateCar(ctx context.Context, arg CreateCarParams) (string, error)
 	CreateCarDetails(ctx context.Context, arg CreateCarDetailsParams) error
+	CreatePayment(ctx context.Context, arg CreatePaymentParams) (string, error)
+	CreateReservation(ctx context.Context, arg CreateReservationParams) (string, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (string, error)
+	DeletePayment(ctx context.Context, uuid string) error
+	DeleteReservation(ctx context.Context, uuid string) error
 	GetCarDetails(ctx context.Context, uuid string) (GetCarDetailsRow, error)
 	GetCarImages(ctx context.Context, carUuid string) ([]string, error)
 	GetCarListingImages(ctx context.Context, carUuid string) ([]string, error)
@@ -24,6 +28,8 @@ type Querier interface {
 	GetUsersPendingVerification(ctx context.Context) ([]GetUsersPendingVerificationRow, error)
 	GetVerificationByUserUuid(ctx context.Context, userUuid string) (Verification, error)
 	UpdateCarVerificationStatus(ctx context.Context, arg UpdateCarVerificationStatusParams) error
+	UpdatePaymentStatus(ctx context.Context, arg UpdatePaymentStatusParams) error
+	UpdateReservationStatus(ctx context.Context, arg UpdateReservationStatusParams) error
 	UpdateUserVerificationStatus(ctx context.Context, arg UpdateUserVerificationStatusParams) error
 	UploadCarImage(ctx context.Context, arg UploadCarImageParams) error
 	UploadVerificationDocs(ctx context.Context, arg UploadVerificationDocsParams) error

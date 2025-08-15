@@ -7,6 +7,7 @@ package repo
 
 import (
 	"context"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -72,6 +73,62 @@ func (q *Queries) CreateCarDetails(ctx context.Context, arg CreateCarDetailsPara
 	return err
 }
 
+const createPayment = `-- name: CreatePayment :one
+INSERT INTO payment (rental_uuid,amount_paid,payment_method,reference
+) VALUES ($1, $2, $3, $4)
+RETURNING uuid
+`
+
+type CreatePaymentParams struct {
+	RentalUuid    *string        `json:"rental_uuid"`
+	AmountPaid    pgtype.Numeric `json:"amount_paid"`
+	PaymentMethod string         `json:"payment_method"`
+	Reference     string         `json:"reference"`
+}
+
+func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (string, error) {
+	row := q.db.QueryRow(ctx, createPayment,
+		arg.RentalUuid,
+		arg.AmountPaid,
+		arg.PaymentMethod,
+		arg.Reference,
+	)
+	var uuid string
+	err := row.Scan(&uuid)
+	return uuid, err
+}
+
+const createReservation = `-- name: CreateReservation :one
+INSERT INTO reservation (car_uuid,customer_uuid,start_date,end_date,pickup_time,dropoff_time,rental_amount
+) VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING uuid
+`
+
+type CreateReservationParams struct {
+	CarUuid      *string        `json:"car_uuid"`
+	CustomerUuid string         `json:"customer_uuid"`
+	StartDate    time.Time      `json:"start_date"`
+	EndDate      time.Time      `json:"end_date"`
+	PickupTime   pgtype.Time    `json:"pickup_time"`
+	DropoffTime  pgtype.Time    `json:"dropoff_time"`
+	RentalAmount pgtype.Numeric `json:"rental_amount"`
+}
+
+func (q *Queries) CreateReservation(ctx context.Context, arg CreateReservationParams) (string, error) {
+	row := q.db.QueryRow(ctx, createReservation,
+		arg.CarUuid,
+		arg.CustomerUuid,
+		arg.StartDate,
+		arg.EndDate,
+		arg.PickupTime,
+		arg.DropoffTime,
+		arg.RentalAmount,
+	)
+	var uuid string
+	err := row.Scan(&uuid)
+	return uuid, err
+}
+
 const createUser = `-- name: CreateUser :one
 INSERT INTO "user" (fname,lname,email,gender,phone,zip_code,city,street,region,role)
 VALUES ($1, $2, $3,$4,$5,$6,$7,$8,$9,$10)
@@ -109,8 +166,26 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (string,
 	return email, err
 }
 
+const deletePayment = `-- name: DeletePayment :exec
+DELETE FROM payment WHERE uuid = $1
+`
+
+func (q *Queries) DeletePayment(ctx context.Context, uuid string) error {
+	_, err := q.db.Exec(ctx, deletePayment, uuid)
+	return err
+}
+
+const deleteReservation = `-- name: DeleteReservation :exec
+DELETE FROM reservation WHERE uuid = $1
+`
+
+func (q *Queries) DeleteReservation(ctx context.Context, uuid string) error {
+	_, err := q.db.Exec(ctx, deleteReservation, uuid)
+	return err
+}
+
 const getCarDetails = `-- name: GetCarDetails :one
-SELECT c.pickup_location,c.dropoff_location,cd.name,
+SELECT c.uuid,c.pickup_location,c.dropoff_location,cd.name,
 cd.model,cd.energy_type,cd.transmission_type,cd.brand,cd.no_seats,
 cd.color,cd.chassis_no,cd.vin,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
@@ -118,6 +193,7 @@ WHERE c.uuid = $1
 `
 
 type GetCarDetailsRow struct {
+	Uuid             string         `json:"uuid"`
 	PickupLocation   string         `json:"pickup_location"`
 	DropoffLocation  string         `json:"dropoff_location"`
 	Name             string         `json:"name"`
@@ -136,6 +212,7 @@ func (q *Queries) GetCarDetails(ctx context.Context, uuid string) (GetCarDetails
 	row := q.db.QueryRow(ctx, getCarDetails, uuid)
 	var i GetCarDetailsRow
 	err := row.Scan(
+		&i.Uuid,
 		&i.PickupLocation,
 		&i.DropoffLocation,
 		&i.Name,
@@ -477,6 +554,38 @@ type UpdateCarVerificationStatusParams struct {
 
 func (q *Queries) UpdateCarVerificationStatus(ctx context.Context, arg UpdateCarVerificationStatusParams) error {
 	_, err := q.db.Exec(ctx, updateCarVerificationStatus, arg.Visibility, arg.Uuid)
+	return err
+}
+
+const updatePaymentStatus = `-- name: UpdatePaymentStatus :exec
+UPDATE payment
+SET status = $2
+WHERE uuid = $1
+`
+
+type UpdatePaymentStatusParams struct {
+	Uuid   string `json:"uuid"`
+	Status string `json:"status"`
+}
+
+func (q *Queries) UpdatePaymentStatus(ctx context.Context, arg UpdatePaymentStatusParams) error {
+	_, err := q.db.Exec(ctx, updatePaymentStatus, arg.Uuid, arg.Status)
+	return err
+}
+
+const updateReservationStatus = `-- name: UpdateReservationStatus :exec
+UPDATE reservation
+SET status = $2
+WHERE uuid = $1
+`
+
+type UpdateReservationStatusParams struct {
+	Uuid   string `json:"uuid"`
+	Status string `json:"status"`
+}
+
+func (q *Queries) UpdateReservationStatus(ctx context.Context, arg UpdateReservationStatusParams) error {
+	_, err := q.db.Exec(ctx, updateReservationStatus, arg.Uuid, arg.Status)
 	return err
 }
 
