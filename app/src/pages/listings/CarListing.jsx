@@ -6,11 +6,8 @@ import { BsFillFuelPumpDieselFill } from "react-icons/bs";
 import { IoLogoModelS } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 
-
-
-import api from "../../services/axios"
-import {Link} from "react-router-dom"
-
+import api from "../../services/axios";
+import { Link } from "react-router-dom";
 
 function CarListing() {
   const [hoveredId, setHoveredId] = useState(null);
@@ -51,6 +48,65 @@ function CarListing() {
         Book a car and Unleash Your Adventure!
       </h2>
 
+      {/* Sort / Filter Bar */}
+      <div className="flex items-center gap-0 border rounded-full overflow-hidden shadow-sm mb-8 w-full sm:w-[650px] overflow-x-auto no-scrollbar scrollbar-track-primary">
+        {/* Brand */}
+        <div className="flex items-center gap-2 px-4 py-2 bg-white border-r">
+          <IoLogoModelS className="text-gray-500" />
+          <span className="text-blue-600 font-medium">Brand</span>
+          <select className="ml-2 bg-transparent outline-none ">
+            <option value="">All</option>
+            <option value="Toyota">Toyota</option>
+            <option value="Honda">Honda</option>
+            <option value="Mercedes">Mercedes</option>
+            <option value="BMW">BMW</option>
+            <option value="Nissan">Nissan</option>
+          </select>
+        </div>
+
+        {/* Number of Seats */}
+        <div className="flex items-center gap-2 px-4 py-2 bg-white border-r">
+          <MdPeopleAlt className="text-gray-500" />
+          <span className="text-blue-600 font-medium">Seats</span>
+          <select className="ml-2 bg-transparent outline-none">
+            <option value="">Any</option>
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="7">7</option>
+          </select>
+        </div>
+
+        {/* Energy Type */}
+        <div className="flex items-center gap-2 px-4 py-2 bg-white border-r">
+          <BsFillFuelPumpDieselFill className="text-gray-500" />
+          <span className="text-blue-600 font-medium">Energy</span>
+          <select className="ml-2 bg-transparent outline-none">
+            <option value="">All</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Electric">Electric</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+        </div>
+
+        {/* Transmission */}
+        <div className="flex items-center gap-2 px-4 py-2 bg-white border-r">
+          <TbManualGearboxFilled className="text-gray-500" />
+          <span className="text-blue-600 font-medium">Transmission</span>
+          <select className="ml-2 bg-transparent outline-none">
+            <option value="">All</option>
+            <option value="Automatic">Automatic</option>
+            <option value="Manual">Manual</option>
+          </select>
+        </div>
+
+        {/* Cancel Button */}
+        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white hover:bg-blue-900">
+          <span>Cancel</span>
+        </button>
+      </div>
+
       <div className="grid justify-center grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {currentCars.map((car) => {
           const isHovered = hoveredId === car.id;
@@ -58,70 +114,70 @@ function CarListing() {
 
           return (
             <Link to={`/carlisting/car/${car.id}`} key={car.id}>
-            <motion.div
-              key={car.id}
-              className="overflow-hidden transition-shadow bg-white shadow-md rounded-xl hover:shadow-lg"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 }}
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0px 10px 20px rgba(0,0,0,0.1)",
-              }}
-              whileTap={{ scale: 0.97 }}
-            >
-              {" "}
-              <div className="relative w-full h-48 overflow-hidden">
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={image}
-                    src={image}
-                    alt={car.name}
-                    className="absolute object-cover w-full h-48"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                    onMouseEnter={() => setHoveredId(car.id)}
-                    onMouseLeave={() => setHoveredId(null)}
-                  />
-                </AnimatePresence>
-              </div>
-              <div className="p-4 space-y-2">
-                <h3 className="text-xl font-semibold capitalize text-primary">
-                  {car.name}
-                </h3>
+              <motion.div
+                key={car.id}
+                className="overflow-hidden transition-shadow bg-white shadow-md rounded-xl hover:shadow-lg"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0px 10px 20px rgba(0,0,0,0.1)",
+                }}
+                whileTap={{ scale: 0.97 }}
+              >
+                {" "}
+                <div className="relative w-full h-48 overflow-hidden">
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={image}
+                      src={image}
+                      alt={car.name}
+                      className="absolute object-cover w-full h-48"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                      onMouseEnter={() => setHoveredId(car.id)}
+                      onMouseLeave={() => setHoveredId(null)}
+                    />
+                  </AnimatePresence>
+                </div>
+                <div className="p-4 space-y-2">
+                  <h3 className="text-xl font-semibold capitalize text-primary">
+                    {car.name}
+                  </h3>
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-sm text-gray-500 ">
-                    <TbManualGearboxFilled className="capitalize text-primary" />
-                    Transmission: {car.transmission}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-sm text-gray-500 ">
+                      <TbManualGearboxFilled className="capitalize text-primary" />
+                      Transmission: {car.transmission}
+                    </div>
+                    <div className="flex items-center gap-1 text-sm text-gray-500 ">
+                      <MdPeopleAlt className="capitalize text-primary" />
+                      Seats: {car.no_seats}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 text-sm text-gray-500 ">
-                    <MdPeopleAlt className="capitalize text-primary" />
-                    Seats: {car.no_seats}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-sm text-gray-500">
+                      <BsFillFuelPumpDieselFill className="capitalize text-primary" />
+                      Energy: {car.energy_type}
+                    </div>
+                    <div className="flex items-center gap-1 text-sm text-gray-500">
+                      <IoLogoModelS className="capitalize text-primary" />
+                      Brand: {car.brand}
+                    </div>
                   </div>
+                  <div className="flex items-center justify-end">
+                    <p className="px-3 py-1 font-bold rounded-full shadow-md text-primary ">
+                      XAF <span className="text-xl">{car.pricePerDay}</span>/day
+                    </p>
+                  </div>
+                  <button className="w-full py-2 mt-3 text-white transition-colors rounded-md bg-primary hover:bg-secondary">
+                    View Details
+                  </button>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-sm text-gray-500">
-                    <BsFillFuelPumpDieselFill className="capitalize text-primary" />
-                    Energy: {car.energy_type}
-                  </div>
-                  <div className="flex items-center gap-1 text-sm text-gray-500">
-                    <IoLogoModelS className="capitalize text-primary" />
-                    Brand: {car.brand}
-                  </div>
-                </div>
-                <div className="flex items-center justify-end">
-                  <p className="px-3 py-1 font-bold rounded-full shadow-md text-primary ">
-                    XAF <span className="text-xl">{car.pricePerDay}</span>/day
-                  </p>
-                </div>
-                <button className="w-full py-2 mt-3 text-white transition-colors rounded-md bg-primary hover:bg-secondary">
-                  View Details
-                </button>
-              </div>
-            </motion.div>
+              </motion.div>
             </Link>
           );
         })}
