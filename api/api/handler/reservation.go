@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -126,23 +127,77 @@ func (h *ReservationHandler) CreateReservation(c *gin.Context) {
 
 	//async go routine to check payment status
 	//and update reservation/payment status or delete the reservation if payment fails
+	go func() {
+		maxWait := 1 * time.Minute          // maximum wait time for payment confirmation of 2 minutes
+		checkInterval := 10 * time.Second   // check every 10 seconds
+		deadline := time.Now().Add(maxWait) // set deadline for payment confirmation
 
-}
+		for time.Now().Before(deadline) {
+			status, err := h.campay.TransactionStatus(ref)
+			if err != nil {
+				fmt.Println("error checking payment status:", err)
+				time.Sleep(checkInterval)
+				continue
+			}
 
-func (h *ReservationHandler) Status(c *gin.Context) {
-	//d571df3b-4b29-4a51-beef-f51088350912
-	ref := c.Param("ref")
-	if ref == "" {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "ref must not be null"})
-		return
-	}
-	status, err := h.campay.TransactionStatus(ref)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"status":  status,
-	})
+			//print the current payment status
+			fmt.Println("Current payment status:", status)
+
+			ctx := context.Background()
+
+			if status == "SUCCESSFUL" {
+				// update reservation and payment status to confirmed
+				if err := h.store.Do().UpdateReservationStatus(ctx, repo.UpdateReservationStatusParams{
+					Uuid:   reservationUuid,
+					Status: "completed",
+				}); err != nil {
+					fmt.Println("error updating reservation status:", err)
+				}
+				if err := h.store.Do().UpdatePaymentStatus(ctx, repo.UpdatePaymentStatusParams{
+					Uuid:   payment_uuid,
+					Status: "completed",
+				}); err != nil {
+					fmt.Println("error updating payment status:", err)
+				}
+				return
+			} else if status == "FAILED" {
+				// update the reservation and payment to cancelled/failed
+				if err := h.store.Do().UpdateReservationStatus(ctx, repo.UpdateReservationStatusParams{
+					Uuid:   reservationUuid,
+					Status: "cancelled",
+				}); err != nil {
+					fmt.Println("error updating reservation status:", err)
+				}
+				if err := h.store.Do().UpdatePaymentStatus(ctx, repo.UpdatePaymentStatusParams{
+					Uuid:   payment_uuid,
+					Status: "failed",
+				}); err != nil {
+					fmt.Println("error updating payment status:", err)
+				}
+				fmt.Println("payment failed, reservation and payment updated to cancelled/failed")
+				return
+			}
+
+			time.Sleep(checkInterval) // wait before next check
+		}
+
+		//timeout reached, delete reservation and payment
+		ctx := context.Background()
+		// update the reservation and payment to cancelled/failed
+		if err := h.store.Do().UpdateReservationStatus(ctx, repo.UpdateReservationStatusParams{
+			Uuid:   reservationUuid,
+			Status: "cancelled",
+		}); err != nil {
+			fmt.Println("error updating reservation status:", err)
+		}
+		if err := h.store.Do().UpdatePaymentStatus(ctx, repo.UpdatePaymentStatusParams{
+			Uuid:   payment_uuid,
+			Status: "failed",
+		}); err != nil {
+			fmt.Println("error updating payment status:", err)
+		}
+		//prin
+		fmt.Println("payment confirmation timeout reached, reservation and payment deleted")
+	}()
+
 }

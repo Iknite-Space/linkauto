@@ -14,6 +14,8 @@ type Querier interface {
 	CreatePayment(ctx context.Context, arg CreatePaymentParams) (string, error)
 	CreateReservation(ctx context.Context, arg CreateReservationParams) (string, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (string, error)
+	DeletePayment(ctx context.Context, uuid string) error
+	DeleteReservation(ctx context.Context, uuid string) error
 	GetCarDetails(ctx context.Context, uuid string) (GetCarDetailsRow, error)
 	GetCarImages(ctx context.Context, carUuid string) ([]string, error)
 	GetCarListingImages(ctx context.Context, carUuid string) ([]string, error)
