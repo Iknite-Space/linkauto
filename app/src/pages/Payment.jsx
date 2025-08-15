@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/axios";
 import { toast } from "react-toastify";
+import PaymentConfirmation from "../components/PaymentConfirmation";
 
 export default function Payment() {
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ export default function Payment() {
   const [paymentDetails, setPaymentDetails] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
+  const [ref, setRef] = useState(""); // Reference for payment confirmation
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   // Load reservation data from localStorage
   useEffect(() => {
@@ -74,8 +77,8 @@ export default function Payment() {
       const res = await api.post("/reservation", payload);
       console.log("Payment initiated:", res.data);
       if(res.data.success){
-        localStorage.removeItem("reservationData"); // Clear reservation data after successful payment initiation
-        toast.success("Payment initiated successfully. Please confirm your payment.");
+        setRef(res.data.ref); // Set reference for confirmation
+        setShowConfirmation(true); // Show confirmation modal
       }
       
     } catch (error) {
@@ -86,43 +89,6 @@ export default function Payment() {
     }finally{
       setIsProcessing(false);
     }
-
-    // try {
-    //   // Send data to backend
-    //   const response = await fetch("/api/process-payment", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(payload),
-    //   });
-
-    //   if (!response.ok) throw new Error("Failed to initiate payment");
-
-    //   // Simulate waiting for payment confirmation
-    //   let countdown = 30;
-    //   const interval = setInterval(async () => {
-    //     countdown--;
-
-    //     // Poll backend for payment status
-    //     const statusRes = await fetch(`/api/payment-status?reservationId=${reservationData.id}`);
-    //     const statusData = await statusRes.json();
-
-    //     if (statusData.status === "success") {
-    //       clearInterval(interval);
-    //       setIsProcessing(false);
-    //       setPaymentStatus("success");
-    //       navigate("/confirmation");
-    //     } else if (countdown <= 0) {
-    //       clearInterval(interval);
-    //       setIsProcessing(false);
-    //       setPaymentStatus("timeout");
-    //     }
-    //   }, 1000);
-
-    // } catch (err) {
-    //   console.error(err);
-    //   setIsProcessing(false);
-    //   setPaymentStatus("error");
-    // }
   };
 
   return (
@@ -134,7 +100,7 @@ export default function Payment() {
           <h2 className="font-semibold">Reservation Summary</h2>
           <p>Start: {reservationData. start_date} at {reservationData.pickup_time}</p>
           <p>End: {reservationData. end_date} at {reservationData.dropoff_time}</p>
-          <p>Total: <strong>${reservationData.rental_amount}</strong></p>
+          <p>Total: <strong>FCFA {reservationData.rental_amount}</strong></p>
         </div>
       )}
 
@@ -213,7 +179,7 @@ export default function Payment() {
       {/* Status Messages */}
       {isProcessing && (
         <div className="mt-4 text-sm text-center text-gray-600">
-          Please confirm your payment... Waiting for confirmation
+          {/* Please confirm your payment... Waiting for confirmation */}
         </div>
       )}
       {paymentStatus === "timeout" && (
@@ -222,10 +188,12 @@ export default function Payment() {
         </div>
       )}
       {paymentStatus === "error" && (
-        <div className="mt-4 text-center text-red-500">
+        <div className="mt-4 text-center text-red">
           Something went wrong. Please try again.
         </div>
       )}
+
+      {showConfirmation && <PaymentConfirmation ref={ref} />}
     </div>
   );
 }

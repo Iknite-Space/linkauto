@@ -58,6 +58,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 
 	//reservation
 	r.POST("/reservation", reservationHandler.CreateReservation)
+	r.GET("/reservation/:ref", reservationHandler.Status)
 
 	return r
 }

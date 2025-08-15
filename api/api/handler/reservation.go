@@ -120,9 +120,8 @@ func (h *ReservationHandler) CreateReservation(c *gin.Context) {
 	}
 	//respond to frontend immediately
 	c.JSON(http.StatusOK, gin.H{
-		"success":      true,
-		"rental_uuid":  reservationUuid,
-		"payment_uuid": payment_uuid,
+		"success": true,
+		"ref":     ref,
 	})
 
 	//async go routine to check payment status
@@ -139,9 +138,6 @@ func (h *ReservationHandler) CreateReservation(c *gin.Context) {
 				time.Sleep(checkInterval)
 				continue
 			}
-
-			//print the current payment status
-			fmt.Println("Current payment status:", status)
 
 			ctx := context.Background()
 
@@ -200,4 +196,24 @@ func (h *ReservationHandler) CreateReservation(c *gin.Context) {
 		fmt.Println("payment confirmation timeout reached, reservation and payment deleted")
 	}()
 
+}
+
+// transaction status handler
+func (h *ReservationHandler) Status(c *gin.Context) {
+	ref := c.Param("ref")
+	if ref == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Reference is required"})
+		return
+	}
+
+	status, err := h.campay.TransactionStatus(ref)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check payment status", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"status":  status,
+	})
 }
