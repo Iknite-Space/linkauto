@@ -26,6 +26,8 @@ type Querier interface {
 	GetUsersPendingVerification(ctx context.Context) ([]GetUsersPendingVerificationRow, error)
 	GetVerificationByUserUuid(ctx context.Context, userUuid string) (Verification, error)
 	UpdateCarVerificationStatus(ctx context.Context, arg UpdateCarVerificationStatusParams) error
+	UpdatePaymentStatus(ctx context.Context, arg UpdatePaymentStatusParams) error
+	UpdateReservationStatus(ctx context.Context, arg UpdateReservationStatusParams) error
 	UpdateUserVerificationStatus(ctx context.Context, arg UpdateUserVerificationStatusParams) error
 	UploadCarImage(ctx context.Context, arg UploadCarImageParams) error
 	UploadVerificationDocs(ctx context.Context, arg UploadVerificationDocsParams) error

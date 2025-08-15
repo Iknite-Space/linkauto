@@ -74,8 +74,8 @@ func (q *Queries) CreateCarDetails(ctx context.Context, arg CreateCarDetailsPara
 }
 
 const createPayment = `-- name: CreatePayment :one
-INSERT INTO payment (rental_uuid,amount_paid,payment_method,reference,status
-) VALUES ($1, $2, $3, $4, $5)
+INSERT INTO payment (rental_uuid,amount_paid,payment_method,reference
+) VALUES ($1, $2, $3, $4)
 RETURNING uuid
 `
 
@@ -84,7 +84,6 @@ type CreatePaymentParams struct {
 	AmountPaid    pgtype.Numeric `json:"amount_paid"`
 	PaymentMethod string         `json:"payment_method"`
 	Reference     string         `json:"reference"`
-	Status        string         `json:"status"`
 }
 
 func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (string, error) {
@@ -93,7 +92,6 @@ func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (s
 		arg.AmountPaid,
 		arg.PaymentMethod,
 		arg.Reference,
-		arg.Status,
 	)
 	var uuid string
 	err := row.Scan(&uuid)
@@ -538,6 +536,38 @@ type UpdateCarVerificationStatusParams struct {
 
 func (q *Queries) UpdateCarVerificationStatus(ctx context.Context, arg UpdateCarVerificationStatusParams) error {
 	_, err := q.db.Exec(ctx, updateCarVerificationStatus, arg.Visibility, arg.Uuid)
+	return err
+}
+
+const updatePaymentStatus = `-- name: UpdatePaymentStatus :exec
+UPDATE payment
+SET status = $2
+WHERE uuid = $1
+`
+
+type UpdatePaymentStatusParams struct {
+	Uuid   string `json:"uuid"`
+	Status string `json:"status"`
+}
+
+func (q *Queries) UpdatePaymentStatus(ctx context.Context, arg UpdatePaymentStatusParams) error {
+	_, err := q.db.Exec(ctx, updatePaymentStatus, arg.Uuid, arg.Status)
+	return err
+}
+
+const updateReservationStatus = `-- name: UpdateReservationStatus :exec
+UPDATE reservation
+SET status = $2
+WHERE uuid = $1
+`
+
+type UpdateReservationStatusParams struct {
+	Uuid   string `json:"uuid"`
+	Status string `json:"status"`
+}
+
+func (q *Queries) UpdateReservationStatus(ctx context.Context, arg UpdateReservationStatusParams) error {
+	_, err := q.db.Exec(ctx, updateReservationStatus, arg.Uuid, arg.Status)
 	return err
 }
 

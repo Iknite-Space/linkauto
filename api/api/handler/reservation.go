@@ -1,9 +1,14 @@
 package handler
 
 import (
+	"database/sql"
+	"fmt"
 	"net/http"
+	"time"
 
+	"github.com/Iknite-Space/c4-project-boilerplate/api/db/repo"
 	"github.com/Iknite-Space/c4-project-boilerplate/api/db/store"
+	"github.com/Iknite-Space/c4-project-boilerplate/api/helpers"
 	"github.com/Iknite-Space/c4-project-boilerplate/api/service/campay"
 	"github.com/gin-gonic/gin"
 )
@@ -22,15 +27,106 @@ func NewResHandler(store store.Store, campay *campay.Client) *ReservationHandler
 
 // create a new reservation
 func (h *ReservationHandler) CreateReservation(c *gin.Context) {
-	ref, err := h.campay.RequestPayment("653595434", "100", "test")
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	var req ReservationRequestJSON
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
+
+	//parse start and end date
+	startDate, err := time.Parse("2006-01-02", req.ReservationDetails.StartDate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid start date format"})
+		return
+	}
+	endDate, err := time.Parse("2006-01-02", req.ReservationDetails.EndDate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid end date format"})
+		return
+	}
+	pickupPg, err := helpers.ParsePgTimeString(req.ReservationDetails.PickupTime)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	dropoffPg, err := helpers.ParsePgTimeString(req.ReservationDetails.PickupTime)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	rentalAmount, err := helpers.FloatToPgNumeric(req.ReservationDetails.RentalAmount)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid rental amount"})
+		return
+	}
+
+	//insert reservation details
+	reservationParams := repo.CreateReservationParams{
+		CarUuid:      req.ReservationDetails.CarUuid,
+		CustomerUuid: req.ReservationDetails.CustomerUuid,
+		StartDate:    startDate,
+		EndDate:      endDate,
+		PickupTime:   pickupPg,
+		DropoffTime:  dropoffPg,
+		RentalAmount: rentalAmount,
+	}
+
+	// begin transaction
+	q, tx, err := h.store.Begin(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to begin transaction"})
+		return
+	}
+	defer func() {
+		if err := tx.Rollback(c); err != nil && err != sql.ErrTxDone {
+			fmt.Println("warning: failed to rollback transaction:", err)
+		}
+	}()
+
+	// Create reservation
+	reservationUuid, err := q.CreateReservation(c, reservationParams)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create reservation", "details": err.Error()})
+		return
+	}
+	// //now initiate the campay payment
+	ref, err := h.campay.RequestPayment(req.Phone, req.Amount, req.Description)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to initiate payment", "details": err.Error()})
+		return
+	}
+
+	//format payment param
+	pamentParam := repo.CreatePaymentParams{
+		RentalUuid:    &reservationUuid,
+		AmountPaid:    rentalAmount,
+		PaymentMethod: req.PaymentDetails.PaymentMethod,
+		Reference:     ref,
+	}
+
+	//initial payment creation
+	payment_uuid, err := q.CreatePayment(c, pamentParam)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create payment", "details": err.Error()})
+		return
+	}
+	//commit transaction before starting async process
+	if err := tx.Commit(c); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to commit transaction", "details": err.Error()})
+		return
+	}
+	//respond to frontend immediately
 	c.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"ref":     ref,
+		"success":      true,
+		"rental_uuid":  reservationUuid,
+		"payment_uuid": payment_uuid,
 	})
+
+	//async go routine to check payment status
+	//and update reservation/payment status or delete the reservation if payment fails
+
 }
 
 func (h *ReservationHandler) Status(c *gin.Context) {
