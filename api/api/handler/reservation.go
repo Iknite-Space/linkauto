@@ -141,7 +141,8 @@ func (h *ReservationHandler) CreateReservation(c *gin.Context) {
 
 			ctx := context.Background()
 
-			if status == "SUCCESSFUL" {
+			switch status {
+			case "SUCCESSFUL":
 				// update reservation and payment status to confirmed
 				if err := h.store.Do().UpdateReservationStatus(ctx, repo.UpdateReservationStatusParams{
 					Uuid:   reservationUuid,
@@ -156,7 +157,8 @@ func (h *ReservationHandler) CreateReservation(c *gin.Context) {
 					fmt.Println("error updating payment status:", err)
 				}
 				return
-			} else if status == "FAILED" {
+
+			case "FAILED":
 				// update the reservation and payment to cancelled/failed
 				if err := h.store.Do().UpdateReservationStatus(ctx, repo.UpdateReservationStatusParams{
 					Uuid:   reservationUuid,
