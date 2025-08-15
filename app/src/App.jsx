@@ -37,6 +37,7 @@ const CarsVerification = lazy(() =>
 );
 
 const SingleCarVerPage = lazy(() => import("./pages/dashboard/SingleCarVerPage"));
+const DiffPaymentPage = lazy(() => import("./pages/dashboard/DiffPaymentPage"))
 
 const CarListing = lazy(() => import("./pages/listings/CarListing"));
 const CarUploadForm = lazy(() => import("./components/form/CarUploadForm"));
@@ -83,6 +84,7 @@ function App() {
                 <Route path="car-verification" element={<CarsVerification />} />
                 <Route path="car-verification/:car_uuid" element={<SingleCarVerPage />} />
                 <Route path="user-ver-doc-form" element={<UserVerDocForm />} />
+                <Route path="diff-payment-page" element={<DiffPaymentPage />}/>
                 {/*}
                 <Route
                   path="user-verification/:user_uuid"
