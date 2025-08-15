@@ -109,8 +109,8 @@ INSERT INTO reservation (car_uuid,customer_uuid,start_date,end_date,pickup_time,
 RETURNING uuid;
 
 -- name: CreatePayment :one
-INSERT INTO payment (rental_uuid,amount_paid,payment_method,reference,status
-) VALUES ($1, $2, $3, $4, $5)
+INSERT INTO payment (rental_uuid,amount_paid,payment_method,reference
+) VALUES ($1, $2, $3, $4)
 RETURNING uuid;
 
 -- name: UpdateReservationStatus :exec

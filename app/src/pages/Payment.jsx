@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../services/axios";
+import { toast } from "react-toastify";
 
 export default function Payment() {
   const navigate = useNavigate();
 
   const [reservationData, setReservationData] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState("mobile");
+  const [paymentMethod, setPaymentMethod] = useState("momo");
   const [paymentDetails, setPaymentDetails] = useState({});
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -32,7 +34,8 @@ export default function Payment() {
     e.preventDefault();
 
     // Mobile number validation
-    if (paymentMethod === "mobile") {
+    let phone;
+    if (paymentMethod === "momo") {
         let phone = paymentDetails.phone?.replace(/\s+/g, ""); // remove all spaces
         const phoneRegex = /^6\d{8}$/; // starts with 6 and 9 digits total
         if (!phoneRegex.test(phone)) {
@@ -45,52 +48,81 @@ export default function Payment() {
     setIsProcessing(true);
     setPaymentStatus(null);
 
-    //add the total amount to the paymentdetails object
-    paymentDetails.amount_paid = reservationData.rental_amount;
-    paymentDetails.payment_method = paymentMethod
+    const description = paymentDetails.description || "Payment for reservation";
+    const amount = reservationData.rental_amount.toString();
+    const number = paymentDetails.phone;
+
+    paymentDetails.amount_paid = Number(reservationData.rental_amount);
+    paymentDetails.payment_method = paymentMethod;
+    delete paymentDetails.description;
+    delete paymentDetails.phone;
+    paymentDetails.rental_uuid = "";
+    paymentDetails.reference = "";
+    paymentDetails.status = "";
 
     const payload = {
+      phone: number, // string
+      // amount,
+      amount: "100",
+      description,
       reservationDetails: { ...reservationData },
-      paymentDetails,
+      paymentDetails, // amount_paid as numeric
     };
     console.log(payload)
 
     try {
-      // Send data to backend
-      const response = await fetch("/api/process-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) throw new Error("Failed to initiate payment");
-
-      // Simulate waiting for payment confirmation
-      let countdown = 30;
-      const interval = setInterval(async () => {
-        countdown--;
-
-        // Poll backend for payment status
-        const statusRes = await fetch(`/api/payment-status?reservationId=${reservationData.id}`);
-        const statusData = await statusRes.json();
-
-        if (statusData.status === "success") {
-          clearInterval(interval);
-          setIsProcessing(false);
-          setPaymentStatus("success");
-          navigate("/confirmation");
-        } else if (countdown <= 0) {
-          clearInterval(interval);
-          setIsProcessing(false);
-          setPaymentStatus("timeout");
-        }
-      }, 1000);
-
-    } catch (err) {
-      console.error(err);
+      const res = await api.post("/reservation", payload);
+      console.log("Payment initiated:", res.data);
+      if(res.data.success){
+        localStorage.removeItem("reservationData"); // Clear reservation data after successful payment initiation
+        toast.success("Payment initiated successfully. Please confirm your payment.");
+      }
+      
+    } catch (error) {
+      console.error("Payment processing error:", error);
       setIsProcessing(false);
       setPaymentStatus("error");
+      return;  
+    }finally{
+      setIsProcessing(false);
     }
+
+    // try {
+    //   // Send data to backend
+    //   const response = await fetch("/api/process-payment", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(payload),
+    //   });
+
+    //   if (!response.ok) throw new Error("Failed to initiate payment");
+
+    //   // Simulate waiting for payment confirmation
+    //   let countdown = 30;
+    //   const interval = setInterval(async () => {
+    //     countdown--;
+
+    //     // Poll backend for payment status
+    //     const statusRes = await fetch(`/api/payment-status?reservationId=${reservationData.id}`);
+    //     const statusData = await statusRes.json();
+
+    //     if (statusData.status === "success") {
+    //       clearInterval(interval);
+    //       setIsProcessing(false);
+    //       setPaymentStatus("success");
+    //       navigate("/confirmation");
+    //     } else if (countdown <= 0) {
+    //       clearInterval(interval);
+    //       setIsProcessing(false);
+    //       setPaymentStatus("timeout");
+    //     }
+    //   }, 1000);
+
+    // } catch (err) {
+    //   console.error(err);
+    //   setIsProcessing(false);
+    //   setPaymentStatus("error");
+    // }
   };
 
   return (
@@ -115,7 +147,7 @@ export default function Payment() {
             onChange={(e) => setPaymentMethod(e.target.value)}
           >
             <option value="card">Credit/Debit Card</option>
-            <option value="mobile">Mobile Money</option>
+            <option value="momo">Mobile Money</option>
             <option value="bank">Bank Transfer</option>
           </select>
         </div>
@@ -138,7 +170,7 @@ export default function Payment() {
           </>
         )}
 
-        {paymentMethod === "mobile" && (
+        {paymentMethod === "momo" && (
           <>
             <input type="text"name="phone"placeholder="Mobile Money Number e.g: 654573923"className="w-full p-2 border rounded"
             onChange={handlePaymentChange}
