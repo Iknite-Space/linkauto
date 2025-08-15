@@ -122,4 +122,10 @@ UPDATE payment
 SET status = $2
 WHERE uuid = $1;
 
+-- name: DeleteReservation :exec
+DELETE FROM reservation WHERE uuid = $1;
+
+-- name: DeletePayment :exec
+DELETE FROM payment WHERE uuid = $1;
+
 

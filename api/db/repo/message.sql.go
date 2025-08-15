@@ -166,6 +166,24 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (string,
 	return email, err
 }
 
+const deletePayment = `-- name: DeletePayment :exec
+DELETE FROM payment WHERE uuid = $1
+`
+
+func (q *Queries) DeletePayment(ctx context.Context, uuid string) error {
+	_, err := q.db.Exec(ctx, deletePayment, uuid)
+	return err
+}
+
+const deleteReservation = `-- name: DeleteReservation :exec
+DELETE FROM reservation WHERE uuid = $1
+`
+
+func (q *Queries) DeleteReservation(ctx context.Context, uuid string) error {
+	_, err := q.db.Exec(ctx, deleteReservation, uuid)
+	return err
+}
+
 const getCarDetails = `-- name: GetCarDetails :one
 SELECT c.uuid,c.pickup_location,c.dropoff_location,cd.name,
 cd.model,cd.energy_type,cd.transmission_type,cd.brand,cd.no_seats,
