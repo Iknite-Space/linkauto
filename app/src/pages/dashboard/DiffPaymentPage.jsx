@@ -106,11 +106,10 @@ const DiffPaymentPage = () => {
 
               </div>
             </a>
-
           ))}
         </div>
 
-// The dynamic form
+{/* The dynamic form */}
 {selectedMethod && (
         <div className="mt-10 bg-white rounded-lg shadow-lg p-6 max-w-lg mx-auto">
           <h3 className="text-2xl font-semibold text-primary mb-4">
