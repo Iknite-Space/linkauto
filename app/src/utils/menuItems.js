@@ -12,6 +12,7 @@ import {
     FiChevronRight,
     FiUser,
     FiClipboard,
+    FiDribbble,
   } from "react-icons/fi";
 
   
@@ -58,6 +59,12 @@ import {
               label: "Car Verification Page",
               icon: <FiClipboard />,
               href: "/dashboard/car-ver-page",
+              visible: ["admin"],
+            },
+            {
+              label: "Diff Payment Page",
+              icon: <FiDribbble />,
+              href: "/dashboard/diff-payment-page",
               visible: ["admin"],
             },
           ],
