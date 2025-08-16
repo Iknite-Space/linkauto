@@ -6,9 +6,9 @@ import Button from "../../components/UI/Button";
 
 const paymentOptions = [
     {
-        name: 'Campay',
-        image: '',
-        filds: [
+        name: 'Mobile Money',
+        image: './../assets/mobilemoney.png',
+        fields: [
           { name: 'phone', label: 'Phone Number', type: 'tel', placeholder: 'Enter phone number' },
           { name: 'amount', label: 'Amount', type: 'number', placeholder: 'Enter amount' },
           { name: 'description', label: 'Description', type: 'text', placeholder: 'Enter description' },
@@ -21,8 +21,8 @@ const paymentOptions = [
     },
     {
         name: 'Credit Card',
-        image: '',
-        field: [
+        image: './../assets/visa2.png',
+        fields: [
           { name: 'cardNumber', label: 'Card Number', type: 'text', placeholder: 'Enter card number' },
           { name: 'expiryDate', label: 'Expiry Date', type: 'text', placeholder: 'MM/YY' },
           { name: 'cvv', label: 'CVV', type: 'password', placeholder: 'Enter CVV' },
@@ -37,8 +37,8 @@ const paymentOptions = [
     },
     {
         name: 'PayPal',
-        image: '',
-        field: [
+        image: './../assets/paypal.png',
+        fields: [
           { name: 'phone', label: 'Phone Number', type: 'tel', placeholder: 'Enter phone number' },
           { name: 'amount', label: 'Amount', type: 'number', placeholder: 'Enter amount' },
           { name: 'description', label: 'Description', type: 'text', placeholder: 'Enter description' },
@@ -51,8 +51,8 @@ const paymentOptions = [
     },
     {
         name: 'Bank Transfer',
-        image: '',
-        field: [
+        image: './../assets/banktransfer.png',
+        fields: [
           { name: 'accountNumber', label: 'Account Number', type: 'text', placeholder: 'Enter account number' },
           { name: 'bankName', label: 'Bank Name', type: 'text', placeholder: 'Enter bank name' },
           { name: 'amount', label: 'Amount', type: 'number', placeholder: 'Enter amount' },
@@ -68,7 +68,7 @@ const paymentOptions = [
 
 
 const DiffPaymentPage = () => {
-  const [selectedMethod, setSElectedMethod] = useState(null);
+  const [selectedMethod, setSelectedMethod] = useState(null);
 
   // Validate form for any selectedOPtion
   const form = useForm({
@@ -85,26 +85,24 @@ const DiffPaymentPage = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-primary">
-        <h2 className="text-3xl font-semibold text-white text-center mb-8">Choose a Payment Method</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 max-w-4xl mx-auto"> 
+    <div className="min-h-screen p-6 bg-gray">
+        <h2 className="text-3xl font-semibold text-PrimaryTextColor text-center mb-8">Choose a Payment Method</h2>
+        <div className="grid grid-cols-4 sm:grid-cols-4 lg:grid-cols-4 gap-1 max-w-xl mx-auto"> 
           {paymentOptions.map((option, index) => (
             <a
                 key={index}
-                onClick={() => setSElectedMethod(option)}
+                onClick={() => setSelectedMethod(option)}
                 className="group relative block rounded-lg shadow-lg overflow-hidden transition-transform hover:scale-105"
             >
               <div
-              className="h-48 bg-cover bg-center flex items-end justify-center"
+              className="h-32 bg-contain bg-no-repeat bg-center flex items-end justify-center"
               style={{
                 backgroundImage: `url(${option.image})`
               }}>
-
-                <div className="bg-primary w-full text-center py-4">
-                  <p className="text-white text-xl font-semibold group-hover:text-accent transition-colors">{option.name}</p>
-                </div>
-
               </div>
+               {/* <div className="bg-primary h-8 text-center mt-2">
+                  <p className="text-white text-xl font-semibold group-hover:text-accent transition-colors">{option.name}</p>
+                </div> */}
             </a>
           ))}
         </div>
@@ -125,7 +123,9 @@ const DiffPaymentPage = () => {
                 <input
                   type={field.type}
                   placeholder={field.placeholder}
-                  {...form.register(field.name, field.validation)}
+                  {...form.register(field.name, {
+                    valueAsNumber: field.type === "number" ? true : undefined
+                  })}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:border-[#01285b] focus:ring-[#01285b]"
                 />
                 {form.formState.errors[field.name] && (
