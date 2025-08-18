@@ -403,6 +403,57 @@ func (q *Queries) GetCarVerificationDetails(ctx context.Context, uuid string) (G
 	return i, err
 }
 
+const getCustomerReservationDetails = `-- name: GetCustomerReservationDetails :many
+SELECT 
+CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
+CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
+r.start_date,
+r.end_date,
+r.rental_amount,
+r.status
+FROM reservation r
+JOIN car c ON c.uuid = r.car_uuid
+JOIN "user" owner ON owner.uuid = c.owner_uuid
+JOIN "user" customer ON customer.uuid = r.customer_uuid
+WHERE r.customer_uuid = $1
+`
+
+type GetCustomerReservationDetailsRow struct {
+	OwnerName    interface{}    `json:"owner_name"`
+	CustomerName interface{}    `json:"customer_name"`
+	StartDate    time.Time      `json:"start_date"`
+	EndDate      time.Time      `json:"end_date"`
+	RentalAmount pgtype.Numeric `json:"rental_amount"`
+	Status       string         `json:"status"`
+}
+
+func (q *Queries) GetCustomerReservationDetails(ctx context.Context, customerUuid string) ([]GetCustomerReservationDetailsRow, error) {
+	rows, err := q.db.Query(ctx, getCustomerReservationDetails, customerUuid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetCustomerReservationDetailsRow{}
+	for rows.Next() {
+		var i GetCustomerReservationDetailsRow
+		if err := rows.Scan(
+			&i.OwnerName,
+			&i.CustomerName,
+			&i.StartDate,
+			&i.EndDate,
+			&i.RentalAmount,
+			&i.Status,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getUserByEmail = `-- name: GetUserByEmail :one
 SELECT Uuid,email,lname,role,account_status FROM "user" WHERE email = $1
 `
