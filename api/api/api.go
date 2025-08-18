@@ -59,6 +59,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	//reservation
 	r.POST("/reservation", reservationHandler.CreateReservation)
 	r.GET("/reservation/:ref", reservationHandler.Status)
+	r.GET("/customer-reservations/:customer_uuid", reservationHandler.CustomerReservations)
 
 	return r
 }
