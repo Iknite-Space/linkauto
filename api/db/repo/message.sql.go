@@ -403,10 +403,79 @@ func (q *Queries) GetCarVerificationDetails(ctx context.Context, uuid string) (G
 	return i, err
 }
 
+const getCustomerPaymentDetails = `-- name: GetCustomerPaymentDetails :many
+SELECT 
+  CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
+  CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
+  customer.uuid AS user_uuid,
+  p.amount_paid,
+  p.payment_method,
+  p.status AS payment_status,
+  cd.name AS car_name,
+  r.start_date,
+  r.end_date,
+  r.status AS reservation_status,
+  r.penalty_amount
+FROM payment p
+JOIN reservation r ON r.uuid = p.rental_uuid
+JOIN "user" customer ON customer.uuid = r.customer_uuid
+JOIN car c ON c.uuid = r.car_uuid
+JOIN "user" owner ON owner.uuid = c.owner_uuid
+LEFT JOIN car_details cd ON cd.car_uuid = c.uuid
+WHERE customer.uuid = $1
+`
+
+type GetCustomerPaymentDetailsRow struct {
+	CustomerName      interface{}    `json:"customer_name"`
+	OwnerName         interface{}    `json:"owner_name"`
+	UserUuid          string         `json:"user_uuid"`
+	AmountPaid        pgtype.Numeric `json:"amount_paid"`
+	PaymentMethod     string         `json:"payment_method"`
+	PaymentStatus     string         `json:"payment_status"`
+	CarName           string         `json:"car_name"`
+	StartDate         time.Time      `json:"start_date"`
+	EndDate           time.Time      `json:"end_date"`
+	ReservationStatus string         `json:"reservation_status"`
+	PenaltyAmount     pgtype.Numeric `json:"penalty_amount"`
+}
+
+func (q *Queries) GetCustomerPaymentDetails(ctx context.Context, uuid string) ([]GetCustomerPaymentDetailsRow, error) {
+	rows, err := q.db.Query(ctx, getCustomerPaymentDetails, uuid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetCustomerPaymentDetailsRow{}
+	for rows.Next() {
+		var i GetCustomerPaymentDetailsRow
+		if err := rows.Scan(
+			&i.CustomerName,
+			&i.OwnerName,
+			&i.UserUuid,
+			&i.AmountPaid,
+			&i.PaymentMethod,
+			&i.PaymentStatus,
+			&i.CarName,
+			&i.StartDate,
+			&i.EndDate,
+			&i.ReservationStatus,
+			&i.PenaltyAmount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getCustomerReservationDetails = `-- name: GetCustomerReservationDetails :many
 SELECT 
 CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
 CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
+customer.uuid AS user_uuid,
 r.start_date,
 r.end_date,
 r.rental_amount,
@@ -421,6 +490,7 @@ WHERE r.customer_uuid = $1
 type GetCustomerReservationDetailsRow struct {
 	OwnerName    interface{}    `json:"owner_name"`
 	CustomerName interface{}    `json:"customer_name"`
+	UserUuid     string         `json:"user_uuid"`
 	StartDate    time.Time      `json:"start_date"`
 	EndDate      time.Time      `json:"end_date"`
 	RentalAmount pgtype.Numeric `json:"rental_amount"`
@@ -439,6 +509,7 @@ func (q *Queries) GetCustomerReservationDetails(ctx context.Context, customerUui
 		if err := rows.Scan(
 			&i.OwnerName,
 			&i.CustomerName,
+			&i.UserUuid,
 			&i.StartDate,
 			&i.EndDate,
 			&i.RentalAmount,

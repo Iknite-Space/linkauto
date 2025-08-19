@@ -22,6 +22,7 @@ type Querier interface {
 	GetCarListings(ctx context.Context) ([]GetCarListingsRow, error)
 	GetCarPendingVerifications(ctx context.Context) ([]GetCarPendingVerificationsRow, error)
 	GetCarVerificationDetails(ctx context.Context, uuid string) (GetCarVerificationDetailsRow, error)
+	GetCustomerPaymentDetails(ctx context.Context, uuid string) ([]GetCustomerPaymentDetailsRow, error)
 	GetCustomerReservationDetails(ctx context.Context, customerUuid string) ([]GetCustomerReservationDetailsRow, error)
 	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
 	GetUserByUuid(ctx context.Context, uuid string) (GetUserByUuidRow, error)

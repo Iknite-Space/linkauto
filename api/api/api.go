@@ -60,6 +60,8 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.POST("/reservation", reservationHandler.CreateReservation)
 	r.GET("/reservation/:ref", reservationHandler.Status)
 	r.GET("/customer-reservations/:customer_uuid", reservationHandler.CustomerReservations)
+	//payment 
+	r.GET("/customer-payments/:customer_uuid", reservationHandler.CustomerPaymentDetails)
 
 	return r
 }

@@ -238,3 +238,22 @@ func (h *ReservationHandler) CustomerReservations(c *gin.Context) {
 		"reservations":  reservations,
 	})
 }
+
+func (h *ReservationHandler) CustomerPaymentDetails(c *gin.Context) {
+	customerUuid := c.Param("customer_uuid")
+	if customerUuid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Customer UUID is required"})
+		return
+	}
+
+	payments, err := h.store.Do().GetCustomerPaymentDetails(c, customerUuid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch payment details", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success":  true,
+		"payments": payments,
+	})
+}
