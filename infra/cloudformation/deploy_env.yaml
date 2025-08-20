@@ -127,7 +127,7 @@ Resources:
               !GetAtt VpcStack.Outputs.SubnetBPrivate,
             ],
           ]
-        # AdditionalNodeSecurityGroupIds: !GetAtt RdsStack.Outputs.ClientSecurityGroupId
+        AdditionalNodeSecurityGroupIds: 'sg-029184e61e9ecdf59' # !GetAtt RdsStack.Outputs.ClientSecurityGroupId
         NumPrivateNodes: 1
         InstanceType: t2.micro
       Tags:
