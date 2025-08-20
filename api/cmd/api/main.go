@@ -81,8 +81,8 @@ func run() error {
 
 	querier := store.NewStore(db)
 	campay := campay.New("https://demo.campay.net/api", "74e673b7e942ee4f2f3c95d11ce6ed0ff3bd6ba7")
-	// cloudinary := cloudinary.New("https://api.cloudinary.com/v1_1/" + config.Cloudinary_Cloud_Name)
-	cloudinary := cloudinary.New("https://api.cloudinary.com/v1_1/dttmgum2k")
+	cloudinary := cloudinary.New("https://api.cloudinary.com/v1_1/" + config.Cloudinary_Cloud_Name)
+	// cloudinary := cloudinary.New("https://api.cloudinary.com/v1_1/dttmgum2k")
 	// cloudinary := cloudinary.New("https://api.cloudinary.com/v1_1/dttmgum2k")
 
 	// We create a new http handler using the database querier.
