@@ -49,7 +49,10 @@ function CarListing() {
       </h2>
 
       {/* Sort / Filter Bar */}
-      <div className="flex items-center gap-0 border rounded-full overflow-hidden shadow-sm mb-8 w-full sm:w-[650px] overflow-x-auto no-scrollbar scrollbar-track-primary">
+      <div
+        className="flex items-center gap-0 border rounded-full overflow-hidden shadow-sm mb-8 lg:w-max 
+       overflow-x-auto no-scrollbar scrollbar-track-primary"
+      >
         {/* Brand */}
         <div className="flex items-center gap-2 px-4 py-2 bg-white border-r">
           <IoLogoModelS className="text-gray-500" />
