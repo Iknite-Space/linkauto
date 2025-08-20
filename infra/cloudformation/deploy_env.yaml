@@ -63,54 +63,54 @@ Resources:
           ],
         ]
 
-  #  RdsStack nested stack deploys the Rds instance..
-  RdsStack:
-    Type: AWS::CloudFormation::Stack
-    DependsOn: [VpcStack]
-    Properties:
-      Parameters:
-        EnvId: !Ref "EnvId"
-        IsDevelopmentGrade: true
-        VpcId: !GetAtt VpcStack.Outputs.VPC
-        SubnetIds:
-          !Join [
-            ",",
-            [
-              !GetAtt VpcStack.Outputs.SubnetAPrivate,
-              !GetAtt VpcStack.Outputs.SubnetBPrivate,
-            ],
-          ]
-        PublicSubnetIds:
-          !Join [
-            ",",
-            [
-              !GetAtt VpcStack.Outputs.SubnetAPublic,
-              !GetAtt VpcStack.Outputs.SubnetBPublic,
-            ],
-          ]
-        LambdaS3BucketName: !Ref InfraArtifactsBucket
-        LambdaS3KeyPrefix:
-          !Join [
-            "",
-            [
-              !Ref InfraReleaseHash,
-              "/cloudformation/aws-cloudformation-templates",
-            ],
-          ]
-      Tags:
-        - Key: EnvId
-          Value: !Ref "EnvId"
-      TemplateURL:
-        !Join [
-          "",
-          [
-            "https://s3.amazonaws.com/",
-            !Ref "InfraArtifactsBucket",
-            "/",
-            !Ref "InfraReleaseHash",
-            "/cloudformation/aws-cloudformation-templates/core-components/rds.yaml",
-          ],
-        ]
+  # #  RdsStack nested stack deploys the Rds instance..
+  # RdsStack:
+  #   Type: AWS::CloudFormation::Stack
+  #   DependsOn: [VpcStack]
+  #   Properties:
+  #     Parameters:
+  #       EnvId: !Ref "EnvId"
+  #       IsDevelopmentGrade: true
+  #       VpcId: !GetAtt VpcStack.Outputs.VPC
+  #       SubnetIds:
+  #         !Join [
+  #           ",",
+  #           [
+  #             !GetAtt VpcStack.Outputs.SubnetAPrivate,
+  #             !GetAtt VpcStack.Outputs.SubnetBPrivate,
+  #           ],
+  #         ]
+  #       PublicSubnetIds:
+  #         !Join [
+  #           ",",
+  #           [
+  #             !GetAtt VpcStack.Outputs.SubnetAPublic,
+  #             !GetAtt VpcStack.Outputs.SubnetBPublic,
+  #           ],
+  #         ]
+  #       LambdaS3BucketName: !Ref InfraArtifactsBucket
+  #       LambdaS3KeyPrefix:
+  #         !Join [
+  #           "",
+  #           [
+  #             !Ref InfraReleaseHash,
+  #             "/cloudformation/aws-cloudformation-templates",
+  #           ],
+  #         ]
+  #     Tags:
+  #       - Key: EnvId
+  #         Value: !Ref "EnvId"
+  #     TemplateURL:
+  #       !Join [
+  #         "",
+  #         [
+  #           "https://s3.amazonaws.com/",
+  #           !Ref "InfraArtifactsBucket",
+  #           "/",
+  #           !Ref "InfraReleaseHash",
+  #           "/cloudformation/aws-cloudformation-templates/core-components/rds.yaml",
+  #         ],
+  #       ]
 
   EcsStack:
     Type: AWS::CloudFormation::Stack
@@ -127,7 +127,7 @@ Resources:
               !GetAtt VpcStack.Outputs.SubnetBPrivate,
             ],
           ]
-        AdditionalNodeSecurityGroupIds: !GetAtt RdsStack.Outputs.ClientSecurityGroupId
+        AdditionalNodeSecurityGroupIds: '' # !GetAtt RdsStack.Outputs.ClientSecurityGroupId
         NumPrivateNodes: 1
         InstanceType: t2.micro
       Tags:
@@ -201,48 +201,48 @@ Resources:
       ToPort: 61000
       SourceSecurityGroupId: !GetAtt LoadBalancerStack.Outputs.LoadBalancerSecurityGroupId
 
-  ApiStack:
-    Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - VpcStack
-      - RdsStack
-    Properties:
-      Parameters:
-        EnvId: !Ref "EnvId"
-        Image: !Ref ApiImageTag
-        VPC: !GetAtt VpcStack.Outputs.VPC
-        LogGroupName: !Ref LogGroup
-        ClusterArn: !GetAtt EcsStack.Outputs.ClusterArn
-        SubnetIds:
-          !Join [
-            ",",
-            [
-              !GetAtt VpcStack.Outputs.SubnetAPrivate,
-              !GetAtt VpcStack.Outputs.SubnetBPrivate,
-            ],
-          ]
-        DesiredCount: 1
-        DomainName: !Ref DomainName
-        LoadBalancerCanonicalHostedZoneID: !GetAtt LoadBalancerStack.Outputs.LoadBalancerCanonicalHostedZoneID
-        LoadBalancerDNSName: !GetAtt LoadBalancerStack.Outputs.LoadBalancerDNSName
-        HttpsListener: !GetAtt LoadBalancerStack.Outputs.HttpsListener
-        DbAdminSecretArn: !GetAtt "RdsStack.Outputs.AdminSecretArn"
-        CustomResourcesServiceToken: !GetAtt RdsStack.Outputs.DatabaseInitLambdaArn
+  # ApiStack:
+  #   Type: AWS::CloudFormation::Stack
+  #   DependsOn:
+  #     - VpcStack
+  #     - RdsStack
+  #   Properties:
+  #     Parameters:
+  #       EnvId: !Ref "EnvId"
+  #       Image: !Ref ApiImageTag
+  #       VPC: !GetAtt VpcStack.Outputs.VPC
+  #       LogGroupName: !Ref LogGroup
+  #       ClusterArn: !GetAtt EcsStack.Outputs.ClusterArn
+  #       SubnetIds:
+  #         !Join [
+  #           ",",
+  #           [
+  #             !GetAtt VpcStack.Outputs.SubnetAPrivate,
+  #             !GetAtt VpcStack.Outputs.SubnetBPrivate,
+  #           ],
+  #         ]
+  #       DesiredCount: 1
+  #       DomainName: !Ref DomainName
+  #       LoadBalancerCanonicalHostedZoneID: !GetAtt LoadBalancerStack.Outputs.LoadBalancerCanonicalHostedZoneID
+  #       LoadBalancerDNSName: !GetAtt LoadBalancerStack.Outputs.LoadBalancerDNSName
+  #       HttpsListener: !GetAtt LoadBalancerStack.Outputs.HttpsListener
+  #       DbAdminSecretArn: !GetAtt "RdsStack.Outputs.AdminSecretArn"
+  #       CustomResourcesServiceToken: !GetAtt RdsStack.Outputs.DatabaseInitLambdaArn
 
-      Tags:
-        - Key: EnvId
-          Value: !Ref "EnvId"
-      TemplateURL:
-        !Join [
-          "",
-          [
-            "https://s3.amazonaws.com/",
-            !Ref "InfraArtifactsBucket",
-            "/",
-            !Ref "InfraReleaseHash",
-            "/cloudformation/services/api.yaml",
-          ],
-        ]
+  #     Tags:
+  #       - Key: EnvId
+  #         Value: !Ref "EnvId"
+  #     TemplateURL:
+  #       !Join [
+  #         "",
+  #         [
+  #           "https://s3.amazonaws.com/",
+  #           !Ref "InfraArtifactsBucket",
+  #           "/",
+  #           !Ref "InfraReleaseHash",
+  #           "/cloudformation/services/api.yaml",
+  #         ],
+  #       ]
 
 
 
@@ -250,7 +250,6 @@ Resources:
     Type: AWS::CloudFormation::Stack
     DependsOn:
       - VpcStack
-      - RdsStack
     Properties:
       Parameters:
         DomainName: !Ref DomainName
