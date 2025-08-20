@@ -86,22 +86,22 @@ const DiffPaymentPage = () => {
       </h2>
 
       {/* Payment Methods */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 max-w-2xl mx-auto">
         {paymentOptions.map((option, index) => (
           <div
             key={index}
             onClick={() => setSelectedMethod(option)}
-            className={`group cursor-pointer rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 bg-white p-4 border ${
+            className={`group cursor-pointer rounded-2xl shadow-md hover:shadow-xl transition-all transition-transform hover:scale-105 duration-300 bg-white p-4 border ${
               selectedMethod?.name === option.name ? "border-[#023b85]" : "border-transparent"
             }`}
           >
             <div
-              className="h-28 bg-contain bg-no-repeat bg-center"
+              className="h-28 bg-contain bg-no-repeat bg-center "
               style={{
                 backgroundImage: `url(${option.image})`,
               }}
             ></div>
-            <p className="mt-3 text-center text-lg font-semibold text-gray-700 group-hover:text-[#023b85]">
+            <p className="mt-3 text-center text-lg font-semibold text-gray-700 group-hover:text-[#023b85] ">
               {option.name}
             </p>
           </div>

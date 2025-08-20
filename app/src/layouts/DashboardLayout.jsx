@@ -23,7 +23,7 @@ const DashboardLayout = ({ children }) => {
         <div className="flex items-center px-4 py-5">
           <NavLink to="/dashboard" className="flex items-center gap-2">
             <img
-              src="/logo192.png"
+              src="./../assets/logo-bg-primary.png"
               alt="LinkAuto logo"
               className="w-6 h-6"
               width={24}
