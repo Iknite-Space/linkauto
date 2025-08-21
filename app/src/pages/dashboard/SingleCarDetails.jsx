@@ -25,19 +25,6 @@ CarDetails.propTypes = {
   const [showModal, setShowModal] = useState(false);
   const status = cardetails?.status;
 
-  // const car = {
-  //   name: "Toyota Corolla",
-  //   model: "2022",
-  //   energy_type: "Petrol",
-  //   transmission_type: "Automatic",
-  //   brand: "Toyota",
-  //   no_seats: 5,
-  //   color: "White",
-  //   chasis_no: "ABC1234567890",
-  //   vin: "1HGCM82633A123456",
-  //   price_per_day: 45,
-  // };
-
   return (
     <div className="w-full max-w-5xl p-6 mx-auto bg-white shadow-md rounded-xl">
       <h2 className="mb-4 text-2xl font-semibold text-gray-800">Car Details</h2>
@@ -59,10 +46,16 @@ CarDetails.propTypes = {
       {/** grey out the reservation button when the status is pending */}
       <div className="flex justify-center mt-10">
         <Button
-          className={`w-64 py-3 text-base ${status === "completed" ? "bg-gray-400 cursor-not-allowed" : ""}`}
-          onClick={() => status !== "completed" && setShowModal(true)}
-          disabled={status === "completed"}
-          title={status === "completed" ? "Reservation not available" : "Reserve this car"}
+          className={`w-64 py-3 text-base ${(status === "completed" || currentUser?.role !== "customer") ? "bg-gray-400 cursor-not-allowed" : ""}`}
+          onClick={() => setShowModal(true)}
+          disabled={status === "completed" || currentUser?.role !== "customer"}
+          title={
+            status === "completed"
+              ? "Reservation not available"
+              : currentUser?.role !== "customer"
+              ? "Only customers can reserve"
+              : "Reserve this car"
+          }
         >
           Reserve
         </Button>
