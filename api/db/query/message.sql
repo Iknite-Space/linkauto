@@ -146,20 +146,16 @@ WHERE r.customer_uuid = $1;
 -- name: GetCustomerPaymentDetails :many
 SELECT 
   CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
-  CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
   customer.uuid AS user_uuid,
   p.amount_paid,
   p.payment_method,
+  p.reference,
+  p.date_paid,
   p.status AS payment_status,
-  cd.name AS car_name,
-  r.start_date,
-  r.end_date,
-  r.status AS reservation_status,
-  r.penalty_amount
+  cd.name AS car_name
 FROM payment p
 JOIN reservation r ON r.uuid = p.rental_uuid
-JOIN "user" customer ON customer.uuid = r.customer_uuid
 JOIN car c ON c.uuid = r.car_uuid
-JOIN "user" owner ON owner.uuid = c.owner_uuid
+JOIN "user" customer ON customer.uuid = r.customer_uuid
 LEFT JOIN car_details cd ON cd.car_uuid = c.uuid
 WHERE customer.uuid = $1;

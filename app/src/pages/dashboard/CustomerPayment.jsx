@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import api from "../../services/axios";
 import Loading from "../../components/shared/Loading";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../hooks/UseAuth";
 
 const CustomerPayment = () => {
   const [loading, setLoading] = useState(true);
   const [payments, setPayments] = useState([]);
+  const { currentUser } = useUser();
 
   const handlePaymentAction = (paymentId) => {
     // Handle payment action (e.g., mark as completed)
@@ -18,7 +20,8 @@ const CustomerPayment = () => {
   useEffect(() => {
     const fetchCustomerPayments = async () => {
       try {
-        const res = await api.get("/customer-payments/:customer_uuid");
+        const res = await api.get(`/customer-payments/${currentUser.uuid}`);
+        console.log(res.data);
         if (res.data.success) {
           const paymentData = res.data.payments.map((payment) => ({
             ...payment,
@@ -41,7 +44,7 @@ const CustomerPayment = () => {
       }
     };
     fetchCustomerPayments();
-  }, []);
+  }, [currentUser]);
   const customStyles = {
     headCells: {
       style: {
@@ -62,18 +65,19 @@ const CustomerPayment = () => {
 
   const columns = [
     {
-      name: "Car Owner",
-      selector: (row) => row.owner_name,
-      sortable: true,
-    },
-    {
       name: "Customer Name",
       selector: (row) => row.customer_name,
       sortable: true,
     },
+    { name: "Car Name", selector: (row) => row.car_name, sortable: true },
     {
-      name: "Amount Paid",
+      name: "Amount Paid (XAF)",
       selector: (row) => row.amount_paid,
+      sortable: true,
+    },
+    {
+      name: "Payment Method",
+      selector: (row) => row.payment_method,
       sortable: true,
     },
     {
@@ -82,35 +86,13 @@ const CustomerPayment = () => {
       sortable: true,
     },
     {
-      name: "Payment Method",
-      selector: (row) => row.payment_method,
-      sortable: true,
-    },
-
-    {
-      name: "Reservation Start Date",
-      selector: (row) => row.start_date,
+      name: "Reference",
+      selector: (row) => row.reference,
       sortable: true,
     },
     {
-      name: "Reservation End Date",
-      selector: (row) => row.end_date,
-      sortable: true,
-    },
-
-    {
-      name: "Reservation Status",
-      selector: (row) => row.visibility,
-      sortable: true,
-    },
-    {
-      name: "Penalty Amount",
-      selector: (row) => row.penalty_amount,
-      sortable: true,
-    },
-    {
-      name: "Action",
-      selector: (row) => row.action,
+      name: "Date Paid",
+      selector: (row) => row.date_paid,
       sortable: true,
     },
   ];
