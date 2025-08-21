@@ -21,7 +21,7 @@ const DashboardLayout = ({ children }) => {
         aria-label="Sidebar"
       >
         <div className="flex items-center px-4 py-5">
-          <NavLink to="/dashboard" className="flex items-center gap-2">
+          <NavLink to="/" className="flex items-center gap-2">
             <img
               src="./../assets/logo-bg-primary.png"
               alt="LinkAuto logo"

@@ -185,16 +185,18 @@ func (q *Queries) DeleteReservation(ctx context.Context, uuid string) error {
 }
 
 const getCarDetails = `-- name: GetCarDetails :one
-SELECT c.uuid,c.pickup_location,c.dropoff_location,cd.name,
+SELECT c.uuid,c.pickup_location,r.status,c.dropoff_location,cd.name,
 cd.model,cd.energy_type,cd.transmission_type,cd.brand,cd.no_seats,
 cd.color,cd.chassis_no,cd.vin,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
+JOIN reservation r ON c.uuid = r.car_uuid
 WHERE c.uuid = $1
 `
 
 type GetCarDetailsRow struct {
 	Uuid             string         `json:"uuid"`
 	PickupLocation   string         `json:"pickup_location"`
+	Status           string         `json:"status"`
 	DropoffLocation  string         `json:"dropoff_location"`
 	Name             string         `json:"name"`
 	Model            string         `json:"model"`
@@ -214,6 +216,7 @@ func (q *Queries) GetCarDetails(ctx context.Context, uuid string) (GetCarDetails
 	err := row.Scan(
 		&i.Uuid,
 		&i.PickupLocation,
+		&i.Status,
 		&i.DropoffLocation,
 		&i.Name,
 		&i.Model,
@@ -281,6 +284,7 @@ func (q *Queries) GetCarListingImages(ctx context.Context, carUuid string) ([]st
 const getCarListings = `-- name: GetCarListings :many
 SELECT c.uuid,cd.name,cd.transmission_type,cd.no_seats,cd.energy_type,cd.brand,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
+WHERE c.visibility = 'approved'
 ORDER BY cd.date_added
 `
 

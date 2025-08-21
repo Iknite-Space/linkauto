@@ -26,7 +26,7 @@ function SingleCarPage() {
   },[id])
   return (
     <>
-    <div><SingleCar images={carImages}/></div>
+    <div className='mt-14'><SingleCar images={carImages}/></div>
 
     <div><CarDetails cardetails={carDetails} /></div>
     </>

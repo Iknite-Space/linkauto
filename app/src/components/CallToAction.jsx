@@ -1,26 +1,27 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react"; 
+import { Link } from "react-router-dom";
 
 export default function CallToAction() {
   return (
     <section
       id="call-to-action"
-      className="relative text-center py-24 px-6 md:px-10 bg-contain bg-center bg-no-repeat"
+      className="relative px-6 py-24 text-center bg-center bg-no-repeat bg-contain md:px-10"
       style={{
         backgroundImage: `url('./../assets/Car1.png')`, 
       }}
     >
       {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/50 z-0" />
+      <div className="absolute inset-0 z-0 bg-black/50" />
 
       {/* Content */}
       <div className="relative z-10 max-w-3xl mx-auto">
-        <p className="text-accent text-lg mb-2 font-semibold tracking-wide uppercase">
+        <p className="mb-2 text-lg font-semibold tracking-wide uppercase text-accent">
           Ready to hit the road?
         </p>
 
-        <h2 className="text-3xl md:text-5xl font-bold text-white mb-10">
+        <h2 className="mb-10 text-3xl font-bold text-white md:text-5xl">
           Book your ride in seconds
         </h2>
 
@@ -32,12 +33,12 @@ export default function CallToAction() {
           <ChevronDown size={32} className="text-accent" />
         </motion.div>
 
-        <a
-          href="#book"
-          className="inline-block bg-gradient-to-r from-accent to-secondary text-white text-lg font-semibold px-8 py-4 rounded-2xl shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+        <Link
+          to="/carlisting"
+          className="inline-block px-8 py-4 text-lg font-semibold text-white transition-all duration-300 shadow-lg bg-gradient-to-r from-accent to-secondary rounded-2xl hover:scale-105 hover:shadow-xl"
         >
           Book Now
-        </a>
+        </Link>
       </div>
     </section>
   );

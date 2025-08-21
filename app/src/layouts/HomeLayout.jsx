@@ -13,7 +13,7 @@ const HomeLayout = () => {
             <Outlet />
         </main>
 
-        <footer className="lg:px-7 py-10 md:px-20">
+        <footer className="px-6 py-10 bg-gray-100 lg:px-7 md:px-20">
             <HomeFooter />
         </footer>
     </div>

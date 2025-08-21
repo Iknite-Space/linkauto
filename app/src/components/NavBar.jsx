@@ -11,12 +11,13 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 z-50 w-full bg-primary ">
       <div className="flex items-center justify-between p-4 md:px-10 md:py-6">
         {/* Left: Logo and Brand */}
+        <Link to="/">
         <div className="flex items-center space-x-0">
-          <img
-            src="./../assets/single-logo-accent.png"
-            alt="Logo"
-            className="object-contain w-10 h-10 md:h-12 md:w-12"
-          />
+            <img
+              src="./../assets/single-logo-accent.png"
+              alt="Logo"
+              className="object-contain w-10 h-10 md:h-12 md:w-12"
+            />
           <div className="flex flex-col items-start">
             <span className="text-logoName text-[23px] md:text-logoName font-bold text-backgroundColor">
               LinkAuto
@@ -26,6 +27,7 @@ const Navbar = () => {
             </span>
           </div>
         </div>
+        </Link>
 
         {/* Desktop Menu */}
         <div className="items-center hidden w-full md:flex">
@@ -76,20 +78,19 @@ const Navbar = () => {
       {isOpen && (
         <div className="flex flex-col px-6 pb-4 space-y-2 text-sm text-white md:hidden bg-primary">
           {[
-            "Home",
-            "About Us",
-            "Why Choose Us",
-            "Testimonials",
-            "Contact",
-            "FAQ",
-          ].map((label) => (
-            <a
+            { label: "Home", link: "/#home" },
+            { label: "About Us", link: "/#about-us" },
+            { label: "Contact", link: "/#contact" },
+            { label: "Cars", link: "/carlisting" },
+          ].map(({ label, link }) => (
+            <Link
               key={label}
-              href="#"
+              to={link}
               className="px-3 py-2 transition duration-200 rounded hover:bg-secondary hover:text-accent focus:bg-secondary focus:text-accent active:bg-secondary active:text-accent"
+              onClick={() => setIsOpen(false)} // Close menu on click
             >
               {label}
-            </a>
+            </Link>
           ))}
         </div>
       )}

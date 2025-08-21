@@ -3,9 +3,13 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { menuItems } from "../../utils/menuItems";
+import { useUser } from "../../hooks/UseAuth";
 
 const Menu = () => {
-  const role ="admin";
+  const { currentUser } = useUser();
+  const role = currentUser?.role; 
+
+
 
   const [openSubmenus, setOpenSubmenus] = useState({});
 
@@ -15,6 +19,10 @@ const Menu = () => {
       [label]: !prev[label],
     }));
   };
+
+  if (currentUser.status === "pending" && currentUser.role !== "admin") {
+    return null;
+  }
 
   return (
     <div className="mt-4 text-sm">
