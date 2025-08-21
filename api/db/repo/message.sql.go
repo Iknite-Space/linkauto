@@ -284,6 +284,7 @@ func (q *Queries) GetCarListingImages(ctx context.Context, carUuid string) ([]st
 const getCarListings = `-- name: GetCarListings :many
 SELECT c.uuid,cd.name,cd.transmission_type,cd.no_seats,cd.energy_type,cd.brand,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
+WHERE c.visibility = 'approved'
 ORDER BY cd.date_added
 `
 
