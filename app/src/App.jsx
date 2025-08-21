@@ -22,11 +22,11 @@ const SingleCarPage = lazy(() => import("./pages/listings/SingleCarPage"));
 
 // Public pages
 const HomePage = lazy(() => import("./components/HomePage"));
-const ComingSoon = lazy(() => import("./components/ComingSoon"));
 const Login = lazy(() => import("./pages/auth/Login"));
 // const Register = lazy(() => import("./pages/auth/Register"));
 const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
 // Protected pages
+const Home = lazy(() => import("./pages/dashboard/Home"));
 const Logout = lazy(() => import("./pages/auth/Logout"));
 const UserVerification = lazy(() =>
   import("./pages/dashboard/VerifyUserTable")
@@ -76,14 +76,15 @@ function App() {
                   </ProtectedRoute>
                 }
               >
-                <Route index element={<ComingSoon />} />
+                <Route index element={<Home />} />
                 {/* <Route path="profile" element={<ComingSoon />} /> */}
 
                 <Route
                   path="user-verification"
                   element={<UserVerification />}
                 />
-
+                <Route path="cars/upload" element={<CarUploadForm />} />
+                <Route path="cars/all" element={<CarUploadForm />} />
                 <Route path="car-verification" element={<CarsVerification />} />
                 <Route path="car-verification/:car_uuid" element={<SingleCarVerPage />} />
                 <Route path="user-ver-doc-form" element={<UserVerDocForm />} />

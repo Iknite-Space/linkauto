@@ -13,6 +13,7 @@ import {
     FiUser,
     FiClipboard,
     FiDribbble,
+    FiDollarSign,
   } from "react-icons/fi";
 
   
@@ -27,9 +28,40 @@ import {
           visible: ["admin", "owner", "customer"],
         },
         {
+          label: "General",
+          icon: <FiBookOpen />,
+          visible: ["admin","owner", "customer"],
+          children: [
+            {
+              label: "Users",
+              icon: <FiUsers />,
+              href: "/dashboard/users",
+              visible: ["admin"],
+            },
+            {
+              label: "Cars",
+              icon: <FiTruck />,
+              href: "/dashboard/cars",
+              visible: ["admin"],
+            },
+            {
+              label: "Payments",
+              icon: <FiDollarSign />,
+              href: "/dashboard/payments",
+              visible: ["admin","owner", "customer"],
+            },
+            {
+              label: "Reservations",
+              icon: <FiBookOpen />,
+              href: "/dashboard/reservations",
+              visible: ["admin","owner", "customer"],
+            },
+          ],
+        },
+        {
           label: "Verifications",
           icon: <FiTruck />,
-          visible: ["admin", "owner"],
+          visible: ["admin"],
           children: [
             {
               label: "users",
@@ -43,43 +75,32 @@ import {
               href: "/dashboard/car-verification",
               visible: ["admin"],
             },
-            {
-              label: "Categories",
-              icon: <FiClipboard />,
-              href: "dashboard/fleet/categories",
-              visible: ["admin"],
-            },
-            {
-              label: "User Verification Form",
-              icon: <FiClipboard />,
-              href: "/dashboard/user-ver-doc-form",
-              visible: ["admin"],
-            },
-            {
-              label: "Car Verification Page",
-              icon: <FiClipboard />,
-              href: "/dashboard/car-ver-page",
-              visible: ["admin"],
-            },
-            {
-              label: "Diff Payment Page",
-              icon: <FiDribbble />,
-              href: "/dashboard/diff-payment-page",
-              visible: ["admin"],
-            },
+            // {
+            //   label: "Diff Payment Page",
+            //   icon: <FiDribbble />,
+            //   href: "/dashboard/diff-payment-page",
+            //   visible: ["admin"],
+            // },
           ],
         },
         {
-          label: "Bookings",
-          icon: <FiBookOpen />,
-          href: "/dashboard/upload",
-          visible: ["admin", "owner", "customer"],
-        },
-        {
-          label: "Users",
-          icon: <FiUsers />,
-          href: "dashboard/users",
-          visible: ["admin"],
+          label: "Cars",
+          icon: <FiTruck />,
+          visible: ["owner"],
+          children: [
+            {
+              label: "All Cars",
+              icon: <FiList />,
+              href: "/dashboard/cars/all",
+              visible: ["owner"],
+            },
+            {
+              label: "Add Car",
+              icon: <FiPlusSquare />,
+              href: "/dashboard/cars/upload",
+              visible: ["owner"],
+            },
+          ],
         },
       ],
     },
