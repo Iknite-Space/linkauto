@@ -4,11 +4,18 @@ import api from "../../services/axios";
 import Loading from "../../components/shared/Loading";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/UseAuth";
+import { format } from "date-fns";
 
 const CustomerPayment = () => {
   const [loading, setLoading] = useState(true);
   const [payments, setPayments] = useState([]);
   const { currentUser } = useUser();
+
+  // Format date function
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return format(date, "MMMM dd, yyyy");
+  };
 
   const handlePaymentAction = (paymentId) => {
     // Handle payment action (e.g., mark as completed)
@@ -92,7 +99,7 @@ const CustomerPayment = () => {
     },
     {
       name: "Date Paid",
-      selector: (row) => row.date_paid,
+      selector: (row) => formatDate(row.date_paid),
       sortable: true,
     },
   ];

@@ -466,12 +466,14 @@ SELECT
 CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
 CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
 customer.uuid AS user_uuid,
+cd.name AS car_name,
 r.start_date,
 r.end_date,
 r.rental_amount,
 r.status
 FROM reservation r
 JOIN car c ON c.uuid = r.car_uuid
+JOIN car_details cd ON cd.car_uuid = c.uuid
 JOIN "user" owner ON owner.uuid = c.owner_uuid
 JOIN "user" customer ON customer.uuid = r.customer_uuid
 WHERE r.customer_uuid = $1
@@ -481,6 +483,7 @@ type GetCustomerReservationDetailsRow struct {
 	OwnerName    interface{}    `json:"owner_name"`
 	CustomerName interface{}    `json:"customer_name"`
 	UserUuid     string         `json:"user_uuid"`
+	CarName      string         `json:"car_name"`
 	StartDate    time.Time      `json:"start_date"`
 	EndDate      time.Time      `json:"end_date"`
 	RentalAmount pgtype.Numeric `json:"rental_amount"`
@@ -500,6 +503,7 @@ func (q *Queries) GetCustomerReservationDetails(ctx context.Context, customerUui
 			&i.OwnerName,
 			&i.CustomerName,
 			&i.UserUuid,
+			&i.CarName,
 			&i.StartDate,
 			&i.EndDate,
 			&i.RentalAmount,

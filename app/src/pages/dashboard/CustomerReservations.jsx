@@ -2,16 +2,25 @@ import DataTable from "react-data-table-component";
 import { useEffect, useState } from "react";
 import api from "../../services/axios";
 import Loading from "../../components/shared/Loading";
+import { useUser } from "../../hooks/UseAuth";
+import { format } from "date-fns";
 
 const CustomerReservations = () => {
   const [loading, setLoading] = useState(true);
   const [reservations, setReservations] = useState([]);
+  const { currentUser } = useUser();
+
+  // Format date function
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return format(date, "MMMM dd, yyyy");
+  };
 
   // Fetch customer reservations
   useEffect(() => {
     const fetchCustomerReservations = async () => {
       try {
-        const res = await api.get("/customer-reservations/:customer_uuid");
+        const res = await api.get(`/customer-reservations/${currentUser.uuid}`);
         if (res.data.success) {
           const reservationData = res.data.reservations.map((reservation) => ({
             ...reservation,
@@ -47,7 +56,7 @@ const CustomerReservations = () => {
   const columns = [
     {
       name: "Car Name",
-      selector: (row) => row.name,
+      selector: (row) => row.car_name,
       sortable: true,
     },
     {
@@ -66,10 +75,18 @@ const CustomerReservations = () => {
       selector: (row) => row.rental_amount,
       sortable: true,
     },
-    { name: "Start Date", selector: (row) => row.start_date, sortable: true },
-    { name: "End Date", selector: (row) => row.end_date, sortable: true },
+    {
+      name: "Start Date",
+      selector: (row) => formatDate(row.start_date),
+      sortable: true,
+    },
+    {
+      name: "End Date",
+      selector: (row) => formatDate(row.end_date),
+      sortable: true,
+    },
 
-    { name: "Status", selector: (row) => row.visibility, sortable: true },
+    { name: "Status", selector: (row) => row.status, sortable: true },
   ];
   if (loading) {
     return <Loading />;
