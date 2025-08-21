@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { FaAngleRight, FaCaravan, FaDollarSign, FaMoneyBillWave } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 
@@ -20,6 +21,7 @@ const itemVariants = {
 }
 
 const WhyChooseUs = () => {
+  const navigate = useNavigate();
   return (
     <motion.div
       initial="hidden"
@@ -38,6 +40,7 @@ const WhyChooseUs = () => {
         </p>
 
         <motion.button
+          onClick={() => navigate('/carlisting')}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           type="button"
