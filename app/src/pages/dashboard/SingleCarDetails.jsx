@@ -23,6 +23,7 @@ CarDetails.propTypes = {
   cardetails: PropTypes.object.isRequired,
 };
   const [showModal, setShowModal] = useState(false);
+  const status = cardetails?.status;
 
   // const car = {
   //   name: "Toyota Corolla",
@@ -55,9 +56,16 @@ CarDetails.propTypes = {
         <DetailItem icon={<Car size={20} />} label="Pickup Location" value={cardetails.pickup_location} />
         <DetailItem icon={<BadgeInfo size={20} />} label="Dropoff Location" value={cardetails.dropoff_location} />
       </div>
-
+      {/** grey out the reservation button when the status is pending */}
       <div className="flex justify-center mt-10">
-        <Button className="w-64 py-3 text-base" onClick={() => setShowModal(true)}>Reserve</Button>
+        <Button
+          className={`w-64 py-3 text-base ${status === "completed" ? "bg-gray-400 cursor-not-allowed" : ""}`}
+          onClick={() => status !== "completed" && setShowModal(true)}
+          disabled={status === "completed"}
+          title={status === "completed" ? "Reservation not available" : "Reserve this car"}
+        >
+          Reserve
+        </Button>
       </div>
 
       {showModal && <ReservationFormModal pricePerDay={cardetails.price_per_day} carId={cardetails.uuid} onClose={() => setShowModal(false)} />}
