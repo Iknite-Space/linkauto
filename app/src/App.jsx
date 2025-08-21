@@ -36,8 +36,10 @@ const CarsVerification = lazy(() =>
   import("./pages/dashboard/CarsVerification")
 );
 
-const SingleCarVerPage = lazy(() => import("./pages/dashboard/SingleCarVerPage"));
-const DiffPaymentPage = lazy(() => import("./pages/dashboard/DiffPaymentPage"))
+const SingleCarVerPage = lazy(() =>
+  import("./pages/dashboard/SingleCarVerPage")
+);
+const DiffPaymentPage = lazy(() => import("./pages/dashboard/DiffPaymentPage"));
 
 const CarListing = lazy(() => import("./pages/listings/CarListing"));
 const CarUploadForm = lazy(() => import("./components/form/CarUploadForm"));
@@ -45,6 +47,12 @@ const CarUploadForm = lazy(() => import("./components/form/CarUploadForm"));
 const UserVerDocForm = lazy(() => import("./pages/dashboard/UserVerDocForm"));
 
 const Payment = lazy(() => import("./pages/Payment"));
+const CustomerPayment = lazy(() =>
+  import("./pages/dashboard/CustomerPayment")
+);
+const CustomerReservations = lazy(() =>
+  import("./pages/dashboard/CustomerReservations")
+);
 
 function App() {
   return (
@@ -58,7 +66,7 @@ function App() {
                 <Route index element={<HomePage />} />
                 <Route path="/carlisting" element={<CarListing />} />
                 <Route path="/carlisting/car/:id" element={<SingleCarPage />} />
-                <Route path="/payment" element={<Payment />}/>
+                <Route path="/payment" element={<Payment />} />
               </Route>
               {/* Public routes */}
               <Route element={<AuthLayout />}>
@@ -86,9 +94,20 @@ function App() {
                 <Route path="cars/upload" element={<CarUploadForm />} />
                 <Route path="cars/all" element={<CarUploadForm />} />
                 <Route path="car-verification" element={<CarsVerification />} />
-                <Route path="car-verification/:car_uuid" element={<SingleCarVerPage />} />
+                <Route
+                  path="car-verification/:car_uuid"
+                  element={<SingleCarVerPage />}
+                />
+                <Route
+                  path="customer-reservations"
+                  element={<CustomerReservations />}
+                />
+                <Route
+                  path="customer-payments"
+                  element={<CustomerPayment />}
+                />
                 <Route path="user-ver-doc-form" element={<UserVerDocForm />} />
-                <Route path="diff-payment-page" element={<DiffPaymentPage />}/>
+                <Route path="diff-payment-page" element={<DiffPaymentPage />} />
                 {/*}
                 <Route
                   path="user-verification/:user_uuid"
