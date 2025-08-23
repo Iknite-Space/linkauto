@@ -88,3 +88,16 @@ func (h *UserHandler) UpdateUserVerificationStatus(c *gin.Context) {
 		"message": "User verification status updated successfully",
 	})
 }
+
+func (h *UserHandler) MakeAdmin(c *gin.Context) {
+
+	if err := h.store.Do().MakeAdmin(c, ); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to make user admin: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "User role updated to admin successfully",
+	})
+}

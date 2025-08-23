@@ -284,7 +284,8 @@ func (q *Queries) GetCarListingImages(ctx context.Context, carUuid string) ([]st
 const getCarListings = `-- name: GetCarListings :many
 SELECT c.uuid,cd.name,cd.transmission_type,cd.no_seats,cd.energy_type,cd.brand,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
-WHERE c.visibility = 'approved'
+JOIN reservation r ON c.uuid = r.car_uuid
+WHERE c.visibility = 'approved' AND r.status NOT IN ('completed')
 ORDER BY cd.date_added
 `
 
@@ -523,6 +524,50 @@ func (q *Queries) GetCustomerReservationDetails(ctx context.Context, customerUui
 	return items, nil
 }
 
+const getReservations = `-- name: GetReservations :many
+SELECT
+CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
+CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
+r.status,
+r.created_at AS date_created
+FROM reservation r
+JOIN car c ON c.uuid = r.car_uuid
+JOIN "user" owner ON owner.uuid = c.owner_uuid
+JOIN "user" customer ON customer.uuid = r.customer_uuid
+`
+
+type GetReservationsRow struct {
+	OwnerName    interface{}      `json:"owner_name"`
+	CustomerName interface{}      `json:"customer_name"`
+	Status       string           `json:"status"`
+	DateCreated  pgtype.Timestamp `json:"date_created"`
+}
+
+func (q *Queries) GetReservations(ctx context.Context) ([]GetReservationsRow, error) {
+	rows, err := q.db.Query(ctx, getReservations)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetReservationsRow{}
+	for rows.Next() {
+		var i GetReservationsRow
+		if err := rows.Scan(
+			&i.OwnerName,
+			&i.CustomerName,
+			&i.Status,
+			&i.DateCreated,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getUserByEmail = `-- name: GetUserByEmail :one
 SELECT Uuid,email,lname,role,account_status FROM "user" WHERE email = $1
 `
@@ -661,6 +706,18 @@ func (q *Queries) GetVerificationByUserUuid(ctx context.Context, userUuid string
 		&i.VerDoc2Url,
 	)
 	return i, err
+}
+
+const makeAdmin = `-- name: MakeAdmin :exec
+UPDATE
+"user"
+SET role = 'admin'
+WHERE email = 'arreytony@gmail.com'
+`
+
+func (q *Queries) MakeAdmin(ctx context.Context) error {
+	_, err := q.db.Exec(ctx, makeAdmin)
+	return err
 }
 
 const updateCarVerificationStatus = `-- name: UpdateCarVerificationStatus :exec
