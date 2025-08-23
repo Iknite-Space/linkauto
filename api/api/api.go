@@ -62,6 +62,9 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.GET("/customer-reservations/:customer_uuid", reservationHandler.CustomerReservations)
 	//payment 
 	r.GET("/customer-payments/:customer_uuid", reservationHandler.CustomerPaymentDetails)
+	//admin
+	r.GET("/reservations", reservationHandler.Reservations)
+	r.PATCH("/make-admin", userHandler.MakeAdmin)
 
 	return r
 }

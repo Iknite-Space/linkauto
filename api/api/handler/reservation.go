@@ -257,3 +257,17 @@ func (h *ReservationHandler) CustomerPaymentDetails(c *gin.Context) {
 		"payments": payments,
 	})
 }
+
+func (h *ReservationHandler) Reservations(c *gin.Context) {
+
+	reservations, err := h.store.Do().GetReservations(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch reservations", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success":     true,
+		"reservations": reservations,
+	})
+}
