@@ -55,6 +55,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 
 	r.GET("/car-verification/:car_uuid", carHandler.GetCarVerificationDocs)
 	r.PATCH("/car-verification", carHandler.UpdateUserVerificationStatus)
+	r.GET("/uploaded-cars", carHandler.GetAllOwnerCars)
 
 	//reservation
 	r.POST("/reservation", reservationHandler.CreateReservation)

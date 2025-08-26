@@ -311,3 +311,24 @@ func (h *CarHandler) UpdateUserVerificationStatus(c *gin.Context) {
 		"message": "Car verification status updated successfully",
 	})
 }
+
+// update pending cars visibility status
+func (h *CarHandler) GetAllOwnerCars(c *gin.Context) {
+	userUuid := c.Query("user_uuid")
+	if userUuid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "role and user_uuid query parameters are required"})
+		return
+	}
+
+	cars, err := h.store.Do().GetAllUploadedCars(c, userUuid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch payment details: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"cars":    cars,
+	})
+
+}

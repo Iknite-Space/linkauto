@@ -165,6 +165,13 @@ JOIN "user" customer ON customer.uuid = r.customer_uuid
 LEFT JOIN car_details cd ON cd.car_uuid = c.uuid
 WHERE customer.uuid = $1;
 
+-- name: GetAllUploadedCars :many 
+SELECT name,model,visibility,status,pickup_location,dropoff_location,price_per_day,date_added
+FROM car c
+JOIN car_details cd ON c.uuid = cd.car_uuid
+JOIN "user" u ON u.uuid = c.owner_uuid
+WHERE u.uuid = $1;
+
 -- name: GetAllPayments :many
 SELECT 
   CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
