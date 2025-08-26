@@ -712,7 +712,7 @@ const makeAdmin = `-- name: MakeAdmin :exec
 UPDATE
 "user"
 SET role = 'admin'
-WHERE email = 'arreytony@gmail.com'
+WHERE email = 'brandonichami@gmail.com'
 `
 
 func (q *Queries) MakeAdmin(ctx context.Context) error {
