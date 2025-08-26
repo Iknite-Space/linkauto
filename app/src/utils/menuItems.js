@@ -47,7 +47,7 @@ import {
             {
               label: "Payments",
               icon: <FiDollarSign />,
-              href: "/dashboard/payments",
+              href: "/dashboard/all-payments",
               visible: ["admin","owner", "customer"],
             },
             {

@@ -107,6 +107,15 @@ func (h *UserHandler) AllPayments(c *gin.Context) {
 			return
 		}
 	}
+	//admins can view all payments
+	if role == "admin" {
+		var err error
+		payments, err = h.store.Do().GetAllPayments(c)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch all payments: " + err.Error()})
+			return
+		}
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"success":  true,
 		"payments": payments,
