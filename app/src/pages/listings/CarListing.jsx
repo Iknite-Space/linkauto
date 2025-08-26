@@ -15,12 +15,13 @@ function CarListing() {
   const [cars, setCars] = useState([]);
 
   const itemsPerPage = 8;
-  const pageCount = Math.ceil(cars.length / itemsPerPage);
+  const pageCount = Math.ceil(cars?.length || 0 / itemsPerPage);
 
   useEffect(() => {
     const carListings = async () => {
       try {
         const res = await api.get("/carlistings");
+        console.log(res.data)
         if (res.data.success) {
           setCars(res.data.cars);
         }
@@ -38,9 +39,9 @@ function CarListing() {
 
   const offset = currentPage * itemsPerPage;
   const currentCars = cars.slice(offset, offset + itemsPerPage);
-  if (cars.length === 0) {
-    return <p className="text-center text-red">** No car Listed yet **</p>;
-  }
+  if (!Array.isArray(cars) || cars.length === 0) {
+    return <p className="text-center text-red-500">** No car Listed yet **</p>;
+  }  
 
   return (
     <section className="px-10 py-16 mt-16 lg:mx-auto">
@@ -50,13 +51,12 @@ function CarListing() {
 
       {/* Sort / Filter Bar */}
       <div
-        className="flex items-center gap-0 border rounded-full overflow-hidden shadow-sm mb-8 lg:w-max 
-       overflow-x-auto no-scrollbar scrollbar-track-primary"
+        className="flex items-center gap-0 mb-8 overflow-hidden overflow-x-auto border rounded-full shadow-sm lg:w-max no-scrollbar scrollbar-track-primary"
       >
         {/* Brand */}
         <div className="flex items-center gap-2 px-4 py-2 bg-white border-r">
           <IoLogoModelS className="text-gray-500" />
-          <span className="text-blue-600 font-medium">Brand</span>
+          <span className="font-medium text-blue-600">Brand</span>
           <select className="ml-2 bg-transparent outline-none ">
             <option value="">All</option>
             <option value="Toyota">Toyota</option>
@@ -70,7 +70,7 @@ function CarListing() {
         {/* Number of Seats */}
         <div className="flex items-center gap-2 px-4 py-2 bg-white border-r">
           <MdPeopleAlt className="text-gray-500" />
-          <span className="text-blue-600 font-medium">Seats</span>
+          <span className="font-medium text-blue-600">Seats</span>
           <select className="ml-2 bg-transparent outline-none">
             <option value="">Any</option>
             <option value="2">2</option>
@@ -83,7 +83,7 @@ function CarListing() {
         {/* Energy Type */}
         <div className="flex items-center gap-2 px-4 py-2 bg-white border-r">
           <BsFillFuelPumpDieselFill className="text-gray-500" />
-          <span className="text-blue-600 font-medium">Energy</span>
+          <span className="font-medium text-blue-600">Energy</span>
           <select className="ml-2 bg-transparent outline-none">
             <option value="">All</option>
             <option value="Petrol">Petrol</option>
@@ -96,7 +96,7 @@ function CarListing() {
         {/* Transmission */}
         <div className="flex items-center gap-2 px-4 py-2 bg-white border-r">
           <TbManualGearboxFilled className="text-gray-500" />
-          <span className="text-blue-600 font-medium">Transmission</span>
+          <span className="font-medium text-blue-600">Transmission</span>
           <select className="ml-2 bg-transparent outline-none">
             <option value="">All</option>
             <option value="Automatic">Automatic</option>
@@ -105,7 +105,7 @@ function CarListing() {
         </div>
 
         {/* Cancel Button */}
-        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white hover:bg-blue-900">
+        <button className="flex items-center gap-2 px-4 py-2 text-white bg-primary hover:bg-blue-900">
           <span>Cancel</span>
         </button>
       </div>
