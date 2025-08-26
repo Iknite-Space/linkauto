@@ -21,6 +21,7 @@ function CarListing() {
     const carListings = async () => {
       try {
         const res = await api.get("/carlistings");
+        console.log(res.data)
         if (res.data.success) {
           setCars(res.data.cars);
         }
