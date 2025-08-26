@@ -21,6 +21,7 @@ type Querier interface {
 	GetCarDetails(ctx context.Context, uuid string) (GetCarDetailsRow, error)
 	GetCarImages(ctx context.Context, carUuid string) ([]string, error)
 	GetCarListingImages(ctx context.Context, carUuid string) ([]string, error)
+	// WHERE c.visibility = 'approved' AND r.status NOT IN ('completed')
 	GetCarListings(ctx context.Context) ([]GetCarListingsRow, error)
 	GetCarOwnerPayments(ctx context.Context, uuid string) ([]GetCarOwnerPaymentsRow, error)
 	GetCarPendingVerifications(ctx context.Context) ([]GetCarPendingVerificationsRow, error)
