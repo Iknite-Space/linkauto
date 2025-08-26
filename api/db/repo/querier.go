@@ -17,6 +17,7 @@ type Querier interface {
 	DeletePayment(ctx context.Context, uuid string) error
 	DeleteReservation(ctx context.Context, uuid string) error
 	GetAllPayments(ctx context.Context) ([]GetAllPaymentsRow, error)
+	GetAllUploadedCars(ctx context.Context, uuid string) ([]GetAllUploadedCarsRow, error)
 	GetCarDetails(ctx context.Context, uuid string) (GetCarDetailsRow, error)
 	GetCarImages(ctx context.Context, carUuid string) ([]string, error)
 	GetCarListingImages(ctx context.Context, carUuid string) ([]string, error)

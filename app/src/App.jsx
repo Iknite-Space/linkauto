@@ -39,6 +39,8 @@ const CarsVerification = lazy(() =>
   import("./pages/dashboard/CarsVerification")
 );
 
+const UploadedCars = lazy(() => import("./pages/dashboard/UploadedCars"));
+
 const SingleCarVerPage = lazy(() =>
   import("./pages/dashboard/SingleCarVerPage")
 );
@@ -96,7 +98,7 @@ function App() {
                   element={<UserVerification />}
                 />
                 <Route path="cars/upload" element={<CarUploadForm />} />
-                <Route path="cars/all" element={<CarUploadForm />} />
+                <Route path="cars/all" element={<UploadedCars />} />
                 <Route path="car-verification" element={<CarsVerification />} />
                 <Route
                   path="car-verification/:car_uuid"

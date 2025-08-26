@@ -242,6 +242,54 @@ func (q *Queries) GetAllPayments(ctx context.Context) ([]GetAllPaymentsRow, erro
 	return items, nil
 }
 
+const getAllUploadedCars = `-- name: GetAllUploadedCars :many
+SELECT name,model,visibility,status,pickup_location,dropoff_location,price_per_day,date_added
+FROM car c
+JOIN car_details cd ON c.uuid = cd.car_uuid
+JOIN "user" u ON u.uuid = c.owner_uuid
+WHERE u.uuid = $1
+`
+
+type GetAllUploadedCarsRow struct {
+	Name            string           `json:"name"`
+	Model           string           `json:"model"`
+	Visibility      string           `json:"visibility"`
+	Status          string           `json:"status"`
+	PickupLocation  string           `json:"pickup_location"`
+	DropoffLocation string           `json:"dropoff_location"`
+	PricePerDay     pgtype.Numeric   `json:"price_per_day"`
+	DateAdded       pgtype.Timestamp `json:"date_added"`
+}
+
+func (q *Queries) GetAllUploadedCars(ctx context.Context, uuid string) ([]GetAllUploadedCarsRow, error) {
+	rows, err := q.db.Query(ctx, getAllUploadedCars, uuid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetAllUploadedCarsRow{}
+	for rows.Next() {
+		var i GetAllUploadedCarsRow
+		if err := rows.Scan(
+			&i.Name,
+			&i.Model,
+			&i.Visibility,
+			&i.Status,
+			&i.PickupLocation,
+			&i.DropoffLocation,
+			&i.PricePerDay,
+			&i.DateAdded,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getCarDetails = `-- name: GetCarDetails :one
 SELECT c.uuid,c.pickup_location,r.status,c.dropoff_location,cd.name,
 cd.model,cd.energy_type,cd.transmission_type,cd.brand,cd.no_seats,
