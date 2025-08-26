@@ -31,6 +31,9 @@ const Logout = lazy(() => import("./pages/auth/Logout"));
 const UserVerification = lazy(() =>
   import("./pages/dashboard/VerifyUserTable")
 );
+const SingleUserVerPage = lazy(() =>
+  import("./pages/dashboard/SingleUserVerPage")
+);
 
 const CarsVerification = lazy(() =>
   import("./pages/dashboard/CarsVerification")
@@ -45,6 +48,7 @@ const CarListing = lazy(() => import("./pages/listings/CarListing"));
 const CarUploadForm = lazy(() => import("./components/form/CarUploadForm"));
 
 const UserVerDocForm = lazy(() => import("./pages/dashboard/UserVerDocForm"));
+const AllPayments = lazy(() => import("./pages/dashboard/AllPayments"));
 
 const Payment = lazy(() => import("./pages/Payment"));
 const CustomerPayment = lazy(() =>
@@ -98,6 +102,7 @@ function App() {
                   path="car-verification/:car_uuid"
                   element={<SingleCarVerPage />}
                 />
+                <Route path="all-payments" element={<AllPayments />} />
                 <Route
                   path="customer-reservations"
                   element={<CustomerReservations />}
@@ -108,12 +113,11 @@ function App() {
                 />
                 <Route path="user-ver-doc-form" element={<UserVerDocForm />} />
                 <Route path="diff-payment-page" element={<DiffPaymentPage />} />
-                {/*}
                 <Route
                   path="user-verification/:user_uuid"
-                  element={<SingleUserVerification />}
+                  element={<SingleUserVerPage />}
                 />
-                */}
+               
                 <Route path="logout" element={<Logout />} />
               </Route>
 
