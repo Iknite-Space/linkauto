@@ -180,4 +180,4 @@ JOIN "user" customer ON customer.uuid = r.customer_uuid;
 UPDATE
 "user"
 SET role = 'admin'
-WHERE email = 'arreytony@gmail.com';
+WHERE email = 'brandonichami@gmail.com';
