@@ -390,7 +390,7 @@ func (q *Queries) GetCarListingImages(ctx context.Context, carUuid string) ([]st
 const getCarListings = `-- name: GetCarListings :many
 SELECT c.uuid,cd.name,cd.transmission_type,cd.no_seats,cd.energy_type,cd.brand,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
-JOIN reservation r ON c.uuid = r.car_uuid
+WHERE c.visibility = 'approved'
 ORDER BY cd.date_added
 `
 
@@ -404,7 +404,6 @@ type GetCarListingsRow struct {
 	PricePerDay      pgtype.Numeric `json:"price_per_day"`
 }
 
-// WHERE c.visibility = 'approved' AND r.status NOT IN ('completed')
 func (q *Queries) GetCarListings(ctx context.Context) ([]GetCarListingsRow, error) {
 	rows, err := q.db.Query(ctx, getCarListings)
 	if err != nil {
