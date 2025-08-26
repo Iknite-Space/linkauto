@@ -385,6 +385,72 @@ func (q *Queries) GetCarListings(ctx context.Context) ([]GetCarListingsRow, erro
 	return items, nil
 }
 
+const getCarOwnerPayments = `-- name: GetCarOwnerPayments :many
+SELECT 
+  CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
+  customer.uuid AS customer_uuid,
+  owner.uuid AS owner_uuid,
+  CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
+  p.amount_paid,
+  p.payment_method,
+  p.reference,
+  p.date_paid,
+  p.status AS payment_status,
+  cd.name AS car_name
+FROM payment p
+JOIN reservation r ON r.uuid = p.rental_uuid
+JOIN car c ON c.uuid = r.car_uuid
+JOIN "user" customer ON customer.uuid = r.customer_uuid   -- the one renting
+JOIN "user" owner ON owner.uuid = c.owner_uuid            -- the one who uploaded
+LEFT JOIN car_details cd ON cd.car_uuid = c.uuid
+WHERE owner.uuid = $1
+ORDER BY p.date_paid DESC
+`
+
+type GetCarOwnerPaymentsRow struct {
+	CustomerName  interface{}      `json:"customer_name"`
+	CustomerUuid  string           `json:"customer_uuid"`
+	OwnerUuid     string           `json:"owner_uuid"`
+	OwnerName     interface{}      `json:"owner_name"`
+	AmountPaid    pgtype.Numeric   `json:"amount_paid"`
+	PaymentMethod string           `json:"payment_method"`
+	Reference     string           `json:"reference"`
+	DatePaid      pgtype.Timestamp `json:"date_paid"`
+	PaymentStatus string           `json:"payment_status"`
+	CarName       string           `json:"car_name"`
+}
+
+func (q *Queries) GetCarOwnerPayments(ctx context.Context, uuid string) ([]GetCarOwnerPaymentsRow, error) {
+	rows, err := q.db.Query(ctx, getCarOwnerPayments, uuid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetCarOwnerPaymentsRow{}
+	for rows.Next() {
+		var i GetCarOwnerPaymentsRow
+		if err := rows.Scan(
+			&i.CustomerName,
+			&i.CustomerUuid,
+			&i.OwnerUuid,
+			&i.OwnerName,
+			&i.AmountPaid,
+			&i.PaymentMethod,
+			&i.Reference,
+			&i.DatePaid,
+			&i.PaymentStatus,
+			&i.CarName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getCarPendingVerifications = `-- name: GetCarPendingVerifications :many
 SELECT 
   CONCAT(u.fname, ' ', u.lname) AS owner_name,

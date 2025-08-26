@@ -116,6 +116,15 @@ func (h *UserHandler) AllPayments(c *gin.Context) {
 			return
 		}
 	}
+	//only car_owners can view payments related to their cars
+	if role == "car_owner" {
+		var err error
+		payments, err = h.store.Do().GetCarOwnerPayments(c, userUuid)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch car owner payments: " + err.Error()})
+			return
+		}
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"success":  true,
 		"payments": payments,

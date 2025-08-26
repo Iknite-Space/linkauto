@@ -21,6 +21,7 @@ type Querier interface {
 	GetCarImages(ctx context.Context, carUuid string) ([]string, error)
 	GetCarListingImages(ctx context.Context, carUuid string) ([]string, error)
 	GetCarListings(ctx context.Context) ([]GetCarListingsRow, error)
+	GetCarOwnerPayments(ctx context.Context, uuid string) ([]GetCarOwnerPaymentsRow, error)
 	GetCarPendingVerifications(ctx context.Context) ([]GetCarPendingVerificationsRow, error)
 	GetCarVerificationDetails(ctx context.Context, uuid string) (GetCarVerificationDetailsRow, error)
 	GetCustomerPaymentDetails(ctx context.Context, uuid string) ([]GetCustomerPaymentDetailsRow, error)

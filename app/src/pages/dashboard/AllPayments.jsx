@@ -55,7 +55,7 @@ const AllPayments = () => {
     ];
 
     // Add extra columns for admins
-    if (currentUser?.role === "admin") {
+    if (currentUser?.role === "admin" || currentUser?.role === "car_owner") {
       baseColumns.unshift({
         name: "Customer",
         selector: (row) => row.customer_name,
