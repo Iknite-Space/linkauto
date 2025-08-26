@@ -37,11 +37,11 @@ function CarListing() {
     setHoveredId(null);
   };
 
-  const offset = currentPage * itemsPerPage;
-  const currentCars = cars.slice(offset, offset + itemsPerPage);
   if (!Array.isArray(cars) || cars.length === 0) {
-    return <p className="text-center text-red-500">** No car Listed yet **</p>;
-  }  
+    return <p className="mt-48 text-center text-red">** No car Listed yet **</p>;
+  } 
+  const offset = currentPage * itemsPerPage;
+  const currentCars = cars.slice(offset, offset + itemsPerPage); 
 
   return (
     <section className="px-10 py-16 mt-16 lg:mx-auto">
