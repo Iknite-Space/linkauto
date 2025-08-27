@@ -50,13 +50,15 @@ import {
               href: "/dashboard/all-payments",
               visible: ["admin","car_owner", "customer"],
             },
+            //just added this but not in main dont know why
             {
               label: "Reservations",
               icon: <FiBookOpen />,
-              href: "/dashboard/reservations",
-              visible: ["admin","car_owner", "customer"],
+              href: "/dashboard/customer-reservations",
+              visible: ["customer"],
             },
           ],
+          
         },
         {
           label: "Verifications",
@@ -75,6 +77,13 @@ import {
               href: "/dashboard/car-verification",
               visible: ["admin"],
             },
+            //just added this but not in main dont know why
+            {
+              label: "Reservations",
+              icon: <FiBookOpen />,
+              href: "/dashboard/reservations",
+              visible: ["admin"],
+            }
             // {
             //   label: "Diff Payment Page",
             //   icon: <FiDribbble />,
