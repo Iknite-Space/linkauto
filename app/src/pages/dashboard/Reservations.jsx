@@ -40,7 +40,7 @@ const Reservations = () => {
                 title="Click here to view details"
                 className="px-4 py-2 font-bold text-white rounded bg-primary hover:bg-blue-600"
               >
-                Verify
+                Details
               </button>
             ),
           }));
@@ -83,7 +83,11 @@ const Reservations = () => {
       selector: (row) => row.customer_name,
       sortable: true,
     },
-    { name: "Car Status", selector: (row) => row.status, sortable: true },
+    {
+      name: "Reservation Status",
+      selector: (row) => row.status,
+      sortable: true,
+    },
     {
       name: "Date Created",
       selector: (row) => formatDate(row.date_created),

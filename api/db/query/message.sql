@@ -230,6 +230,9 @@ CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
 CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
 cd.name AS car_name,
 r.status,
+r.start_date,
+r.end_date,
+r.rental_amount,
 r.created_at AS date_created
 FROM reservation r
 JOIN car c ON c.uuid = r.car_uuid
