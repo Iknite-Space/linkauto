@@ -222,10 +222,12 @@ ORDER BY p.date_paid DESC;
 SELECT
 CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
 CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
+cd.name AS car_name,
 r.status,
 r.created_at AS date_created
 FROM reservation r
 JOIN car c ON c.uuid = r.car_uuid
+JOIN car_details cd ON cd.car_uuid = c.uuid
 JOIN "user" owner ON owner.uuid = c.owner_uuid
 JOIN "user" customer ON customer.uuid = r.customer_uuid;
 
@@ -234,3 +236,4 @@ UPDATE
 "user"
 SET role = 'admin'
 WHERE email = 'brandonichami@gmail.com';
+

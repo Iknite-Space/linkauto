@@ -72,6 +72,11 @@ const Reservations = () => {
 
   const columns = [
     {
+      name: "Car Name",
+      selector: (row) => row.car_name,
+      sortable: true,
+    },
+    {
       name: "Owner Name",
       selector: (row) => row.owner_name,
       sortable: true,
@@ -83,7 +88,7 @@ const Reservations = () => {
     },
     
     {
-      name: "Status",
+      name: "Car Status",
       selector: (row) => row.status,
       sortable: true,
     },
