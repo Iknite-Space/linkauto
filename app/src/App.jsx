@@ -51,6 +51,7 @@ const CarUploadForm = lazy(() => import("./components/form/CarUploadForm"));
 
 const UserVerDocForm = lazy(() => import("./pages/dashboard/UserVerDocForm"));
 const AllPayments = lazy(() => import("./pages/dashboard/AllPayments"));
+const AllUsers = lazy(() => import("./pages/dashboard/AllUsers"));
 
 const Payment = lazy(() => import("./pages/Payment"));
 const CustomerPayment = lazy(() =>
@@ -105,6 +106,7 @@ function App() {
                   element={<SingleCarVerPage />}
                 />
                 <Route path="all-payments" element={<AllPayments />} />
+                <Route path="users" element={<AllUsers />} />
                 <Route
                   path="customer-reservations"
                   element={<CustomerReservations />}

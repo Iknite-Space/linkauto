@@ -46,6 +46,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.GET("/users/pending-verification", userHandler.GetUserPendingVer)
 	r.GET("/user-verification/:user_uuid", userHandler.GetSingleUserVerification)
 	r.PATCH("/user-verification", userHandler.UpdateUserVerificationStatus)
+	r.GET("/all-users", userHandler.GetActiveUsers)
 
 	r.POST("/car", carHandler.UploadCar)
 	r.GET("/carlistings", carHandler.CarListings)

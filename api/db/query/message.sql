@@ -80,6 +80,12 @@ SELECT image FROM car_gallery WHERE car_uuid = $1;
 -- name: GetCarResStatus :one
 SELECT status FROM reservation WHERE car_uuid = $1;
 
+-- name: GetActiveUsers :many
+SELECT uuid,CONCAT(fname, ' ', lname) AS name,email,role, gender, account_status,phone,created_at
+FROM "user"
+WHERE account_status = 'active' AND role IN ('customer','car_owner')
+ORDER BY created_at DESC;
+
 -- name: GetCarPendingVerifications :many
 SELECT 
   CONCAT(u.fname, ' ', u.lname) AS owner_name,
