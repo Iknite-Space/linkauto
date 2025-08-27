@@ -528,10 +528,12 @@ const getReservations = `-- name: GetReservations :many
 SELECT
 CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
 CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
+cd.name AS car_name,
 r.status,
 r.created_at AS date_created
 FROM reservation r
 JOIN car c ON c.uuid = r.car_uuid
+JOIN car_details cd ON cd.car_uuid = c.uuid
 JOIN "user" owner ON owner.uuid = c.owner_uuid
 JOIN "user" customer ON customer.uuid = r.customer_uuid
 `
@@ -539,6 +541,7 @@ JOIN "user" customer ON customer.uuid = r.customer_uuid
 type GetReservationsRow struct {
 	OwnerName    interface{}      `json:"owner_name"`
 	CustomerName interface{}      `json:"customer_name"`
+	CarName      string           `json:"car_name"`
 	Status       string           `json:"status"`
 	DateCreated  pgtype.Timestamp `json:"date_created"`
 }
@@ -555,6 +558,7 @@ func (q *Queries) GetReservations(ctx context.Context) ([]GetReservationsRow, er
 		if err := rows.Scan(
 			&i.OwnerName,
 			&i.CustomerName,
+			&i.CarName,
 			&i.Status,
 			&i.DateCreated,
 		); err != nil {
