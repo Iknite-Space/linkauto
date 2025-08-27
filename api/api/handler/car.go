@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"mime/multipart"
 	"net/http"
@@ -234,24 +235,43 @@ func (h *CarHandler) CarDetails(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
+	fmt.Println("Fetching details for car ID:", id)
 
 	//get the car details
 	cardetails, err := h.store.Do().GetCarDetails(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		//print the error to the console
+		fmt.Println("Error fetching car details:", err)
 		return
 	}
 
 	carimages, err := h.store.Do().GetCarImages(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		//print the error to the console
+		fmt.Println("Error fetching car images:", err)
 		return
+	}
+	status, statusErr := h.store.Do().GetCarResStatus(c, &cardetails.Uuid)
+	if statusErr != nil {
+		if errors.Is(statusErr, sql.ErrNoRows) {
+			// no reservation found → just return empty status
+			status = ""
+			fmt.Println("No status found for car:", cardetails.Uuid)
+		} else {
+			// real error
+			c.JSON(http.StatusInternalServerError, gin.H{"error": statusErr.Error()})
+			fmt.Println("Error fetching car status:", statusErr)
+			return
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"success":      true,
 		"cardetails":   cardetails,
 		"carimageurls": carimages,
+		"status":       status,
 	})
 
 }

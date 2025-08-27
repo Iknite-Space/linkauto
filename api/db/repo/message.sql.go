@@ -291,18 +291,16 @@ func (q *Queries) GetAllUploadedCars(ctx context.Context, uuid string) ([]GetAll
 }
 
 const getCarDetails = `-- name: GetCarDetails :one
-SELECT c.uuid,c.pickup_location,r.status,c.dropoff_location,cd.name,
+SELECT c.uuid,c.pickup_location,c.dropoff_location,cd.name,
 cd.model,cd.energy_type,cd.transmission_type,cd.brand,cd.no_seats,
 cd.color,cd.chassis_no,cd.vin,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
-JOIN reservation r ON c.uuid = r.car_uuid
 WHERE c.uuid = $1
 `
 
 type GetCarDetailsRow struct {
 	Uuid             string         `json:"uuid"`
 	PickupLocation   string         `json:"pickup_location"`
-	Status           string         `json:"status"`
 	DropoffLocation  string         `json:"dropoff_location"`
 	Name             string         `json:"name"`
 	Model            string         `json:"model"`
@@ -322,7 +320,6 @@ func (q *Queries) GetCarDetails(ctx context.Context, uuid string) (GetCarDetails
 	err := row.Scan(
 		&i.Uuid,
 		&i.PickupLocation,
-		&i.Status,
 		&i.DropoffLocation,
 		&i.Name,
 		&i.Model,
@@ -540,6 +537,17 @@ func (q *Queries) GetCarPendingVerifications(ctx context.Context) ([]GetCarPendi
 		return nil, err
 	}
 	return items, nil
+}
+
+const getCarResStatus = `-- name: GetCarResStatus :one
+SELECT status FROM reservation WHERE car_uuid = $1
+`
+
+func (q *Queries) GetCarResStatus(ctx context.Context, carUuid *string) (string, error) {
+	row := q.db.QueryRow(ctx, getCarResStatus, carUuid)
+	var status string
+	err := row.Scan(&status)
+	return status, err
 }
 
 const getCarVerificationDetails = `-- name: GetCarVerificationDetails :one
