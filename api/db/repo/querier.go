@@ -16,6 +16,7 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (string, error)
 	DeletePayment(ctx context.Context, uuid string) error
 	DeleteReservation(ctx context.Context, uuid string) error
+	GetActiveUsers(ctx context.Context) ([]GetActiveUsersRow, error)
 	GetAllPayments(ctx context.Context) ([]GetAllPaymentsRow, error)
 	GetAllUploadedCars(ctx context.Context, uuid string) ([]GetAllUploadedCarsRow, error)
 	GetCarDetails(ctx context.Context, uuid string) (GetCarDetailsRow, error)

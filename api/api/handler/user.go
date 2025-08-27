@@ -143,3 +143,16 @@ func (h *UserHandler) MakeAdmin(c *gin.Context) {
 		"message": "User role updated to admin successfully",
 	})
 }
+
+func (h *UserHandler) GetActiveUsers(c *gin.Context) {
+	users, err := h.store.Do().GetActiveUsers(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve active users: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"users":   users,
+	})
+}

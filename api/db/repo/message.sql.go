@@ -184,6 +184,53 @@ func (q *Queries) DeleteReservation(ctx context.Context, uuid string) error {
 	return err
 }
 
+const getActiveUsers = `-- name: GetActiveUsers :many
+SELECT uuid,CONCAT(fname, ' ', lname) AS name,email,role, gender, account_status,phone,created_at
+FROM "user"
+WHERE account_status = 'active' AND role IN ('customer','car_owner')
+ORDER BY created_at DESC
+`
+
+type GetActiveUsersRow struct {
+	Uuid          string           `json:"uuid"`
+	Name          interface{}      `json:"name"`
+	Email         string           `json:"email"`
+	Role          string           `json:"role"`
+	Gender        string           `json:"gender"`
+	AccountStatus string           `json:"account_status"`
+	Phone         string           `json:"phone"`
+	CreatedAt     pgtype.Timestamp `json:"created_at"`
+}
+
+func (q *Queries) GetActiveUsers(ctx context.Context) ([]GetActiveUsersRow, error) {
+	rows, err := q.db.Query(ctx, getActiveUsers)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetActiveUsersRow{}
+	for rows.Next() {
+		var i GetActiveUsersRow
+		if err := rows.Scan(
+			&i.Uuid,
+			&i.Name,
+			&i.Email,
+			&i.Role,
+			&i.Gender,
+			&i.AccountStatus,
+			&i.Phone,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAllPayments = `-- name: GetAllPayments :many
 SELECT 
   CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
