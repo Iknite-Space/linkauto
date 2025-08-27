@@ -57,6 +57,7 @@ import {
               visible: ["customer"],
             },
           ],
+          
         },
         {
           label: "Verifications",

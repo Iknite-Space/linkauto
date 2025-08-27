@@ -119,7 +119,6 @@ function App() {
                   element={<SingleUserVerPage />}
                 />
                 <Route path="reservations" element={<Reservations />} />
-
                 <Route path="logout" element={<Logout />} />
               </Route>
 
