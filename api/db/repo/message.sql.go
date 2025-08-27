@@ -231,6 +231,53 @@ func (q *Queries) GetActiveUsers(ctx context.Context) ([]GetActiveUsersRow, erro
 	return items, nil
 }
 
+const getAllCars = `-- name: GetAllCars :many
+SELECT name,model,visibility,status,pickup_location,dropoff_location,price_per_day,date_added
+FROM car c
+JOIN car_details cd ON c.uuid = cd.car_uuid
+WHERE c.visibility = 'approved'
+`
+
+type GetAllCarsRow struct {
+	Name            string           `json:"name"`
+	Model           string           `json:"model"`
+	Visibility      string           `json:"visibility"`
+	Status          string           `json:"status"`
+	PickupLocation  string           `json:"pickup_location"`
+	DropoffLocation string           `json:"dropoff_location"`
+	PricePerDay     pgtype.Numeric   `json:"price_per_day"`
+	DateAdded       pgtype.Timestamp `json:"date_added"`
+}
+
+func (q *Queries) GetAllCars(ctx context.Context) ([]GetAllCarsRow, error) {
+	rows, err := q.db.Query(ctx, getAllCars)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetAllCarsRow{}
+	for rows.Next() {
+		var i GetAllCarsRow
+		if err := rows.Scan(
+			&i.Name,
+			&i.Model,
+			&i.Visibility,
+			&i.Status,
+			&i.PickupLocation,
+			&i.DropoffLocation,
+			&i.PricePerDay,
+			&i.DateAdded,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAllPayments = `-- name: GetAllPayments :many
 SELECT 
   CONCAT(customer.fname, ' ', customer.lname) AS customer_name,

@@ -33,15 +33,15 @@ import {
           visible: ["admin","car_owner", "customer"],
           children: [
             {
-              label: "Users",
+              label: "All Users",
               icon: <FiUsers />,
               href: "/dashboard/users",
               visible: ["admin"],
             },
             {
-              label: "Cars",
+              label: "All Cars",
               icon: <FiTruck />,
-              href: "/dashboard/cars",
+              href: "/dashboard/cars/all",
               visible: ["admin"],
             },
             {
