@@ -54,12 +54,12 @@ const AllPayments = lazy(() => import("./pages/dashboard/AllPayments"));
 const AllUsers = lazy(() => import("./pages/dashboard/AllUsers"));
 
 const Payment = lazy(() => import("./pages/Payment"));
-const CustomerPayment = lazy(() =>
-  import("./pages/dashboard/CustomerPayment")
-);
+const CustomerPayment = lazy(() => import("./pages/dashboard/CustomerPayment"));
 const CustomerReservations = lazy(() =>
   import("./pages/dashboard/CustomerReservations")
 );
+
+const Reservations = lazy(() => import("./pages/dashboard/Reservations"));
 
 function App() {
   return (
@@ -111,17 +111,15 @@ function App() {
                   path="customer-reservations"
                   element={<CustomerReservations />}
                 />
-                <Route
-                  path="customer-payments"
-                  element={<CustomerPayment />}
-                />
+                <Route path="customer-payments" element={<CustomerPayment />} />
                 <Route path="user-ver-doc-form" element={<UserVerDocForm />} />
                 <Route path="diff-payment-page" element={<DiffPaymentPage />} />
                 <Route
                   path="user-verification/:user_uuid"
                   element={<SingleUserVerPage />}
                 />
-               
+                <Route path="reservations" element={<Reservations />} />
+
                 <Route path="logout" element={<Logout />} />
               </Route>
 
