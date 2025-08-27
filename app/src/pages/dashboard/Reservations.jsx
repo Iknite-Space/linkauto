@@ -4,7 +4,7 @@ import api from "../../services/axios";
 import Loading from "../../components/shared/Loading";
 import { useUser } from "../../hooks/UseAuth";
 import { format } from "date-fns";
-import Modal from "../../components/shared/Modal";
+import Modal from "../../components/UI/Modal";
 
 const Reservations = () => {
   const [loading, setLoading] = useState(true);
