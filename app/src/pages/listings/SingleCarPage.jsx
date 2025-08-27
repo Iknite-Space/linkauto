@@ -19,7 +19,7 @@ function SingleCarPage() {
           setCarImages(res.data.carimageurls)
         }
       } catch (error) {
-        console.error("an unexpected eror occured", error())
+        console.error("an unexpected error occured", error)
       }
     }
     fetchDetails();
