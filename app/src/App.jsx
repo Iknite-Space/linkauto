@@ -58,7 +58,9 @@ const CustomerPayment = lazy(() => import("./pages/dashboard/CustomerPayment"));
 const CustomerReservations = lazy(() =>
   import("./pages/dashboard/CustomerReservations")
 );
-
+{
+  /* just added this but not in main dont know why */
+}
 const Reservations = lazy(() => import("./pages/dashboard/Reservations"));
 
 function App() {
@@ -118,6 +120,7 @@ function App() {
                   path="user-verification/:user_uuid"
                   element={<SingleUserVerPage />}
                 />
+                {/* just added this but not in main dont know why */}
                 <Route path="reservations" element={<Reservations />} />
                 <Route path="logout" element={<Logout />} />
               </Route>
