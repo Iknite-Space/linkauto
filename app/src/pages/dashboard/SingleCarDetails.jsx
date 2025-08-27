@@ -17,13 +17,14 @@ import {
 import Button from "../../components/UI/Button";
 import ReservationFormModal from "./ReservationFormModal";
 
-export default function CarDetails({ cardetails = {} }) {
+export default function CarDetails({ cardetails = {}, resStatus = "" }) {
   const { currentUser = null, loading = true } = useUser() || {};
 CarDetails.propTypes = {
   cardetails: PropTypes.object.isRequired,
+  resStatus: PropTypes.string.isRequired
 };
   const [showModal, setShowModal] = useState(false);
-  const status = cardetails?.status;
+  const status = resStatus;
 
   return (
     <div className="w-full max-w-5xl p-6 mx-auto bg-white shadow-md rounded-xl">

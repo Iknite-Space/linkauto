@@ -60,8 +60,7 @@ VALUES ($1,$2);
 -- name: GetCarListings :many
 SELECT c.uuid,cd.name,cd.transmission_type,cd.no_seats,cd.energy_type,cd.brand,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
-JOIN reservation r ON c.uuid = r.car_uuid
-WHERE c.visibility = 'approved' AND r.status NOT IN ('completed')
+WHERE c.visibility = 'approved'
 ORDER BY cd.date_added;
 
 -- name: GetCarListingImages :many
@@ -69,15 +68,23 @@ SELECT image FROM car_gallery WHERE car_uuid = $1
 LIMIT 2; 
 
 -- name: GetCarDetails :one
-SELECT c.uuid,c.pickup_location,r.status,c.dropoff_location,cd.name,
+SELECT c.uuid,c.pickup_location,c.dropoff_location,cd.name,
 cd.model,cd.energy_type,cd.transmission_type,cd.brand,cd.no_seats,
 cd.color,cd.chassis_no,cd.vin,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
-JOIN reservation r ON c.uuid = r.car_uuid
 WHERE c.uuid = $1;
 
 -- name: GetCarImages :many
 SELECT image FROM car_gallery WHERE car_uuid = $1;
+
+-- name: GetCarResStatus :one
+SELECT status FROM reservation WHERE car_uuid = $1;
+
+-- name: GetActiveUsers :many
+SELECT uuid,CONCAT(fname, ' ', lname) AS name,email,role, gender, account_status,phone,created_at
+FROM "user"
+WHERE account_status = 'active' AND role IN ('customer','car_owner')
+ORDER BY created_at DESC;
 
 -- name: GetCarPendingVerifications :many
 SELECT 
@@ -165,6 +172,52 @@ JOIN "user" customer ON customer.uuid = r.customer_uuid
 LEFT JOIN car_details cd ON cd.car_uuid = c.uuid
 WHERE customer.uuid = $1;
 
+-- name: GetAllUploadedCars :many 
+SELECT name,model,visibility,status,pickup_location,dropoff_location,price_per_day,date_added
+FROM car c
+JOIN car_details cd ON c.uuid = cd.car_uuid
+JOIN "user" u ON u.uuid = c.owner_uuid
+WHERE u.uuid = $1;
+
+-- name: GetAllPayments :many
+SELECT 
+  CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
+  customer.uuid AS user_uuid,
+  p.amount_paid,
+  p.payment_method,
+  p.reference,
+  p.date_paid,
+  p.status AS payment_status,
+  cd.name AS car_name
+FROM payment p
+JOIN reservation r ON r.uuid = p.rental_uuid
+JOIN car c ON c.uuid = r.car_uuid
+JOIN "user" customer ON customer.uuid = r.customer_uuid
+LEFT JOIN car_details cd ON cd.car_uuid = c.uuid
+ORDER BY p.date_paid DESC;
+
+-- name: GetCarOwnerPayments :many
+SELECT 
+  CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
+  customer.uuid AS customer_uuid,
+  owner.uuid AS owner_uuid,
+  CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
+  p.amount_paid,
+  p.payment_method,
+  p.reference,
+  p.date_paid,
+  p.status AS payment_status,
+  cd.name AS car_name
+FROM payment p
+JOIN reservation r ON r.uuid = p.rental_uuid
+JOIN car c ON c.uuid = r.car_uuid
+JOIN "user" customer ON customer.uuid = r.customer_uuid   -- the one renting
+JOIN "user" owner ON owner.uuid = c.owner_uuid            -- the one who uploaded
+LEFT JOIN car_details cd ON cd.car_uuid = c.uuid
+WHERE owner.uuid = $1
+ORDER BY p.date_paid DESC;
+
+
 -- name: GetReservations :many
 SELECT
 CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
@@ -182,5 +235,5 @@ JOIN "user" customer ON customer.uuid = r.customer_uuid;
 UPDATE
 "user"
 SET role = 'admin'
-WHERE email = 'arreytony@gmail.com';
+WHERE email = 'brandonichami@gmail.com';
 

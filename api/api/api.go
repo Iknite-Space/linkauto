@@ -46,6 +46,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.GET("/users/pending-verification", userHandler.GetUserPendingVer)
 	r.GET("/user-verification/:user_uuid", userHandler.GetSingleUserVerification)
 	r.PATCH("/user-verification", userHandler.UpdateUserVerificationStatus)
+	r.GET("/all-users", userHandler.GetActiveUsers)
 
 	r.POST("/car", carHandler.UploadCar)
 	r.GET("/carlistings", carHandler.CarListings)
@@ -55,12 +56,15 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 
 	r.GET("/car-verification/:car_uuid", carHandler.GetCarVerificationDocs)
 	r.PATCH("/car-verification", carHandler.UpdateUserVerificationStatus)
+	r.GET("/uploaded-cars", carHandler.GetAllOwnerCars)
 
 	//reservation
 	r.POST("/reservation", reservationHandler.CreateReservation)
 	r.GET("/reservation/:ref", reservationHandler.Status)
+	//all payments irrespective of user role
+	r.GET("/payments", userHandler.AllPayments)
 	r.GET("/customer-reservations/:customer_uuid", reservationHandler.CustomerReservations)
-	//payment 
+	//payment
 	r.GET("/customer-payments/:customer_uuid", reservationHandler.CustomerPaymentDetails)
 	//admin
 	r.GET("/reservations", reservationHandler.Reservations)

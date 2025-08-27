@@ -184,19 +184,170 @@ func (q *Queries) DeleteReservation(ctx context.Context, uuid string) error {
 	return err
 }
 
+const getActiveUsers = `-- name: GetActiveUsers :many
+SELECT uuid,CONCAT(fname, ' ', lname) AS name,email,role, gender, account_status,phone,created_at
+FROM "user"
+WHERE account_status = 'active' AND role IN ('customer','car_owner')
+ORDER BY created_at DESC
+`
+
+type GetActiveUsersRow struct {
+	Uuid          string           `json:"uuid"`
+	Name          interface{}      `json:"name"`
+	Email         string           `json:"email"`
+	Role          string           `json:"role"`
+	Gender        string           `json:"gender"`
+	AccountStatus string           `json:"account_status"`
+	Phone         string           `json:"phone"`
+	CreatedAt     pgtype.Timestamp `json:"created_at"`
+}
+
+func (q *Queries) GetActiveUsers(ctx context.Context) ([]GetActiveUsersRow, error) {
+	rows, err := q.db.Query(ctx, getActiveUsers)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetActiveUsersRow{}
+	for rows.Next() {
+		var i GetActiveUsersRow
+		if err := rows.Scan(
+			&i.Uuid,
+			&i.Name,
+			&i.Email,
+			&i.Role,
+			&i.Gender,
+			&i.AccountStatus,
+			&i.Phone,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getAllPayments = `-- name: GetAllPayments :many
+SELECT 
+  CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
+  customer.uuid AS user_uuid,
+  p.amount_paid,
+  p.payment_method,
+  p.reference,
+  p.date_paid,
+  p.status AS payment_status,
+  cd.name AS car_name
+FROM payment p
+JOIN reservation r ON r.uuid = p.rental_uuid
+JOIN car c ON c.uuid = r.car_uuid
+JOIN "user" customer ON customer.uuid = r.customer_uuid
+LEFT JOIN car_details cd ON cd.car_uuid = c.uuid
+ORDER BY p.date_paid DESC
+`
+
+type GetAllPaymentsRow struct {
+	CustomerName  interface{}      `json:"customer_name"`
+	UserUuid      string           `json:"user_uuid"`
+	AmountPaid    pgtype.Numeric   `json:"amount_paid"`
+	PaymentMethod string           `json:"payment_method"`
+	Reference     string           `json:"reference"`
+	DatePaid      pgtype.Timestamp `json:"date_paid"`
+	PaymentStatus string           `json:"payment_status"`
+	CarName       string           `json:"car_name"`
+}
+
+func (q *Queries) GetAllPayments(ctx context.Context) ([]GetAllPaymentsRow, error) {
+	rows, err := q.db.Query(ctx, getAllPayments)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetAllPaymentsRow{}
+	for rows.Next() {
+		var i GetAllPaymentsRow
+		if err := rows.Scan(
+			&i.CustomerName,
+			&i.UserUuid,
+			&i.AmountPaid,
+			&i.PaymentMethod,
+			&i.Reference,
+			&i.DatePaid,
+			&i.PaymentStatus,
+			&i.CarName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getAllUploadedCars = `-- name: GetAllUploadedCars :many
+SELECT name,model,visibility,status,pickup_location,dropoff_location,price_per_day,date_added
+FROM car c
+JOIN car_details cd ON c.uuid = cd.car_uuid
+JOIN "user" u ON u.uuid = c.owner_uuid
+WHERE u.uuid = $1
+`
+
+type GetAllUploadedCarsRow struct {
+	Name            string           `json:"name"`
+	Model           string           `json:"model"`
+	Visibility      string           `json:"visibility"`
+	Status          string           `json:"status"`
+	PickupLocation  string           `json:"pickup_location"`
+	DropoffLocation string           `json:"dropoff_location"`
+	PricePerDay     pgtype.Numeric   `json:"price_per_day"`
+	DateAdded       pgtype.Timestamp `json:"date_added"`
+}
+
+func (q *Queries) GetAllUploadedCars(ctx context.Context, uuid string) ([]GetAllUploadedCarsRow, error) {
+	rows, err := q.db.Query(ctx, getAllUploadedCars, uuid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetAllUploadedCarsRow{}
+	for rows.Next() {
+		var i GetAllUploadedCarsRow
+		if err := rows.Scan(
+			&i.Name,
+			&i.Model,
+			&i.Visibility,
+			&i.Status,
+			&i.PickupLocation,
+			&i.DropoffLocation,
+			&i.PricePerDay,
+			&i.DateAdded,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getCarDetails = `-- name: GetCarDetails :one
-SELECT c.uuid,c.pickup_location,r.status,c.dropoff_location,cd.name,
+SELECT c.uuid,c.pickup_location,c.dropoff_location,cd.name,
 cd.model,cd.energy_type,cd.transmission_type,cd.brand,cd.no_seats,
 cd.color,cd.chassis_no,cd.vin,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
-JOIN reservation r ON c.uuid = r.car_uuid
 WHERE c.uuid = $1
 `
 
 type GetCarDetailsRow struct {
 	Uuid             string         `json:"uuid"`
 	PickupLocation   string         `json:"pickup_location"`
-	Status           string         `json:"status"`
 	DropoffLocation  string         `json:"dropoff_location"`
 	Name             string         `json:"name"`
 	Model            string         `json:"model"`
@@ -216,7 +367,6 @@ func (q *Queries) GetCarDetails(ctx context.Context, uuid string) (GetCarDetails
 	err := row.Scan(
 		&i.Uuid,
 		&i.PickupLocation,
-		&i.Status,
 		&i.DropoffLocation,
 		&i.Name,
 		&i.Model,
@@ -284,8 +434,7 @@ func (q *Queries) GetCarListingImages(ctx context.Context, carUuid string) ([]st
 const getCarListings = `-- name: GetCarListings :many
 SELECT c.uuid,cd.name,cd.transmission_type,cd.no_seats,cd.energy_type,cd.brand,cd.price_per_day FROM car c
 JOIN car_details cd ON c.uuid = cd.car_uuid
-JOIN reservation r ON c.uuid = r.car_uuid
-WHERE c.visibility = 'approved' AND r.status NOT IN ('completed')
+WHERE c.visibility = 'approved'
 ORDER BY cd.date_added
 `
 
@@ -316,6 +465,72 @@ func (q *Queries) GetCarListings(ctx context.Context) ([]GetCarListingsRow, erro
 			&i.EnergyType,
 			&i.Brand,
 			&i.PricePerDay,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getCarOwnerPayments = `-- name: GetCarOwnerPayments :many
+SELECT 
+  CONCAT(customer.fname, ' ', customer.lname) AS customer_name,
+  customer.uuid AS customer_uuid,
+  owner.uuid AS owner_uuid,
+  CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
+  p.amount_paid,
+  p.payment_method,
+  p.reference,
+  p.date_paid,
+  p.status AS payment_status,
+  cd.name AS car_name
+FROM payment p
+JOIN reservation r ON r.uuid = p.rental_uuid
+JOIN car c ON c.uuid = r.car_uuid
+JOIN "user" customer ON customer.uuid = r.customer_uuid   -- the one renting
+JOIN "user" owner ON owner.uuid = c.owner_uuid            -- the one who uploaded
+LEFT JOIN car_details cd ON cd.car_uuid = c.uuid
+WHERE owner.uuid = $1
+ORDER BY p.date_paid DESC
+`
+
+type GetCarOwnerPaymentsRow struct {
+	CustomerName  interface{}      `json:"customer_name"`
+	CustomerUuid  string           `json:"customer_uuid"`
+	OwnerUuid     string           `json:"owner_uuid"`
+	OwnerName     interface{}      `json:"owner_name"`
+	AmountPaid    pgtype.Numeric   `json:"amount_paid"`
+	PaymentMethod string           `json:"payment_method"`
+	Reference     string           `json:"reference"`
+	DatePaid      pgtype.Timestamp `json:"date_paid"`
+	PaymentStatus string           `json:"payment_status"`
+	CarName       string           `json:"car_name"`
+}
+
+func (q *Queries) GetCarOwnerPayments(ctx context.Context, uuid string) ([]GetCarOwnerPaymentsRow, error) {
+	rows, err := q.db.Query(ctx, getCarOwnerPayments, uuid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetCarOwnerPaymentsRow{}
+	for rows.Next() {
+		var i GetCarOwnerPaymentsRow
+		if err := rows.Scan(
+			&i.CustomerName,
+			&i.CustomerUuid,
+			&i.OwnerUuid,
+			&i.OwnerName,
+			&i.AmountPaid,
+			&i.PaymentMethod,
+			&i.Reference,
+			&i.DatePaid,
+			&i.PaymentStatus,
+			&i.CarName,
 		); err != nil {
 			return nil, err
 		}
@@ -369,6 +584,17 @@ func (q *Queries) GetCarPendingVerifications(ctx context.Context) ([]GetCarPendi
 		return nil, err
 	}
 	return items, nil
+}
+
+const getCarResStatus = `-- name: GetCarResStatus :one
+SELECT status FROM reservation WHERE car_uuid = $1
+`
+
+func (q *Queries) GetCarResStatus(ctx context.Context, carUuid *string) (string, error) {
+	row := q.db.QueryRow(ctx, getCarResStatus, carUuid)
+	var status string
+	err := row.Scan(&status)
+	return status, err
 }
 
 const getCarVerificationDetails = `-- name: GetCarVerificationDetails :one
@@ -716,7 +942,7 @@ const makeAdmin = `-- name: MakeAdmin :exec
 UPDATE
 "user"
 SET role = 'admin'
-WHERE email = 'arreytony@gmail.com'
+WHERE email = 'brandonichami@gmail.com'
 `
 
 func (q *Queries) MakeAdmin(ctx context.Context) error {
