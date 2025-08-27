@@ -64,6 +64,7 @@ const UploadedCars = () => {
         const res = await api.get("/uploaded-cars", {
           params: {
             user_uuid: currentUser?.uuid,
+            role: currentUser?.role,
           },
         });
         console.log(res.data);
@@ -81,7 +82,7 @@ const UploadedCars = () => {
   return (
     <div>
       <DataTable
-        title="All Uploaded Cars"
+        title={currentUser?.role === "admin" ? "All Cars" : "My Uploaded Cars"}
         columns={columns}
         data={cars}
         pagination

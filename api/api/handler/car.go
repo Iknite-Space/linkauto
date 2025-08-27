@@ -335,15 +335,27 @@ func (h *CarHandler) UpdateUserVerificationStatus(c *gin.Context) {
 // update pending cars visibility status
 func (h *CarHandler) GetAllOwnerCars(c *gin.Context) {
 	userUuid := c.Query("user_uuid")
-	if userUuid == "" {
+	role := c.Query("role")
+	if userUuid == "" || role == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "role and user_uuid query parameters are required"})
 		return
 	}
 
-	cars, err := h.store.Do().GetAllUploadedCars(c, userUuid)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch payment details: " + err.Error()})
-		return
+	var cars interface{}
+	var err error
+	if role == "car_owner" {
+		cars, err = h.store.Do().GetAllUploadedCars(c, userUuid)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch payment details: " + err.Error()})
+			return
+		}
+	}
+	if role == "admin" {
+		cars, err = h.store.Do().GetAllCars(c)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch payment details: " + err.Error()})
+			return
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
