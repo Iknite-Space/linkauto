@@ -32,10 +32,19 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="items-center hidden w-full md:flex">
           <div className="flex justify-center flex-1 space-x-6 text-heading2 text-backgroundColor">
+            
+            <div className="relative group">
+              <button className="hover:text-accent">Cars</button>
+              <div className="absolute hidden group-hover:block bg-primary shadow-lg rounded-md mt-2 w-40">
+                <Link to="/carlisting" className="px-4 py-2 block hover:text-accent">Car Listing</Link>
+                <Link to="/upload-car-page" className="px-4 py-2 block hover:text-accent">Upload Car</Link>
+              </div>
+            </div>
             <a href="/#home" className="hover:text-accent">Home</a>
             <a href="/#about-us" className="hover:text-accent">About Us</a>
             <a href="/#contact" className="hover:text-accent">Contact</a>
-            <Link to="/carlisting" className="hover:text-accent">Cars</Link>
+            
+            
           </div>
           {(currentUser?.uuid) ? (
             <Link title="Go to dashboard" to="/dashboard" className="px-4 py-2 text-white rounded shadow bg-accent text-button hover:bg-secondary">Dashboard</Link>
