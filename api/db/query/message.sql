@@ -246,3 +246,20 @@ UPDATE
 SET role = 'admin'
 WHERE email = 'brandonichami@gmail.com';
 
+-- name: GetOwnerCars :many
+SELECT
+  CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
+  cd.name AS car_name,
+  cd.price_per_day,
+  cd.date_added,
+  c.uuid AS car_uuid,
+  c.visibility
+FROM car c
+JOIN car_details cd ON c.uuid = cd.car_uuid
+JOIN "user" owner ON owner.uuid = c.owner_uuid
+WHERE owner.uuid = $1;
+
+-- name: UpdateCarStatus :exec
+UPDATE car
+SET status = $2
+WHERE uuid = $1;
