@@ -25,21 +25,27 @@ import {
           label: "Dashboard",
           icon: <FiHome />,
           href: "/dashboard",
-          visible: ["admin", "owner", "customer"],
+          visible: ["admin", "car_owner", "customer"],
         },
         {
           label: "General",
           icon: <FiBookOpen />,
-          visible: ["admin","owner", "customer"],
+          visible: ["admin","car_owner", "customer"],
           children: [
             {
-              label: "Users",
+              label: "All Users",
               icon: <FiUsers />,
               href: "/dashboard/users",
               visible: ["admin"],
             },
             {
-              label: "Cars",
+              label: "All Cars",
+              icon: <FiTruck />,
+              href: "/dashboard/cars/all",
+              visible: ["car_owner"],
+            },
+             {
+              label: "All Cars",
               icon: <FiTruck />,
               href: "/dashboard/cars",
               visible: ["admin"],
@@ -47,16 +53,24 @@ import {
             {
               label: "Payments",
               icon: <FiDollarSign />,
-              href: "/dashboard/payments",
-              visible: ["admin","owner", "customer"],
+              href: "/dashboard/all-payments",
+              visible: ["admin","car_owner", "customer"],
             },
+            
             {
               label: "Reservations",
               icon: <FiBookOpen />,
-              href: "/dashboard/reservations",
-              visible: ["admin","owner", "customer"],
+              href: "/dashboard/customer-reservations",
+              visible: ["customer"],
             },
+             {
+              label: "Reservations",
+              icon: <FiBookOpen />,
+              href: "/dashboard/reservations",
+              visible: ["admin"],
+            }
           ],
+          
         },
         {
           label: "Verifications",
@@ -75,6 +89,8 @@ import {
               href: "/dashboard/car-verification",
               visible: ["admin"],
             },
+            
+           
             // {
             //   label: "Diff Payment Page",
             //   icon: <FiDribbble />,
@@ -86,19 +102,19 @@ import {
         {
           label: "Cars",
           icon: <FiTruck />,
-          visible: ["owner"],
+          visible: ["car_owner"],
           children: [
             {
               label: "All Cars",
               icon: <FiList />,
               href: "/dashboard/cars/all",
-              visible: ["owner"],
+              visible: ["car_owner"],
             },
             {
               label: "Add Car",
               icon: <FiPlusSquare />,
               href: "/dashboard/cars/upload",
-              visible: ["owner"],
+              visible: ["car_owner"],
             },
           ],
         },
@@ -111,13 +127,13 @@ import {
           label: "Profile",
           icon: <FiUser />,
           href: "dashboard/profile",
-          visible: ["admin", "owner", "customer"],
+          visible: ["admin", "car_owner", "customer"],
         },
         {
           label: "Logout",
           icon: <FiLogOut />,
           href: "/dashboard/logout",
-          visible: ["admin", "owner", "customer"],
+          visible: ["admin", "car_owner", "customer"],
         },
       ],
     },

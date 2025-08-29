@@ -88,3 +88,71 @@ func (h *UserHandler) UpdateUserVerificationStatus(c *gin.Context) {
 		"message": "User verification status updated successfully",
 	})
 }
+
+func (h *UserHandler) AllPayments(c *gin.Context) {
+	//get the role and uuid from the query params
+	role := c.Query("role")
+	userUuid := c.Query("user_uuid")
+	if role == "" || userUuid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "role and user_uuid query parameters are required"})
+		return
+	}
+	//customers can only view their own payments
+	var payments interface{}
+	if role == "customer" {
+		var err error
+		payments, err = h.store.Do().GetCustomerPaymentDetails(c, userUuid)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch payment details: " + err.Error()})
+			return
+		}
+	}
+	//admins can view all payments
+	if role == "admin" {
+		var err error
+		payments, err = h.store.Do().GetAllPayments(c)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch all payments: " + err.Error()})
+			return
+		}
+	}
+	//only car_owners can view payments related to their cars
+	if role == "car_owner" {
+		var err error
+		payments, err = h.store.Do().GetCarOwnerPayments(c, userUuid)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch car owner payments: " + err.Error()})
+			return
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success":  true,
+		"payments": payments,
+	})
+}
+
+func (h *UserHandler) MakeAdmin(c *gin.Context) {
+
+	if err := h.store.Do().MakeAdmin(c); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to make user admin: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "User role updated to admin successfully",
+	})
+}
+
+func (h *UserHandler) GetActiveUsers(c *gin.Context) {
+	users, err := h.store.Do().GetActiveUsers(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve active users: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"users":   users,
+	})
+}

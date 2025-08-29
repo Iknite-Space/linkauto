@@ -31,20 +31,35 @@ const Logout = lazy(() => import("./pages/auth/Logout"));
 const UserVerification = lazy(() =>
   import("./pages/dashboard/VerifyUserTable")
 );
+const SingleUserVerPage = lazy(() =>
+  import("./pages/dashboard/SingleUserVerPage")
+);
 
 const CarsVerification = lazy(() =>
   import("./pages/dashboard/CarsVerification")
 );
 
-const SingleCarVerPage = lazy(() => import("./pages/dashboard/SingleCarVerPage"));
-const DiffPaymentPage = lazy(() => import("./pages/dashboard/DiffPaymentPage"))
+const UploadedCars = lazy(() => import("./pages/dashboard/UploadedCars"));
+
+const SingleCarVerPage = lazy(() =>
+  import("./pages/dashboard/SingleCarVerPage")
+);
+const DiffPaymentPage = lazy(() => import("./pages/dashboard/DiffPaymentPage"));
 
 const CarListing = lazy(() => import("./pages/listings/CarListing"));
 const CarUploadForm = lazy(() => import("./components/form/CarUploadForm"));
 
 const UserVerDocForm = lazy(() => import("./pages/dashboard/UserVerDocForm"));
+const AllPayments = lazy(() => import("./pages/dashboard/AllPayments"));
+const AllUsers = lazy(() => import("./pages/dashboard/AllUsers"));
 
 const Payment = lazy(() => import("./pages/Payment"));
+const CustomerPayment = lazy(() => import("./pages/dashboard/CustomerPayment"));
+const CustomerReservations = lazy(() =>
+  import("./pages/dashboard/CustomerReservations")
+);
+const OwnerCars = lazy(() => import("./pages/dashboard/OwnerCars"));
+const Reservations = lazy(() => import("./pages/dashboard/Reservations"));
 
 const UploadCarPage = lazy(() => import("./pages/listings/UploadCarPage"))
 
@@ -89,17 +104,27 @@ function App() {
                   element={<UserVerification />}
                 />
                 <Route path="cars/upload" element={<CarUploadForm />} />
-                <Route path="cars/all" element={<CarUploadForm />} />
+                <Route path="cars/all" element={<UploadedCars />} />
+                <Route path="cars" element={<OwnerCars />} />
                 <Route path="car-verification" element={<CarsVerification />} />
-                <Route path="car-verification/:car_uuid" element={<SingleCarVerPage />} />
+                <Route
+                  path="car-verification/:car_uuid"
+                  element={<SingleCarVerPage />}
+                />
+                <Route path="all-payments" element={<AllPayments />} />
+                <Route path="users" element={<AllUsers />} />
+                <Route
+                  path="customer-reservations"
+                  element={<CustomerReservations />}
+                />
+                <Route path="customer-payments" element={<CustomerPayment />} />
                 <Route path="user-ver-doc-form" element={<UserVerDocForm />} />
-                <Route path="diff-payment-page" element={<DiffPaymentPage />}/>
-                {/*}
+                <Route path="diff-payment-page" element={<DiffPaymentPage />} />
                 <Route
                   path="user-verification/:user_uuid"
-                  element={<SingleUserVerification />}
+                  element={<SingleUserVerPage />}
                 />
-                */}
+                <Route path="reservations" element={<Reservations />} />
                 <Route path="logout" element={<Logout />} />
               </Route>
 

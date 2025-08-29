@@ -16,19 +16,29 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (string, error)
 	DeletePayment(ctx context.Context, uuid string) error
 	DeleteReservation(ctx context.Context, uuid string) error
+	GetActiveUsers(ctx context.Context) ([]GetActiveUsersRow, error)
+	GetAllCars(ctx context.Context) ([]GetAllCarsRow, error)
+	GetAllPayments(ctx context.Context) ([]GetAllPaymentsRow, error)
+	GetAllUploadedCars(ctx context.Context, uuid string) ([]GetAllUploadedCarsRow, error)
 	GetCarDetails(ctx context.Context, uuid string) (GetCarDetailsRow, error)
 	GetCarImages(ctx context.Context, carUuid string) ([]string, error)
 	GetCarListingImages(ctx context.Context, carUuid string) ([]string, error)
 	GetCarListings(ctx context.Context) ([]GetCarListingsRow, error)
+	GetCarOwnerPayments(ctx context.Context, uuid string) ([]GetCarOwnerPaymentsRow, error)
 	GetCarPendingVerifications(ctx context.Context) ([]GetCarPendingVerificationsRow, error)
+	GetCarResStatus(ctx context.Context, carUuid *string) (string, error)
 	GetCarVerificationDetails(ctx context.Context, uuid string) (GetCarVerificationDetailsRow, error)
 	GetCustomerPaymentDetails(ctx context.Context, uuid string) ([]GetCustomerPaymentDetailsRow, error)
 	GetCustomerReservationDetails(ctx context.Context, customerUuid string) ([]GetCustomerReservationDetailsRow, error)
+	GetOwnerCars(ctx context.Context, uuid string) ([]GetOwnerCarsRow, error)
+	GetReservations(ctx context.Context) ([]GetReservationsRow, error)
 	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
 	GetUserByUuid(ctx context.Context, uuid string) (GetUserByUuidRow, error)
 	GetUserVerificationDetails(ctx context.Context, uuid string) (GetUserVerificationDetailsRow, error)
 	GetUsersPendingVerification(ctx context.Context) ([]GetUsersPendingVerificationRow, error)
 	GetVerificationByUserUuid(ctx context.Context, userUuid string) (Verification, error)
+	MakeAdmin(ctx context.Context) error
+	UpdateCarStatus(ctx context.Context, arg UpdateCarStatusParams) error
 	UpdateCarVerificationStatus(ctx context.Context, arg UpdateCarVerificationStatusParams) error
 	UpdatePaymentStatus(ctx context.Context, arg UpdatePaymentStatusParams) error
 	UpdateReservationStatus(ctx context.Context, arg UpdateReservationStatusParams) error

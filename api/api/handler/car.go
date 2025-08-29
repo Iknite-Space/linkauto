@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"mime/multipart"
 	"net/http"
@@ -234,24 +235,43 @@ func (h *CarHandler) CarDetails(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
+	fmt.Println("Fetching details for car ID:", id)
 
 	//get the car details
 	cardetails, err := h.store.Do().GetCarDetails(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		//print the error to the console
+		fmt.Println("Error fetching car details:", err)
 		return
 	}
 
 	carimages, err := h.store.Do().GetCarImages(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		//print the error to the console
+		fmt.Println("Error fetching car images:", err)
 		return
+	}
+	status, statusErr := h.store.Do().GetCarResStatus(c, &cardetails.Uuid)
+	if statusErr != nil {
+		if errors.Is(statusErr, sql.ErrNoRows) {
+			// no reservation found → just return empty status
+			status = ""
+			fmt.Println("No status found for car:", cardetails.Uuid)
+		} else {
+			// real error
+			c.JSON(http.StatusInternalServerError, gin.H{"error": statusErr.Error()})
+			fmt.Println("Error fetching car status:", statusErr)
+			return
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"success":      true,
 		"cardetails":   cardetails,
 		"carimageurls": carimages,
+		"status":       status,
 	})
 
 }
@@ -309,5 +329,77 @@ func (h *CarHandler) UpdateUserVerificationStatus(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "Car verification status updated successfully",
+	})
+}
+
+// update pending cars visibility status
+func (h *CarHandler) GetAllOwnerCars(c *gin.Context) {
+	userUuid := c.Query("user_uuid")
+	role := c.Query("role")
+	if userUuid == "" || role == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "role and user_uuid query parameters are required"})
+		return
+	}
+
+	var cars interface{}
+	var err error
+	if role == "car_owner" {
+		cars, err = h.store.Do().GetAllUploadedCars(c, userUuid)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch payment details: " + err.Error()})
+			return
+		}
+	}
+	if role == "admin" {
+		cars, err = h.store.Do().GetAllCars(c)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch payment details: " + err.Error()})
+			return
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"cars":    cars,
+	})
+
+}
+
+func (h *CarHandler) GetOwnerCars(c *gin.Context) {
+	ownerUuid := c.Param("owner_uuid")
+	if ownerUuid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "owner_uuid is required"})
+		return
+	}
+
+	//fetch the owner's cars
+	cars, err := h.store.Do().GetOwnerCars(c, ownerUuid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve owner cars: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"cars":    cars,
+	})
+
+}
+
+func (h *CarHandler) UpdateCarStatus (c *gin.Context) {
+	var req repo.UpdateCarStatusParams
+
+	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := h.store.Do().UpdateCarStatus(c, req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update car status: " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Car status updated successfully",
 	})
 }
