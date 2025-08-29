@@ -57,6 +57,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	r.GET("/car-verification/:car_uuid", carHandler.GetCarVerificationDocs)
 	r.PATCH("/car-verification", carHandler.UpdateUserVerificationStatus)
 	r.GET("/uploaded-cars", carHandler.GetAllOwnerCars)
+	r.GET("/owner-car/:owner_uuid", carHandler.GetOwnerCars)
 
 	//reservation
 	r.POST("/reservation", reservationHandler.CreateReservation)
@@ -69,6 +70,7 @@ func (h *MessageHandler) WireHttpHandler() http.Handler {
 	//admin
 	r.GET("/reservations", reservationHandler.Reservations)
 	r.PATCH("/make-admin", userHandler.MakeAdmin)
+	r.PATCH("/car-status", carHandler.UpdateCarStatus)
 
 	return r
 }

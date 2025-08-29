@@ -797,6 +797,56 @@ func (q *Queries) GetCustomerReservationDetails(ctx context.Context, customerUui
 	return items, nil
 }
 
+const getOwnerCars = `-- name: GetOwnerCars :many
+SELECT
+  CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
+  cd.name AS car_name,
+  cd.price_per_day,
+  cd.date_added,
+  c.uuid AS car_uuid,
+  c.visibility
+FROM car c
+JOIN car_details cd ON c.uuid = cd.car_uuid
+JOIN "user" owner ON owner.uuid = c.owner_uuid
+WHERE owner.uuid = $1
+`
+
+type GetOwnerCarsRow struct {
+	OwnerName   interface{}      `json:"owner_name"`
+	CarName     string           `json:"car_name"`
+	PricePerDay pgtype.Numeric   `json:"price_per_day"`
+	DateAdded   pgtype.Timestamp `json:"date_added"`
+	CarUuid     string           `json:"car_uuid"`
+	Visibility  string           `json:"visibility"`
+}
+
+func (q *Queries) GetOwnerCars(ctx context.Context, uuid string) ([]GetOwnerCarsRow, error) {
+	rows, err := q.db.Query(ctx, getOwnerCars, uuid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetOwnerCarsRow{}
+	for rows.Next() {
+		var i GetOwnerCarsRow
+		if err := rows.Scan(
+			&i.OwnerName,
+			&i.CarName,
+			&i.PricePerDay,
+			&i.DateAdded,
+			&i.CarUuid,
+			&i.Visibility,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getReservations = `-- name: GetReservations :many
 SELECT
 CONCAT(owner.fname, ' ', owner.lname) AS owner_name,
@@ -1003,6 +1053,22 @@ WHERE email = 'brandonichami@gmail.com'
 
 func (q *Queries) MakeAdmin(ctx context.Context) error {
 	_, err := q.db.Exec(ctx, makeAdmin)
+	return err
+}
+
+const updateCarStatus = `-- name: UpdateCarStatus :exec
+UPDATE car
+SET status = $2
+WHERE uuid = $1
+`
+
+type UpdateCarStatusParams struct {
+	Uuid   string `json:"uuid"`
+	Status string `json:"status"`
+}
+
+func (q *Queries) UpdateCarStatus(ctx context.Context, arg UpdateCarStatusParams) error {
+	_, err := q.db.Exec(ctx, updateCarStatus, arg.Uuid, arg.Status)
 	return err
 }
 

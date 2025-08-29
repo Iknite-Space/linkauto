@@ -57,6 +57,12 @@ import {
               href: "/dashboard/customer-reservations",
               visible: ["customer"],
             },
+             {
+              label: "Reservations",
+              icon: <FiBookOpen />,
+              href: "/dashboard/reservations",
+              visible: ["admin"],
+            }
           ],
           
         },
@@ -78,12 +84,7 @@ import {
               visible: ["admin"],
             },
             
-            {
-              label: "Reservations",
-              icon: <FiBookOpen />,
-              href: "/dashboard/reservations",
-              visible: ["admin"],
-            }
+           
             // {
             //   label: "Diff Payment Page",
             //   icon: <FiDribbble />,

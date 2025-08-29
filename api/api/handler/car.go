@@ -364,3 +364,42 @@ func (h *CarHandler) GetAllOwnerCars(c *gin.Context) {
 	})
 
 }
+
+func (h *CarHandler) GetOwnerCars(c *gin.Context) {
+	ownerUuid := c.Param("owner_uuid")
+	if ownerUuid == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "owner_uuid is required"})
+		return
+	}
+
+	//fetch the owner's cars
+	cars, err := h.store.Do().GetOwnerCars(c, ownerUuid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve owner cars: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"cars":    cars,
+	})
+
+}
+
+func (h *CarHandler) UpdateCarStatus (c *gin.Context) {
+	var req repo.UpdateCarStatusParams
+
+	if err := c.ShouldBindBodyWithJSON(&req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := h.store.Do().UpdateCarStatus(c, req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update car status: " + err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "Car status updated successfully",
+	})
+}

@@ -30,6 +30,7 @@ type Querier interface {
 	GetCarVerificationDetails(ctx context.Context, uuid string) (GetCarVerificationDetailsRow, error)
 	GetCustomerPaymentDetails(ctx context.Context, uuid string) ([]GetCustomerPaymentDetailsRow, error)
 	GetCustomerReservationDetails(ctx context.Context, customerUuid string) ([]GetCustomerReservationDetailsRow, error)
+	GetOwnerCars(ctx context.Context, uuid string) ([]GetOwnerCarsRow, error)
 	GetReservations(ctx context.Context) ([]GetReservationsRow, error)
 	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
 	GetUserByUuid(ctx context.Context, uuid string) (GetUserByUuidRow, error)
@@ -37,6 +38,7 @@ type Querier interface {
 	GetUsersPendingVerification(ctx context.Context) ([]GetUsersPendingVerificationRow, error)
 	GetVerificationByUserUuid(ctx context.Context, userUuid string) (Verification, error)
 	MakeAdmin(ctx context.Context) error
+	UpdateCarStatus(ctx context.Context, arg UpdateCarStatusParams) error
 	UpdateCarVerificationStatus(ctx context.Context, arg UpdateCarVerificationStatusParams) error
 	UpdatePaymentStatus(ctx context.Context, arg UpdatePaymentStatusParams) error
 	UpdateReservationStatus(ctx context.Context, arg UpdateReservationStatusParams) error
