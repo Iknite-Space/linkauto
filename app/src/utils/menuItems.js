@@ -42,6 +42,12 @@ import {
               label: "All Cars",
               icon: <FiTruck />,
               href: "/dashboard/cars/all",
+              visible: ["car_owner"],
+            },
+             {
+              label: "All Cars",
+              icon: <FiTruck />,
+              href: "/dashboard/cars",
               visible: ["admin"],
             },
             {
