@@ -41,13 +41,13 @@ import {
             {
               label: "All Cars",
               icon: <FiTruck />,
-              href: "/dashboard/cars/all",
+              href: "/dashboard/owner-cars",
               visible: ["car_owner"],
             },
              {
               label: "All Cars",
               icon: <FiTruck />,
-              href: "/dashboard/cars",
+              href: "/dashboard/cars/all",
               visible: ["admin"],
             },
             {

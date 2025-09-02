@@ -104,8 +104,8 @@ function App() {
                   element={<UserVerification />}
                 />
                 <Route path="cars/upload" element={<CarUploadForm />} />
-                <Route path="cars/all" element={<UploadedCars />} />
-                <Route path="cars" element={<OwnerCars />} />
+                {/* <Route path="cars/all" element={<UploadedCars />} /> */}
+                <Route path="owner-cars" element={<OwnerCars />} />
                 <Route path="car-verification" element={<CarsVerification />} />
                 <Route
                   path="car-verification/:car_uuid"
