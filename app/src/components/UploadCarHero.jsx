@@ -13,7 +13,7 @@ export default function UploadCarHero() {
 
   const handleClick = () => {
     if (currentUser?.role === "car_owner") {
-      navigate("cars/upload");
+      navigate("/dashboard/cars/upload");
     } else {
       setModalOpen(true);
     }
