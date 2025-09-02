@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./components/shared/ErrorBoundary";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "./components/shared/Loading";
 import { AuthProvider } from "./contexts/AuthContext";
